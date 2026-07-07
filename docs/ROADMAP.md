@@ -10,7 +10,8 @@ Single-file terminal: manual live inputs, Poisson football model, cash-out/hedge
 
 - **Recommendation tracking**: journal what the orchestrator advised at each pulse vs. what the operator did — the direct measurement of the hypothesis.
 - Sample size: 10–20 real matches in the journal; review DQS trend and advice-followed vs. outcome deltas.
-- Polish from real use: whatever friction the live sessions expose (input speed, screenshot entry, mobile ergonomics).
+- Polish from real use: whatever friction the live sessions expose (input speed, screenshot entry, mobile ergonomics). Source of truth: `docs/CASE_STUDIES/` — every polish item must trace to a case-study lesson.
+- Comprehension bar for all UI work: the **15-Year-Old Test** (see FOUNDER_MANIFESTO.md) — a recommendation must be understandable in 10 seconds, in real dollars, without hype.
 
 ## Deferred (explicitly — do not build until the hypothesis is validated)
 

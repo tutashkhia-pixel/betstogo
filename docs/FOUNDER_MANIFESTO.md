@@ -38,6 +38,14 @@ Every screen is a trading workstation, every recommendation an investment decisi
 
 BETS→GO is advisory, permanently. It analyzes, quantifies, and explains; the final wagering decision belongs to the human. If it stops being fun: 1-800-GAMBLER.
 
+## The 15-Year-Old Test.
+
+If a smart, disciplined 15-year-old cannot understand a recommendation in 10 seconds, the UI is too complicated. Simple language, real dollars, clear risk, no gambling hype. This is the comprehension bar for every screen, and it is also the teaching mission: BETS→GO should quietly teach patience, probability, capital preservation, and emotional control.
+
+## The operator is a field observer, not a data-entry clerk.
+
+The human watching the match holds information no model has: who looks better, who looks dangerous, whether momentum is real or one moment just stung. The product's job is to prompt those observations and price them — not to reduce the operator to a keyboard.
+
 ## Indispensable, not larger.
 
 The goal is not more features, more sports, more users. The goal is to become the tool an experienced trader would genuinely miss if it disappeared tomorrow. Every release must improve decision quality, trust, explainability, operator speed, or capital preservation — or it doesn't ship.

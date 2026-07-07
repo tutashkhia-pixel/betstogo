@@ -188,6 +188,12 @@ a{color:var(--accent)}
 .mom input[type=range]{width:100%; accent-color:var(--accent)}
 .mom .ends{display:flex; justify-content:space-between; font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3)}
 
+/* pulse questions — the field observer's prompts */
+.pulse-qs{margin-top:12px; background:var(--inset); border:1px solid var(--border); border-radius:5px; padding:9px 12px}
+.pulse-qs .pq-title{font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); margin-bottom:5px}
+.pulse-qs ul{margin:0; padding-left:16px; color:var(--ink-2); font-size:12.5px}
+.pulse-qs li{margin:2px 0}
+
 /* ============ TABLES ============ */
 .tbl-wrap{overflow-x:auto}
 table{border-collapse:collapse; width:100%; font-size:13px}
@@ -363,6 +369,7 @@ tr:last-child td{border-bottom:none}
               <div class="verdict-main">
                 <div class="verdict-word" id="vWord"></div>
                 <div class="verdict-why" id="vWhy"></div>
+                <div class="hint" id="vCounter" style="color:var(--warn)"></div>
                 <div class="hint" id="vImprove"></div>
               </div>
               <div class="scorebox">
@@ -397,6 +404,15 @@ tr:last-child td{border-bottom:none}
               <input type="range" id="l-mom" min="-3" max="3" step="1" value="0">
               <div class="ends"><span id="mom-away">Away dominating</span><span>Neutral</span><span id="mom-home">Home dominating</span></div>
             </div>
+            <div class="pulse-qs">
+              <div class="pq-title">Pulse questions — look up from the screen</div>
+              <ul>
+                <li>Who looks better right now? Who looks dangerous?</li>
+                <li>Is momentum actually shifting, or did one moment just sting?</li>
+                <li>Are we emotionally reacting?</li>
+                <li>Has the original thesis changed?</li>
+              </ul>
+            </div>
             <div class="btn-row">
               <button class="btn primary" id="btn-commit">Commit Update ⏎</button>
               <button class="btn ghost danger" id="btn-close">Close &amp; Review</button>
@@ -409,7 +425,8 @@ tr:last-child td{border-bottom:none}
         <div class="panel-h"><h2>Action Board — every option, priced in dollars</h2></div>
         <div class="panel-b">
           <div class="tbl-wrap"><table id="actionBoard"></table></div>
-          <p class="hint" style="margin:10px 0 0">Expected = probability-weighted net P/L from here. Worst / Best = net P/L in the worst and best final result. Hedge rows assume the hedge wins whenever your bet loses.</p>
+          <p class="hint" id="costNothing" style="margin:10px 0 0; color:var(--warn)"></p>
+          <p class="hint" style="margin:6px 0 0">Expected = probability-weighted net P/L from here. Worst / Best = net P/L in the worst and best final result. Hedge rows assume the hedge wins whenever your bet loses. "Hold / No action" is always on the board — standing down is a valid position.</p>
         </div>
       </div>
 
@@ -592,7 +609,7 @@ tr:last-child td{border-bottom:none}
    See docs/ARCHITECTURE.md in the repository.
    ============================================================ */
 
-const VERSION = "0.1.0";
+const VERSION = "0.1.1";
 
 /* ================= UTILITIES (core) ================= */
 const $ = id => document.getElementById(id);
@@ -890,7 +907,18 @@ function orchestrate(st, F){
   else if(F.edge!=null && F.edge >= 0.02){ rec="HOLD"; why="Model has your bet at "+pct(F.p)+" vs market "+pct(F.impLive)+" — you're holding "+pctS(F.edge)+" of edge."; }
   else { rec="HOLD / MONITOR"; why="No actionable mispricing right now. No Action is a position."; }
 
-  return {score, conf, risk, coRec, coWhy, rec, why};
+  /* devil's advocate — the strongest counterargument to the current verdict */
+  const counters = {
+    "SETTLE": "",
+    "CASH OUT": "Books rarely overpay for long — double-check your inputs before locking; one wrong number can flip this.",
+    "PARTIAL CASH OUT": "Fair value now isn't fair value after the next goal — partial locks certainty but caps your upside.",
+    "WRITE IT OFF": "If you're seeing a genuine shift on the pitch that the model can't see, commit one more pulse before mentally closing the book.",
+    "CONSIDER HEDGE": "Hedging costs expected value — if the model is underrating your side, you'd be paying for calm twice.",
+    "HOLD": "This edge assumes the model is right. One goal against flips this whole board — decide your exit now, not then.",
+    "HOLD / MONITOR": "Doing nothing still has a price — check the cost-of-doing-nothing line before settling in.",
+  };
+
+  return {score, conf, risk, coRec, coWhy, rec, why, counter: counters[rec] ?? ""};
 }
 
 /* Facts + advice, flattened for rendering. */
@@ -1012,6 +1040,7 @@ function renderDesk(){
     : A.rec.includes("CASH")||A.rec.includes("HEDGE") ? "var(--warn)"
     : A.rec==="WRITE IT OFF" ? "var(--neg)" : "var(--ink)";
   $("vWhy").textContent = A.why;
+  $("vCounter").textContent = A.counter ? "Devil's advocate: " + A.counter : "";
   $("vImprove").textContent = improveHints(S, A);
   $("vScore").textContent = A.score;
   $("vScore").style.color = A.score>=65 ? "var(--pos)" : A.score<=40 ? "var(--neg)" : "var(--ink)";
@@ -1164,6 +1193,11 @@ function renderDesk(){
       return '<tr><td>'+esc(a.name)+(a.sideBet?' <span class="mut">(independent side trade)</span>':'')+'</td>'+
         sgnT(a.exp)+sgnT(a.worst)+sgnT(a.best)+'<td>'+(badges||'<span class="mut">—</span>')+'</td></tr>';
     }).join("")+'</tbody>';
+
+  // cost of doing nothing — waiting is a decision too, priced in dollars
+  $("costNothing").textContent = A.offer > 0
+    ? "Cost of doing nothing: hold from here and lose, and the "+fmt$(A.offer)+" cash-out on the table becomes $0."
+    : "Cost of doing nothing: unpriced — enter the current cash-out offer and this line will show exactly what waiting risks.";
 
   // live action matrix
   $("matrix").innerHTML = [

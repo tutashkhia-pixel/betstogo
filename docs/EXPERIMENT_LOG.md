@@ -13,9 +13,16 @@
 
 ## Sessions
 
-### 2026-07-06 — Session 1 (game-day pilot)
+### 2026-07-06 — Session 1 (game-day pilot: Spain vs Portugal)
 - First real-world use planned around a live match; app validated same-day with demo walkthroughs and one journaled position.
 - Outcome: prototype passed first real-world validation (operator's assessment). Friction noted: needed spread/handicap support mid-day (shipped), needed a way to discard a test position (shipped).
+- Full product-learning write-up: [CASE_STUDIES/2026-07-06_spain-vs-portugal.md](CASE_STUDIES/2026-07-06_spain-vs-portugal.md)
+
+### 2026-07-06 — Session 2 (live viewing: USA vs Belgium)
+- Watched live outside the terminal; betting specifics Unknown / needs operator input (policy: never invented).
+- Distilled lessons: dollars beat probabilities under pressure; cost of inaction invisible; operator = field observer; pulse checks should ask observational questions; the 15-Year-Old Test born here.
+- Product response shipped in v0.1.1 (TEC-104): Pulse Questions panel, Cost of Doing Nothing line, Devil's Advocate copy.
+- Full product-learning write-up: [CASE_STUDIES/2026-07-06_usa-vs-belgium.md](CASE_STUDIES/2026-07-06_usa-vs-belgium.md)
 
 ### Template
 ```

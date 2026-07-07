@@ -66,6 +66,16 @@ Entry format: Problem · Evidence · Alternatives Considered · Decision · Reas
 **Tradeoffs:** TEC prefix is shared with other TechEdge projects (mitigated by `[BGO]`); label-based gating relies on discipline rather than workflow enforcement.
 **Date:** 2026-07-07 · **Linear:** TEC-96, TEC-103 · **Commit:** (this commit) · **Release:** post-v0.1.0 · **Status:** Active
 
+## Decision #7 — Case studies as product memory; the 15-Year-Old Test as UI bar
+
+**Problem:** Day-1 live-session learning (Spain vs Portugal; USA vs Belgium) lived only in the operator's head, and the UI didn't reflect what the sessions taught.
+**Evidence:** Operator-reported lessons from 2026-07-06 live sessions (see docs/CASE_STUDIES/): dollars beat probabilities under pressure; the cost of inaction was invisible; the operator is a field observer whose observations the app never prompted; recommendations must survive a 10-second comprehension test.
+**Alternatives considered:** Journal-only capture (loses narrative context); building bigger features first (violates experiment-first).
+**Decision:** Create `docs/CASE_STUDIES/` as a first-class product-memory format. Adopt the **15-Year-Old Test** as the permanent comprehension bar (manifesto). Ship only the small UI changes the cases justify: Pulse Questions panel, Cost of Doing Nothing line, Devil's Advocate copy, explicit No-Action labeling.
+**Reasoning:** Preserve learning before scaling features; every shipped change traces to a named lesson; devil's-advocate copy adds the trust-through-friction the sessions showed was missing.
+**Tradeoffs:** More vertical space in the Live Console; more advice text per verdict (kept to one sentence each); case studies contain "Unknown / needs operator input" gaps by policy rather than invented detail.
+**Date:** 2026-07-07 · **Linear:** TEC-104 · **Commit:** (this commit) · **Release:** v0.1.1 · **Status:** Active
+
 ---
 
-*Next entry: #7. Append only; never rewrite history — supersede with a new entry and update the old entry's Status.*
+*Next entry: #8. Append only; never rewrite history — supersede with a new entry and update the old entry's Status.*
