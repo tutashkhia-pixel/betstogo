@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>BETS→GO — Football Trading Terminal</title>
 <style>
 /* ============ TOKENS ============ */
@@ -290,6 +292,144 @@ tr:last-child td{border-bottom:none}
   font-size:11.5px; color:var(--ink-3); max-width:90ch;
 }
 .hidden{display:none!important}
+
+/* ============ MOBILE-FIRST COCKPIT ============ */
+.m-only{display:none}
+@media(max-width:959px){
+  .d-only{display:none!important}
+  .m-only{display:block}
+  .app{padding-bottom:96px}
+  .top-status{display:none}
+  .topbar{padding-bottom:8px; margin-bottom:10px}
+  .roe-panel{display:none}
+  body.mission-preserve .roe-panel{display:block}
+  .alerts-panel{display:none}
+  body.show-alerts .alerts-panel{display:block}
+  .setup-hero h1{font-size:22px}
+}
+
+/* segmented control (Them / Even / Us) */
+.seg{display:flex; gap:6px; margin-top:6px}
+.seg button{
+  flex:1; padding:11px 4px; border:1px solid var(--border-strong); border-radius:6px;
+  background:var(--inset); color:var(--ink-2); font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:12px; font-weight:600; letter-spacing:.04em; min-height:44px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.seg button.on{border-color:var(--accent); color:var(--accent); background:var(--accent-bg)}
+
+/* position strip */
+#m-strip{
+  position:sticky; top:0; z-index:40; display:flex; align-items:center; gap:8px;
+  margin:0 -20px 12px; padding:10px 14px calc(10px);
+  background:var(--surface-2); border-bottom:2px solid var(--border-strong);
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:12.5px;
+}
+.m-mission{font-size:14px}
+.m-score{font-weight:700; color:var(--ink)}
+.m-min{color:var(--ink-3)}
+.m-rec{margin-left:auto; font-weight:700; letter-spacing:.06em}
+.m-ev{font-weight:700}
+.m-badge{display:none; background:var(--neg); color:#fff; border-radius:999px; padding:1px 7px; font-size:10.5px}
+.m-badge.show{display:inline-block}
+
+/* objective shift / event banner */
+#m-banner{
+  border:1px solid var(--accent); background:var(--accent-bg); border-radius:8px;
+  padding:12px 14px; margin-bottom:12px; font-size:13.5px; color:var(--ink);
+}
+#m-banner .bn-t{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-weight:700; letter-spacing:.08em; margin-bottom:4px}
+#m-banner .bn-x{float:right; background:none; border:none; color:var(--ink-3); font-size:16px; padding:0 2px}
+
+/* decision card */
+#m-card{
+  background:var(--surface); border:1px solid var(--border); border-radius:10px;
+  box-shadow:var(--shadow); padding:16px; margin-bottom:12px;
+}
+#m-verdict{
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:34px; font-weight:700; line-height:1.05; margin-bottom:8px;
+}
+#m-say{font-size:14.5px; color:var(--ink); line-height:1.45; max-width:56ch}
+#m-dollars{margin:12px 0 0; border-top:1px solid var(--border); padding-top:10px}
+#m-dollars .dr{display:flex; justify-content:space-between; padding:3px 0; font-size:13.5px}
+#m-dollars .dr span{color:var(--ink-2)}
+#m-dollars .dr b{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+#m-devil{margin-top:10px; font-size:12.5px; color:var(--warn)}
+#m-cost{margin-top:6px; font-size:12.5px; color:var(--ink-3)}
+
+/* action row */
+#m-actions{display:grid; grid-template-columns:repeat(4,1fr); gap:7px; margin-bottom:8px}
+#m-actions button{
+  border:1px solid var(--border-strong); border-radius:8px; background:var(--surface);
+  padding:10px 2px; min-height:64px; display:flex; flex-direction:column; align-items:center; gap:3px;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; color:var(--ink);
+}
+#m-actions button .an{font-size:10px; font-weight:700; letter-spacing:.06em; color:var(--ink-2)}
+#m-actions button .av{font-size:14px; font-weight:700}
+#m-actions button.best{border-color:var(--pos)}
+#m-actions button.dim .av{color:var(--ink-3)}
+#m-actions button.sel{border-color:var(--accent); background:var(--accent-bg)}
+#m-act-detail{
+  background:var(--inset); border:1px solid var(--border); border-radius:8px;
+  padding:12px 14px; margin-bottom:12px; font-size:13px; color:var(--ink-2);
+}
+#m-act-detail b{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; color:var(--ink)}
+
+/* contextual promotions */
+#m-context .ctx{
+  border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:8px;
+  background:var(--surface); padding:12px 14px; margin-bottom:10px; font-size:13px;
+}
+#m-context .ctx .ct{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); margin-bottom:5px}
+.m-more{display:flex; gap:8px; margin:4px 0 10px}
+.m-more .btn{flex:1; font-size:10.5px; padding:8px 4px}
+
+/* sticky bottom bar */
+#m-pulsebar{
+  position:fixed; left:0; right:0; bottom:0; z-index:50;
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  background:var(--surface-2); border-top:1px solid var(--border-strong);
+}
+#m-pulse-open{
+  width:100%; min-height:52px; border-radius:8px; border:1px solid var(--accent);
+  background:var(--accent); color:#14100A; font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:14px; font-weight:700; letter-spacing:.08em;
+}
+
+/* check-in sheet */
+#m-backdrop{position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:60}
+#m-sheet{
+  position:fixed; left:0; right:0; bottom:0; z-index:70;
+  background:var(--surface); border-top:1px solid var(--border-strong);
+  border-radius:14px 14px 0 0; padding:8px 18px calc(16px + env(safe-area-inset-bottom));
+  max-height:86vh; overflow-y:auto;
+}
+.ms-grab{width:38px; height:4px; border-radius:2px; background:var(--border-strong); margin:4px auto 10px}
+.ms-title{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:15px; font-weight:700; margin-bottom:10px}
+.ms-row{display:flex; align-items:center; justify-content:space-between; padding:7px 0}
+.ms-lbl{font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
+.stepper{display:flex; align-items:center; gap:2px}
+.stepper button{
+  width:46px; height:44px; border:1px solid var(--border-strong); background:var(--inset);
+  color:var(--ink); font-size:20px; border-radius:8px;
+}
+.stepper b{min-width:52px; text-align:center; font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:18px}
+.ms-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:10px 0 4px}
+.ms-grid input{min-height:44px; font-size:16px}
+.ms-did{margin-top:10px; border-top:1px solid var(--border); padding-top:10px}
+.ms-q{margin-top:12px; font-style:normal}
+.ms-actions{display:flex; gap:10px; margin-top:14px}
+.ms-actions .btn{flex:1; min-height:48px}
+
+/* mission theming — the objective shift must be FELT */
+body.mission-protect #m-strip{background:rgba(61,214,140,.10); border-bottom-color:var(--pos)}
+body.mission-protect #m-verdict{color:var(--pos)}
+body.mission-protect #m-card{border-color:var(--pos)}
+body.mission-preserve #m-strip{background:var(--inset); border-bottom-color:var(--border)}
+body.mission-preserve #m-card{border-color:var(--border); box-shadow:none}
+body.mission-preserve #m-verdict{color:var(--ink-2); font-size:26px}
+body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2); border-color:var(--border-strong)}
 </style>
 
 <div class="app">
@@ -356,12 +496,44 @@ tr:last-child td{border-bottom:none}
     <!-- ---------- WORKSTATION ---------- -->
     <div id="workstation" class="hidden">
 
-      <div class="panel" style="margin-bottom:14px">
+      <!-- ========== MOBILE COCKPIT (<960px) ========== -->
+      <div class="m-only" id="m-cockpit">
+        <div id="m-strip" role="button" tabindex="0">
+          <span class="m-mission" id="m-strip-mission"></span>
+          <span class="m-score num" id="m-strip-score"></span>
+          <span class="m-min num" id="m-strip-min"></span>
+          <span class="m-rec" id="m-strip-rec"></span>
+          <span class="m-ev num" id="m-strip-ev"></span>
+          <span class="m-badge num" id="m-strip-badge" title="alerts"></span>
+        </div>
+
+        <div id="m-banner" class="hidden"></div>
+
+        <div id="m-card">
+          <div id="m-verdict"></div>
+          <div id="m-say"></div>
+          <div id="m-dollars"></div>
+          <div id="m-devil"></div>
+          <div id="m-cost"></div>
+        </div>
+
+        <div id="m-actions"></div>
+        <div id="m-act-detail" class="hidden"></div>
+
+        <div id="m-context"></div>
+
+        <div class="m-more">
+          <button class="btn ghost" id="m-alerts-toggle">Alerts</button>
+          <button class="btn ghost" id="m-close">Close &amp; review</button>
+        </div>
+      </div>
+
+      <div class="panel d-only" style="margin-bottom:14px">
         <div class="panel-h"><h2>Risk &amp; Exposure — live dollars</h2></div>
         <div class="panel-b"><div class="matrix" id="riskStrip"></div></div>
       </div>
 
-      <div class="g-decide">
+      <div class="g-decide d-only">
         <div class="panel">
           <div class="panel-h"><h2>Primary Decision</h2><span class="tag" id="riskTag"></span></div>
           <div class="panel-b">
@@ -373,11 +545,11 @@ tr:last-child td{border-bottom:none}
                 <div class="hint" id="vImprove"></div>
               </div>
               <div class="scorebox">
-                <div class="big num" id="vScore"></div>
-                <div class="lbl">Trade Score</div>
+                <div class="big" id="vMission" style="font-size:17px;letter-spacing:.08em"></div>
+                <div class="lbl">Mission</div>
                 <div style="height:8px"></div>
-                <div class="big num" id="vConf" style="font-size:22px"></div>
-                <div class="lbl">Confidence / 10</div>
+                <div class="big" id="vConfWord" style="font-size:15px"></div>
+                <div class="lbl">Confidence</div>
               </div>
             </div>
             <div class="kpis" id="kpis"></div>
@@ -400,9 +572,9 @@ tr:last-child td{border-bottom:none}
             </div>
             <div style="height:12px"></div>
             <div class="mom">
-              <label class="f" style="display:block"><span style="font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)">Momentum (last ~10 min)</span></label>
-              <input type="range" id="l-mom" min="-3" max="3" step="1" value="0">
-              <div class="ends"><span id="mom-away">Away dominating</span><span>Neutral</span><span id="mom-home">Home dominating</span></div>
+              <label class="f" style="display:block"><span style="font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)">Who's on top right now?</span></label>
+              <input type="hidden" id="l-mom" value="0">
+              <div class="seg" id="mom-seg"></div>
             </div>
             <div class="pulse-qs">
               <div class="pq-title">Pulse questions — look up from the screen</div>
@@ -421,7 +593,7 @@ tr:last-child td{border-bottom:none}
         </div>
       </div>
 
-      <div class="panel" style="margin-bottom:14px">
+      <div class="panel d-only" style="margin-bottom:14px">
         <div class="panel-h"><h2>Action Board — every option, priced in dollars</h2></div>
         <div class="panel-b">
           <div class="tbl-wrap"><table id="actionBoard"></table></div>
@@ -430,7 +602,7 @@ tr:last-child td{border-bottom:none}
         </div>
       </div>
 
-      <div class="g-two">
+      <div class="g-two d-only">
         <div class="panel">
           <div class="panel-h"><h2>Probability Engine</h2><span class="tag" id="xgTag"></span></div>
           <div class="panel-b">
@@ -450,7 +622,7 @@ tr:last-child td{border-bottom:none}
         </div>
       </div>
 
-      <div class="g-two">
+      <div class="g-two d-only">
         <div class="panel">
           <div class="panel-h"><h2>Cash-Out Engine</h2><span class="tag" id="coTag"></span></div>
           <div class="panel-b" id="cashoutBody"></div>
@@ -461,7 +633,7 @@ tr:last-child td{border-bottom:none}
         </div>
       </div>
 
-      <div class="panel" style="margin-bottom:14px">
+      <div class="panel roe-panel" style="margin-bottom:14px">
         <div class="panel-h"><h2>Recovery Opportunity Engine</h2><span class="tag" id="roeTag"></span></div>
         <div class="panel-b">
           <p class="hint" style="margin:0 0 10px">Independent trades priced on their own merit — never because the ticket is losing. Enter the live markets Hard Rock is showing you.</p>
@@ -480,15 +652,9 @@ tr:last-child td{border-bottom:none}
         </div>
       </div>
 
-      <div class="g-matrix">
-        <div class="panel">
-          <div class="panel-h"><h2>Live Action Matrix</h2></div>
-          <div class="panel-b"><div class="matrix" id="matrix"></div></div>
-        </div>
-        <div class="panel">
-          <div class="panel-h"><h2>Alert Feed</h2><button class="btn ghost" id="btn-clearalerts" style="margin-left:auto;padding:2px 10px;font-size:10px">Clear</button></div>
-          <div class="panel-b"><div class="alerts" id="alertFeed"></div></div>
-        </div>
+      <div class="panel alerts-panel" style="margin-bottom:14px">
+        <div class="panel-h"><h2>Alert Feed</h2><button class="btn ghost" id="btn-clearalerts" style="margin-left:auto;padding:2px 10px;font-size:10px">Clear</button></div>
+        <div class="panel-b"><div class="alerts" id="alertFeed"></div></div>
       </div>
     </div>
 
@@ -515,6 +681,14 @@ tr:last-child td{border-bottom:none}
             <div class="f"><label>Final score</label><input id="rv-score" placeholder="1-0"></div>
           </div>
           <div class="hint" style="margin-top:8px" id="rv-pl"></div>
+        </div>
+      </div>
+      <div class="section-gap"></div>
+      <div class="panel">
+        <div class="panel-h"><h2>What we said · what you did</h2><span class="tag" id="rv-followed-tag"></span></div>
+        <div class="panel-b">
+          <div class="tbl-wrap"><table id="rv-history"></table></div>
+          <p class="hint" id="rv-export-note" style="margin:10px 0 0; color:var(--warn)">Your journal lives only in this browser. Export it after saving — one lost phone should never erase the experiment.</p>
         </div>
       </div>
       <div class="section-gap"></div>
@@ -581,6 +755,43 @@ tr:last-child td{border-bottom:none}
     </div>
   </div>
 
+  <!-- ========== MOBILE: sticky bottom bar + check-in sheet ========== -->
+  <div class="m-only" id="m-pulsebar">
+    <button id="m-pulse-open">WHAT ARE YOU SEEING?</button>
+  </div>
+  <div id="m-backdrop" class="hidden"></div>
+  <div id="m-sheet" class="hidden" role="dialog" aria-label="Check-in">
+    <div class="ms-grab"></div>
+    <div class="ms-title">What are you seeing?</div>
+    <div class="ms-row">
+      <span class="ms-lbl">Minute</span>
+      <div class="stepper"><button data-step="min:-1">−</button><b class="num" id="ms-min">0</b><button data-step="min:1">+</button></div>
+    </div>
+    <div class="ms-row">
+      <span class="ms-lbl" id="ms-h-lbl">Home</span>
+      <div class="stepper"><button data-step="sh:-1">−</button><b class="num" id="ms-sh">0</b><button data-step="sh:1">+</button></div>
+    </div>
+    <div class="ms-row">
+      <span class="ms-lbl" id="ms-a-lbl">Away</span>
+      <div class="stepper"><button data-step="sa:-1">−</button><b class="num" id="ms-sa">0</b><button data-step="sa:1">+</button></div>
+    </div>
+    <div class="ms-row"><span class="ms-lbl">Who's on top?</span></div>
+    <div class="seg" id="ms-mom"></div>
+    <div class="ms-grid">
+      <div class="f"><label>Cash-out offer $</label><input id="ms-cash" type="text" inputmode="decimal" placeholder="0"></div>
+      <div class="f"><label>Live odds (optional)</label><input id="ms-odds" type="text" inputmode="text" placeholder="-220"></div>
+    </div>
+    <div class="ms-did">
+      <div class="ms-lbl" id="ms-did-lbl"></div>
+      <div class="seg" id="ms-did"></div>
+    </div>
+    <div class="ms-q hint" id="ms-question"></div>
+    <div class="ms-actions">
+      <button class="btn ghost" id="ms-cancel">Cancel</button>
+      <button class="btn primary" id="ms-commit">DONE</button>
+    </div>
+  </div>
+
   <div class="foot">
     <span class="mono ver" style="float:right;color:var(--ink-3)"></span>
     <b>Advisory only.</b> BETS→GO analyzes data, quantifies trade-offs, and explains its reasoning; it does not guarantee outcomes and the final wagering decision is always yours. Never bet money you can't afford to lose. If gambling stops being fun, call or text 1-800-GAMBLER (US). 21+.
@@ -590,26 +801,22 @@ tr:last-child td{border-bottom:none}
 <script>
 "use strict";
 /* ============================================================
-   BETS→GO — core application (v0.1.0)
+   BETS→GO — core application (v0.2.0)
 
    Architecture
    ------------
-   • CORE ENGINES are market-agnostic: Position, Probability,
-     Cash-Out, Hedge, Recovery, Alert, Journal. They operate on
-     positions, odds, probabilities, market references, a clock,
-     and events — never on any sport concept.
-   • MARKET ADAPTERS plug sport/market-specific logic into the
-     core: the in-play model, market catalog with pricing
-     functions, event detection, clock, and inputs. Football is
-     the first adapter; future markets are new adapters, not
-     core rewrites.
-   • RULE: every engine produces FACTS. Only the DECISION
-     ORCHESTRATOR produces ADVICE (recommendations + reasoning).
+   • CORE ENGINES are market-agnostic and produce FACTS only.
+   • MARKET ADAPTERS hold everything sport-specific (Football first).
+   • The DECISION ORCHESTRATOR is the only producer of ADVICE —
+     and it owns the operator's attention: missions, promotions,
+     and what earns the screen.
+   • Missions (objectives, not screens): BUILD → PROTECT → PRESERVE.
+     Objective Shifts re-theme the cockpit so the change is felt.
 
-   See docs/ARCHITECTURE.md in the repository.
+   See docs/ARCHITECTURE.md and docs/OPERATING_MODEL.md.
    ============================================================ */
 
-const VERSION = "0.1.1";
+const VERSION = "0.2.0";
 
 /* ================= UTILITIES (core) ================= */
 const $ = id => document.getElementById(id);
@@ -619,8 +826,7 @@ const pct = p => (p*100).toFixed(1) + "%";
 const pctS = p => (p>=0?"+":"−") + Math.abs(p*100).toFixed(1) + " pts";
 const esc = s => String(s??"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
-/* Sandboxed iframes (hosted artifacts) throw on any localStorage access —
-   degrade to in-memory so every engine still works; persistence is a bonus. */
+/* Sandboxed iframes throw on localStorage — degrade to in-memory. */
 const store = {
   get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
   set(k,v){ try { localStorage.setItem(k,v); } catch(e){} },
@@ -642,29 +848,8 @@ const kellyFrac = (p, dec) => Math.max(0, (p*dec-1)/(dec-1));
 function pois(l,k){ let p = Math.exp(-l); for(let i=1;i<=k;i++) p *= l/i; return p; }
 
 /* ============================================================
-   MARKET ADAPTER CONTRACT
-   An adapter supplies everything market/sport-specific:
-     id, name                     — identity
-     clock                        — {max, axisMax, ticks[], fmt(min)}
-     scoreLabels(st)              — [homeScoreLabel, awayScoreLabel]
-     setupParams[]                — pre-match model inputs {key,label,def,step}
-     liveInputs[]                 — extra live console fields {key,label,def,min,max}
-     momentum                     — {min,max,ends(st)->[awayLabel,homeLabel]}
-     checkpoints[]                — pulse-check minutes
-     checkpointLabel(min)         — alert text for a checkpoint
-     model(st)                    — in-play model snapshot (opaque to the core)
-     snapshotProbs(M)             — small serializable probe for the timeline chart
-     chartDefs(st)                — [[label, snapshotKey, cssVar], ...]
-     probBars(M, st)              — primary outcome bars [[label, prob, cssColor]]
-     miniStats(M, st)             — secondary probability rows [[label, prob]]
-     expectancyTag(M)             — header tag for the probability panel
-     markets{}                    — catalog: id -> {option, forBet, forRecovery,
-                                    needsLine, prob(M,st,line,manual), label(st,line)}
-     betOrder[], recoveryOrder[]  — market ids for the two dropdowns
-     detectEvents(prev, live, st) — {alerts:[{level,msg}], ev} from a state diff
-     demos[]                      — scripted walkthroughs {setup, steps, markets}
+   MARKET ADAPTER CONTRACT — see docs/ARCHITECTURE.md
    ============================================================ */
-
 const FootballAdapter = (() => {
   function rates(st){
     const min = Math.min(st.live.min, 90);
@@ -748,7 +933,7 @@ const FootballAdapter = (() => {
       {key:"rh", label:"Reds · H", def:0, min:0, max:3},
       {key:"ra", label:"Reds · A", def:0, min:0, max:3},
     ],
-    momentum: {min:-3, max:3, ends: st => [st.away+" dominating", st.home+" dominating"]},
+    momentum: {min:-2, max:2},
     checkpoints: [45,70,80,85,88],
     checkpointLabel: m => (m===45 ? "HALFTIME" : m+"' pulse check") + " — review cash-out and exposure.",
     model,
@@ -769,10 +954,10 @@ const FootballAdapter = (() => {
     recoveryOrder: ["away-next","home-next","over","under","home-tt-over","away-tt-over","home-hc","away-hc","home-ml","draw","away-ml","btts-yes","custom"],
     detectEvents: (prev, L, st) => {
       const alerts = []; let ev = null;
-      if(L.sh > prev.sh){ alerts.push({level:"crit", msg:"GOAL — "+st.home+" ("+L.sh+"–"+L.sa+"). Full recalculation done."}); ev = "GOAL "+st.home; }
-      if(L.sa > prev.sa){ alerts.push({level:"crit", msg:"GOAL — "+st.away+" ("+L.sh+"–"+L.sa+"). Full recalculation done."}); ev = ev || "GOAL "+st.away; }
-      if(L.rh > prev.rh){ alerts.push({level:"crit", msg:"RED CARD — "+st.home+" down to "+(11-L.rh)+" men."}); ev = ev || "RED CARD"; }
-      if(L.ra > prev.ra){ alerts.push({level:"crit", msg:"RED CARD — "+st.away+" down to "+(11-L.ra)+" men."}); ev = ev || "RED CARD"; }
+      if(L.sh > prev.sh){ alerts.push({level:"crit", msg:"GOAL — "+st.home+" ("+L.sh+"–"+L.sa+"). Full recalculation done."}); ev = "GOAL — "+st.home; }
+      if(L.sa > prev.sa){ alerts.push({level:"crit", msg:"GOAL — "+st.away+" ("+L.sh+"–"+L.sa+"). Full recalculation done."}); ev = ev || "GOAL — "+st.away; }
+      if(L.rh > prev.rh){ alerts.push({level:"crit", msg:"RED CARD — "+st.home+" down to "+(11-L.rh)+" men."}); ev = ev || "RED CARD — "+st.home; }
+      if(L.ra > prev.ra){ alerts.push({level:"crit", msg:"RED CARD — "+st.away+" down to "+(11-L.ra)+" men."}); ev = ev || "RED CARD — "+st.away; }
       return {alerts, ev};
     },
     demos: [
@@ -781,11 +966,11 @@ const FootballAdapter = (() => {
                 params:{xgh:1.45, xga:1.15}, bank:1000,
                 bet:{marketId:"home-ml", line:2.5, odds:120, stake:100}},
         steps: [
-          {min:15, sh:0, sa:0, mom:1, odds:130,  cash:88},
-          {min:31, sh:1, sa:0, mom:2, odds:-160, cash:128},
-          {min:45, sh:1, sa:0, mom:1, odds:-175, cash:132},
-          {min:60, sh:1, sa:0, mom:0, odds:-210, cash:141},
-          {min:68, sh:1, sa:0, mom:1, odds:-220, cash:148},
+          {min:15, sh:0, sa:0, mom:1,  odds:130,  cash:88},
+          {min:31, sh:1, sa:0, mom:2,  odds:-160, cash:128},
+          {min:45, sh:1, sa:0, mom:1,  odds:-175, cash:132},
+          {min:60, sh:1, sa:0, mom:0,  odds:-210, cash:141},
+          {min:68, sh:1, sa:0, mom:1,  odds:-220, cash:148},
         ],
         markets: [],
       },
@@ -796,8 +981,8 @@ const FootballAdapter = (() => {
         steps: [
           {min:22, sh:0, sa:1, mom:-2, odds:210,  cash:52},
           {min:47, sh:0, sa:2, mom:-2, odds:800,  cash:14},
-          {min:64, sh:0, sa:3, mom:-3, odds:5000, cash:2},
-          {min:80, sh:0, sa:3, mom:-3, odds:null, cash:0},
+          {min:64, sh:0, sa:3, mom:-2, odds:5000, cash:2},
+          {min:80, sh:0, sa:3, mom:-2, odds:null, cash:0},
         ],
         markets: [
           {marketId:"away-next", line:0.5, odds:125, manual:null},
@@ -809,7 +994,6 @@ const FootballAdapter = (() => {
   };
 })();
 
-/* Adapter registry — future markets plug in here; the core never changes. */
 const ADAPTERS = { football: FootballAdapter };
 let ADAPTER = ADAPTERS.football;
 
@@ -818,17 +1002,19 @@ const LSK = "betstogo_state_v1", LSJ = "betstogo_journal_v1";
 const LEGACY = {betstogo_state_v1:"ftos_state_v1", betstogo_journal_v1:"ftos_journal_v1"}; // pre-v0.1.0 FTOS-era keys
 const readKey = k => store.get(k) ?? store.get(LEGACY[k]);
 
-let S = null;           // active position state
+let S = null;
 let journal = [];
 try { S = JSON.parse(readKey(LSK)) || null; } catch(e){ S = null; }
 try { journal = JSON.parse(readKey(LSJ)) || []; } catch(e){ journal = []; }
 
-/* migrate pre-adapter state shapes (top-level xg params, bet.type, sport field) */
+/* migrate older state shapes */
 if(S && !S.params && "xgh" in S){ S.params = {xgh:S.xgh, xga:S.xga}; delete S.xgh; delete S.xga; }
 if(S && S.bet && S.bet.type && !S.bet.marketId){ S.bet.marketId = S.bet.type; delete S.bet.type; }
 if(S && Array.isArray(S.markets)) S.markets.forEach(m => { if(m.type && !m.marketId){ m.marketId = m.type; delete m.type; } });
 if(S && S.history) S.history.forEach(h => { if(!h.probs && "pH" in h) h.probs = {pH:h.pH, pD:h.pD, pA:h.pA}; });
 if(S && !S.market) S.market = S.sport || "football";
+if(S && !Array.isArray(S.actions)) S.actions = [];
+if(S && S.live && Math.abs(S.live.mom) > 2) S.live.mom = Math.sign(S.live.mom)*2; // old slider scale
 if(S && ADAPTERS[S.market]) ADAPTER = ADAPTERS[S.market];
 
 function persist(){ if(S) store.set(LSK, JSON.stringify(S)); else store.del(LSK); }
@@ -838,33 +1024,31 @@ const marketDef = id => ADAPTER.markets[id];
 const marketProb = (id, line, manual, M, st) => marketDef(id).prob(M, st, line, manual);
 const marketLabel = (id, line, st) => marketDef(id).label(st, line);
 const betLabel = st => marketLabel(st.bet.marketId, st.bet.line, st);
+const betSide = id => id.startsWith("home") ? "h" : id.startsWith("away") ? "a" : null;
 
 /* ============================================================
-   CORE ENGINES — facts only. No advice below this line until
-   the Decision Orchestrator.
+   CORE ENGINES — facts only.
    ============================================================ */
-
-/* Position + Probability + Cash-Out + Hedge engines → facts */
 function computeFacts(st){
-  const M = ADAPTER.model(st);                                     // Probability Engine (adapter model)
-  const p = marketProb(st.bet.marketId, st.bet.line, null, M, st); // P(original bet wins)
+  const M = ADAPTER.model(st);
+  const p = marketProb(st.bet.marketId, st.bet.line, null, M, st);
   const dec = amer2dec(st.bet.odds);
-  const payout = st.bet.stake * dec;                               // Position Engine facts
+  const payout = st.bet.stake * dec;
   const liveOdds = st.live.odds;
   const impLive = liveOdds!=null ? amer2prob(liveOdds) : null;
   const edge = impLive!=null ? p - impLive : null;
 
-  const ehv = p * payout;                                          // Cash-Out Engine facts
+  const ehv = p * payout;
   const offer = st.live.cash || 0;
   const ratio = ehv>0 && offer>0 ? offer/ehv : null;
   const coRating = ratio!=null ? Math.max(0, Math.min(10, (ratio-0.7)/0.4*10)) : null;
 
-  const hedgeActive = p>=0.25 && p<=0.80;                          // Hedge Engine gate (fact)
+  const hedgeActive = p>=0.25 && p<=0.80;
 
   return {M, p, dec, payout, impLive, edge, ehv, offer, ratio, coRating, hedgeActive};
 }
 
-/* Recovery Engine → facts (independent EV per live market) */
+/* Recovery Engine → facts */
 function analyzeMarkets(st, A){
   return (st.markets||[]).map((m,i)=>{
     const prob = marketProb(m.marketId, m.line, m.manual, A.M, st);
@@ -880,15 +1064,22 @@ function analyzeMarkets(st, A){
 
 /* ============================================================
    DECISION ORCHESTRATOR — the only producer of advice.
-   Consumes engine facts, emits recommendations + reasoning.
+   Owns the mission, the verdict, the counterargument, and
+   what earns the operator's attention.
    ============================================================ */
 function orchestrate(st, F){
   const edgePts = F.edge!=null ? F.edge*100 : 0;
-  const score = Math.max(0, Math.min(100, Math.round(50 + edgePts*3.2)));
+  const score = Math.max(0, Math.min(100, Math.round(50 + edgePts*3.2))); // internal (journal only)
   let conf = 5 + Math.min(Math.abs(edgePts)*0.15, 2) + (st.live.min/ADAPTER.clock.max)*2;
   if(F.impLive==null) conf -= 1.5;
   conf = Math.max(1, Math.min(10, conf));
+  const confWord = F.impLive==null && !F.offer ? "Low data" : conf>=7 ? "Confident" : conf>=5 ? "Steady" : "Cautious";
   const risk = F.p>=0.75 ? "LOW" : F.p>=0.55 ? "MEDIUM" : F.p>=0.35 ? "ELEVATED" : "HIGH";
+
+  /* mission — the operator's current objective */
+  const lockable = F.offer>0 ? F.offer - st.bet.stake : null;
+  const mission = F.p < 0.25 ? "preserve" : F.p >= 0.75 ? "protect" : "build";
+  const verbs = mission==="protect" ? {cash:"LOCK", hedge:"SPLIT"} : {cash:"CASH OUT", hedge:"HEDGE"};
 
   let coRec = "NO OFFER", coWhy = "Enter the current cash-out offer to price it.";
   if(F.ratio!=null){
@@ -899,36 +1090,43 @@ function orchestrate(st, F){
   }
 
   let rec, why;
-  if(F.p >= 0.995){ rec="SETTLE"; why="Position is effectively won."; }
-  else if(coRec==="FULL CASH OUT"){ rec="CASH OUT"; why=coWhy; }
+  if(F.p >= 0.995){ rec="SETTLE"; why="This is effectively won."; }
+  else if(coRec==="FULL CASH OUT"){ rec = mission==="protect" ? "LOCK IT IN" : "CASH OUT"; why=coWhy; }
   else if(coRec==="PARTIAL CASH OUT"){ rec="PARTIAL CASH OUT"; why=coWhy; }
-  else if(F.p < 0.10){ rec="WRITE IT OFF"; why="Win probability is "+pct(F.p)+". Don't chase — check the Recovery Engine for independent value, or take No Action."; }
-  else if(F.edge!=null && F.edge <= -0.06 && F.hedgeActive){ rec="CONSIDER HEDGE"; why="Market prices your outcome "+Math.abs(edgePts).toFixed(0)+" pts above the model — locking value is on the table."; }
-  else if(F.edge!=null && F.edge >= 0.02){ rec="HOLD"; why="Model has your bet at "+pct(F.p)+" vs market "+pct(F.impLive)+" — you're holding "+pctS(F.edge)+" of edge."; }
-  else { rec="HOLD / MONITOR"; why="No actionable mispricing right now. No Action is a position."; }
+  else if(F.p < 0.10){ rec="WRITE IT OFF"; why="Win probability is "+pct(F.p)+". Don't chase. Check the recovery board only if something there earns it on its own."; }
+  else if(F.edge!=null && F.edge <= -0.06 && F.hedgeActive){ rec="CONSIDER "+verbs.hedge; why="The market prices your outcome "+Math.abs(edgePts).toFixed(0)+" points above the model — locking value is on the table."; }
+  else if(F.edge!=null && F.edge >= 0.02){ rec="HOLD"; why="Your bet is worth more than the book is offering. Nothing meaningful has changed. Wait."; }
+  else { rec="HOLD"; why="No actionable mispricing right now. Doing nothing is a position. Wait."; }
 
-  /* devil's advocate — the strongest counterargument to the current verdict */
+  /* conversational lead by mission */
+  const lead = mission==="protect" ? "You are winning. The job has changed: protect it."
+             : mission==="preserve" ? "This position is effectively gone. The job now is to lose nothing further."
+             : "";
+  const say = (lead ? lead+" " : "") + why;
+
+  /* devil's advocate — the strongest counterargument */
   const counters = {
     "SETTLE": "",
     "CASH OUT": "Books rarely overpay for long — double-check your inputs before locking; one wrong number can flip this.",
+    "LOCK IT IN": "Locking gives up the remaining upside. If you'd happily re-place this bet at current odds, holding is the same decision.",
     "PARTIAL CASH OUT": "Fair value now isn't fair value after the next goal — partial locks certainty but caps your upside.",
-    "WRITE IT OFF": "If you're seeing a genuine shift on the pitch that the model can't see, commit one more pulse before mentally closing the book.",
+    "WRITE IT OFF": "If you're seeing a genuine shift the model can't see, file one more check-in before mentally closing the book.",
     "CONSIDER HEDGE": "Hedging costs expected value — if the model is underrating your side, you'd be paying for calm twice.",
-    "HOLD": "This edge assumes the model is right. One goal against flips this whole board — decide your exit now, not then.",
-    "HOLD / MONITOR": "Doing nothing still has a price — check the cost-of-doing-nothing line before settling in.",
+    "CONSIDER SPLIT": "Splitting costs expected value — you're paying the book for certainty it prices in its favor.",
+    "HOLD": "This assumes the model is right. One goal against flips this whole board — decide your exit now, not then.",
   };
 
-  return {score, conf, risk, coRec, coWhy, rec, why, counter: counters[rec] ?? ""};
+  return {score, conf, confWord, risk, coRec, coWhy, rec, why, say,
+          mission, verbs, lockable, counter: counters[rec] ?? ""};
 }
 
-/* Facts + advice, flattened for rendering. */
 function analyze(st){
   const F = computeFacts(st);
   const D = orchestrate(st, F);
   return {...F, ...D};
 }
 
-/* Action board (orchestrator output) — every option priced in dollars, ranked. */
+/* Action board — every option priced in dollars, ranked. */
 function actionBoard(st, A, bestRecovery){
   const s = st.bet.stake, pay = A.payout, p = A.p, offer = A.offer;
   const acts = [];
@@ -955,13 +1153,11 @@ function actionBoard(st, A, bestRecovery){
   return acts.sort((a,b)=> b.exp - a.exp);
 }
 
-/* what extra information would sharpen the recommendation */
 function improveHints(st, A){
   const need = [];
   if(A.impLive==null) need.push("the book's current live odds on your bet");
   if(!A.offer) need.push("the current cash-out offer");
-  if(A.hedgeActive && !st.live.hedgeOdds) need.push("odds on the opposite outcome (Hedge Engine)");
-  if(st.live.min >= 20 && st.live.mom === 0) need.push("a momentum read from the last ~10 minutes");
+  if(A.hedgeActive && !st.live.hedgeOdds) need.push("odds on the opposite outcome");
   return need.length ? "To sharpen this: enter " + need.join(" · ") + "." : "";
 }
 
@@ -1006,10 +1202,9 @@ function renderTop(A){
   el.innerHTML =
     '<span class="tag accent">'+esc(S.home)+' '+L.sh+'–'+L.sa+' '+esc(S.away)+'</span>' +
     '<span class="tag">'+esc(ADAPTER.clock.fmt(L.min))+'</span>' +
-    (A ? '<span class="tag '+(A.rec.includes("HOLD")?"pos":A.rec.includes("CASH")?"warn":"")+'">'+esc(A.rec)+'</span>' : '');
+    (A ? '<span class="tag '+(A.rec.includes("HOLD")?"pos":A.rec.includes("CASH")||A.rec.includes("LOCK")?"warn":"")+'">'+esc(A.rec)+'</span>' : '');
 }
 
-/* fill adapter-driven controls (setup params, market dropdowns, live inputs) */
 function renderAdapterStatics(){
   $("s-market").innerHTML = ADAPTER.betOrder
     .map(id=>'<option value="'+id+'">'+esc(ADAPTER.markets[id].option)+'</option>').join("");
@@ -1019,8 +1214,24 @@ function renderAdapterStatics(){
     '<div class="f"><label>'+esc(p.label)+'</label><input id="s-p-'+p.key+'" type="number" step="'+p.step+'" value="'+p.def+'"></div>').join("");
   $("l-extra").innerHTML = ADAPTER.liveInputs.map(p=>
     '<div class="f"><label>'+esc(p.label)+'</label><input id="l-x-'+p.key+'" type="number" min="'+p.min+'" max="'+p.max+'" value="'+p.def+'"></div>').join("");
-  const mom = $("l-mom");
-  mom.min = ADAPTER.momentum.min; mom.max = ADAPTER.momentum.max;
+}
+
+/* momentum labels: Us = the side we bet on */
+function momLabels(){
+  const side = S ? betSide(S.bet.marketId) : null;
+  if(side) return [{t:"Them", v: side==="h" ? -2 : 2}, {t:"Even", v:0}, {t:"Us", v: side==="h" ? 2 : -2}];
+  return [{t:S? S.away : "Away", v:-2}, {t:"Even", v:0}, {t:S? S.home : "Home", v:2}];
+}
+function renderMomSeg(containerId, current, onPick){
+  const el = $(containerId); if(!el) return;
+  el.innerHTML = "";
+  momLabels().forEach(o=>{
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = o.t;
+    if(o.v === current) b.classList.add("on");
+    b.addEventListener("click", ()=>{ onPick(o.v); renderMomSeg(containerId, o.v, onPick); });
+    el.appendChild(b);
+  });
 }
 
 function renderDesk(){
@@ -1028,23 +1239,26 @@ function renderDesk(){
   $("setup").classList.toggle("hidden", !!S);
   $("workstation").classList.toggle("hidden", !active);
   $("review").classList.toggle("hidden", !(S && S.closing));
+  $("m-pulsebar").classList.toggle("hidden", !active);
+  document.body.classList.remove("mission-build","mission-protect","mission-preserve");
   if(!S){ renderTop(null); return; }
   if(S.closing){ renderTop(null); renderReview(); return; }
 
   const A = analyze(S);
+  document.body.classList.add("mission-"+A.mission);
   renderTop(A);
 
-  // decision panel
+  /* ---------- desktop decision panel ---------- */
   $("vWord").textContent = A.rec;
-  $("vWord").style.color = A.rec.startsWith("HOLD")||A.rec==="SETTLE" ? "var(--pos)"
-    : A.rec.includes("CASH")||A.rec.includes("HEDGE") ? "var(--warn)"
+  $("vWord").style.color = A.rec.startsWith("HOLD")||A.rec==="SETTLE"||A.rec==="LOCK IT IN" ? "var(--pos)"
+    : A.rec.includes("CASH")||A.rec.includes("HEDGE")||A.rec.includes("SPLIT") ? "var(--warn)"
     : A.rec==="WRITE IT OFF" ? "var(--neg)" : "var(--ink)";
-  $("vWhy").textContent = A.why;
+  $("vWhy").textContent = A.say;
   $("vCounter").textContent = A.counter ? "Devil's advocate: " + A.counter : "";
   $("vImprove").textContent = improveHints(S, A);
-  $("vScore").textContent = A.score;
-  $("vScore").style.color = A.score>=65 ? "var(--pos)" : A.score<=40 ? "var(--neg)" : "var(--ink)";
-  $("vConf").textContent = A.conf.toFixed(1);
+  $("vMission").textContent = A.mission.toUpperCase();
+  $("vMission").style.color = A.mission==="protect" ? "var(--pos)" : A.mission==="preserve" ? "var(--ink-3)" : "var(--ink)";
+  $("vConfWord").textContent = A.confWord;
   const riskTag = $("riskTag");
   riskTag.textContent = "RISK · "+A.risk;
   riskTag.className = "tag " + (A.risk==="LOW"?"pos":A.risk==="MEDIUM"?"warn":"neg");
@@ -1059,28 +1273,22 @@ function renderDesk(){
     ["Cash-Out Offer", A.offer?fmt$(A.offer):"—", "var(--ink)"],
   ].map(k=>'<div class="kpi"><div class="l">'+k[0]+'</div><div class="v num" style="color:'+k[2]+'">'+k[1]+'</div></div>').join("");
 
-  // risk & exposure strip — dollars first
   const sVal = S.bet.stake;
-  const lockable = A.offer>0 ? A.offer - sVal : null;
   const evNow = A.p*A.payout - sVal;
   $("riskStrip").innerHTML = [
     ["Current Exposure", fmt$(sVal), "var(--ink)"],
     ["Max Loss (if held)", fmt$(-sVal), "var(--neg)"],
     ["Upside if Won", sgn$(A.payout - sVal), "var(--pos)"],
-    ["Lockable Now (cash-out)", lockable==null ? "—" : sgn$(lockable), lockable>0?"var(--pos)":"var(--ink-3)"],
+    ["Lockable Now (cash-out)", A.lockable==null ? "—" : sgn$(A.lockable), A.lockable>0?"var(--pos)":"var(--ink-3)"],
     ["Expected Value Now", sgn$(evNow), evNow>=0?"var(--pos)":"var(--neg)"],
-    ["Decision Score", A.score+" / 100", A.score>=65?"var(--pos)":A.score<=40?"var(--neg)":"var(--ink)"],
   ].map(m=>'<div class="mx"><div class="l">'+m[0]+'</div><div class="v num" style="color:'+m[2]+'">'+m[1]+'</div></div>').join("");
 
-  // console labels (adapter-driven)
   const [shLbl, saLbl] = ADAPTER.scoreLabels(S);
   $("lbl-sh").textContent = shLbl;
   $("lbl-sa").textContent = saLbl;
-  const [awayEnd, homeEnd] = ADAPTER.momentum.ends(S);
-  $("mom-away").textContent = awayEnd;
-  $("mom-home").textContent = homeEnd;
+  renderMomSeg("mom-seg", parseInt($("l-mom").value)||0, v=>{ $("l-mom").value = v; });
 
-  // probability engine panel
+  /* ---------- probability panel (desktop) ---------- */
   const M = A.M;
   $("pbars").innerHTML = ADAPTER.probBars(M, S).map(b=>
     '<div class="pbar"><div class="top"><span class="n">'+esc(b[0])+'</span><span class="v num">'+pct(b[1])+'</span></div>'+
@@ -1089,7 +1297,7 @@ function renderDesk(){
     .map(r=>'<div class="row"><span>'+esc(r[0])+'</span><b class="num">'+pct(r[1])+'</b></div>').join("");
   $("xgTag").textContent = ADAPTER.expectancyTag(M);
 
-  // cash-out panel
+  /* ---------- cash-out panel (desktop) ---------- */
   const co = $("cashoutBody");
   if(A.ratio==null){
     co.innerHTML = '<div class="empty">Enter a cash-out offer in the Live Console. The engine compares it to Expected Hold Value = P(win) × payout.</div>';
@@ -1106,7 +1314,7 @@ function renderDesk(){
       '<p class="hint" style="margin:10px 0 0">'+esc(A.coWhy)+'</p>';
   }
 
-  // hedge panel
+  /* ---------- hedge panel (desktop) ---------- */
   const hb = $("hedgeBody");
   if(!A.hedgeActive){
     $("hedgeTag").textContent = "NOT ACTIVE"; $("hedgeTag").className="tag";
@@ -1129,10 +1337,7 @@ function renderDesk(){
         '<tr><td class="mut">Net if '+esc(betLabel(S))+' wins</td><td class="r mono '+(ifOrig>=0?"pos-t":"neg-t")+'">'+fmt$(ifOrig)+'</td></tr>'+
         '<tr><td class="mut">Net if hedge wins</td><td class="r mono '+(ifHedge>=0?"pos-t":"neg-t")+'">'+fmt$(ifHedge)+'</td></tr>'+
         '<tr><td class="mut">Worst case</td><td class="r mono '+(Math.min(ifOrig,ifHedge)>=0?"pos-t":"neg-t")+'">'+fmt$(Math.min(ifOrig,ifHedge))+'</td></tr>'+
-        '</table></div>'+
-        '<p class="hint" style="margin:10px 0 0">'+(Math.min(ifOrig,ifHedge)>0
-          ? "This hedge locks a profit in every scenario — a legitimate value lock."
-          : "This hedge does not lock profit; it trades EV for certainty. Only take it if variance reduction is worth the cost.")+'</p>';
+        '</table></div>';
     }
     hb.innerHTML = inner;
     const hbtn = $("btn-hedge");
@@ -1143,9 +1348,9 @@ function renderDesk(){
     });
   }
 
-  // recovery engine panel
+  /* ---------- recovery engine ---------- */
   const rows = analyzeMarkets(S, A);
-  const roeActive = A.p < 0.25;
+  const roeActive = A.mission === "preserve";
   $("roeTag").textContent = roeActive ? "ACTIVE" : "NOT ACTIVE";
   $("roeTag").className = "tag " + (roeActive ? "accent" : "");
   const tbl = $("roeTable");
@@ -1178,9 +1383,9 @@ function renderDesk(){
       ? '<p class="hint">*Quarter-Kelly, capped at 50% of original stake. Best opportunity clears the +4% EV bar on its own merit — not because the ticket is losing.</p>'
       : '<div class="tag neg" style="font-size:12px">NO RECOVERY TRADE — nothing on the board clears the EV bar. Standing down is the correct trade.</div>';
   }
-
-  // action board — ranked options in dollars
   const bestR = rows.filter(r=>r.ev>=0.04).sort((a,b)=>b.ev-a.ev)[0];
+
+  /* ---------- action board (desktop) ---------- */
   const sgnT = v => '<td class="r mono '+(v>=0?"pos-t":"neg-t")+'">'+sgn$(v)+'</td>';
   const acts = actionBoard(S, A, roeActive ? bestR : null);
   $("actionBoard").innerHTML =
@@ -1193,40 +1398,160 @@ function renderDesk(){
       return '<tr><td>'+esc(a.name)+(a.sideBet?' <span class="mut">(independent side trade)</span>':'')+'</td>'+
         sgnT(a.exp)+sgnT(a.worst)+sgnT(a.best)+'<td>'+(badges||'<span class="mut">—</span>')+'</td></tr>';
     }).join("")+'</tbody>';
-
-  // cost of doing nothing — waiting is a decision too, priced in dollars
   $("costNothing").textContent = A.offer > 0
     ? "Cost of doing nothing: hold from here and lose, and the "+fmt$(A.offer)+" cash-out on the table becomes $0."
     : "Cost of doing nothing: unpriced — enter the current cash-out offer and this line will show exactly what waiting risks.";
 
-  // live action matrix
-  $("matrix").innerHTML = [
-    ["Original Bet", A.rec.startsWith("HOLD")?"HOLD":A.rec, A.rec.startsWith("HOLD")?"var(--pos)":"var(--ink)"],
-    ["Cash Out", A.coRec, A.coRec==="HOLD"||A.coRec==="NO OFFER"?"var(--ink)":"var(--warn)"],
-    ["Hedge", A.hedgeActive?"AVAILABLE":"NO", A.hedgeActive?"var(--warn)":"var(--ink-3)"],
-    ["Recovery Trade", roeActive ? (bestR?"OPPORTUNITY":"NONE FOUND") : "NOT ACTIVE", bestR?"var(--pos)":"var(--ink-3)"],
-    ["Risk", A.risk, A.risk==="LOW"?"var(--pos)":A.risk==="MEDIUM"?"var(--warn)":"var(--neg)"],
-    ["Confidence", A.conf.toFixed(1)+" / 10", "var(--ink)"],
-  ].map(m=>'<div class="mx"><div class="l">'+m[0]+'</div><div class="v" style="color:'+m[2]+'">'+esc(m[1])+'</div></div>').join("");
-
-  // alert feed
+  /* ---------- alerts ---------- */
   const feed = $("alertFeed");
   feed.innerHTML = S.alerts.length ? S.alerts.map(a=>
     '<div class="alert '+a.level+'"><span class="min">'+esc(ADAPTER.clock.fmt(a.min))+'</span><span class="lv">'+
     ({crit:"CRITICAL",high:"HIGH",med:"MEDIUM",info:"INFO"}[a.level])+'</span><span>'+esc(a.msg)+'</span></div>').join("")
-    : '<div class="empty">No alerts yet. Commit a live update to start the feed.</div>';
+    : '<div class="empty">No alerts yet.</div>';
 
+  renderMobile(A, evNow, bestR);
   drawChart();
+}
+
+/* ================= MOBILE COCKPIT (the primary experience) ================= */
+function renderMobile(A, evNow, bestR){
+  const L = S.live;
+  const mEmblem = {build:"● BUILD", protect:"◆ PROTECT", preserve:"▣ PRESERVE"}[A.mission];
+
+  /* position strip */
+  $("m-strip-mission").textContent = mEmblem;
+  $("m-strip-mission").style.color = A.mission==="protect" ? "var(--pos)" : A.mission==="preserve" ? "var(--ink-3)" : "var(--accent)";
+  $("m-strip-score").textContent = S.home.slice(0,3).toUpperCase()+" "+L.sh+"–"+L.sa+" "+S.away.slice(0,3).toUpperCase();
+  $("m-strip-min").textContent = ADAPTER.clock.fmt(L.min);
+  $("m-strip-rec").textContent = A.rec;
+  $("m-strip-rec").style.color = A.rec.startsWith("HOLD")||A.rec==="LOCK IT IN"||A.rec==="SETTLE" ? "var(--pos)" : A.rec==="WRITE IT OFF" ? "var(--neg)" : "var(--warn)";
+  $("m-strip-ev").textContent = sgn$(evNow);
+  $("m-strip-ev").style.color = evNow>=0 ? "var(--pos)" : "var(--neg)";
+  const nAlerts = S.alerts.filter(a=>a.level==="crit"||a.level==="high").length;
+  const badge = $("m-strip-badge");
+  badge.textContent = nAlerts;
+  badge.classList.toggle("show", nAlerts>0);
+
+  /* objective shift / critical event banner */
+  const bn = $("m-banner");
+  if(S.lastEvent){
+    bn.classList.remove("hidden");
+    bn.innerHTML = '<button class="bn-x" id="bn-x">✕</button><div class="bn-t">'+esc(S.lastEvent.ev)+' · '+esc(ADAPTER.clock.fmt(S.lastEvent.min))+'</div>'+
+      'Your bet\'s value: <b class="num">'+fmt$(S.lastEvent.from)+' → '+fmt$(S.lastEvent.to)+'</b>';
+  } else if(S.lastShift){
+    bn.classList.remove("hidden");
+    const t = S.lastShift.to==="protect" ? "OBJECTIVE SHIFT — PROTECT THE WIN" : S.lastShift.to==="preserve" ? "OBJECTIVE SHIFT — PRESERVE CAPITAL" : "OBJECTIVE SHIFT — BACK TO BUILD";
+    const m = S.lastShift.to==="protect" ? "You are winning. Every choice from here is about how much of this win you keep."
+            : S.lastShift.to==="preserve" ? "The original bet is effectively gone. Nothing here needs to be won back."
+            : "The match is live again. Back to testing your thesis.";
+    bn.innerHTML = '<button class="bn-x" id="bn-x">✕</button><div class="bn-t">'+t+'</div>'+esc(m);
+  } else bn.classList.add("hidden");
+  const bx = $("bn-x");
+  if(bx) bx.addEventListener("click", ()=>{ S.lastEvent=null; S.lastShift=null; persist(); renderDesk(); });
+
+  /* decision card */
+  $("m-verdict").textContent = A.rec + ".";
+  $("m-verdict").style.color = A.mission==="preserve" ? "" : $("m-strip-rec").style.color;
+  $("m-say").textContent = A.say;
+  const drs = [];
+  if(A.mission==="protect"){
+    drs.push(["Locked if you "+(A.lockable!=null?"cash now":"cash (enter offer)"), A.lockable!=null?sgn$(A.lockable):"—", A.lockable>0?"var(--pos)":"var(--ink-3)"]);
+    drs.push(["Still possible if it holds", sgn$(A.payout - S.bet.stake), "var(--ink)"]);
+    drs.push(["At risk if it turns", fmt$(-S.bet.stake), "var(--neg)"]);
+  } else if(A.mission==="preserve"){
+    drs.push(["Realistic value now", sgn$(evNow), "var(--ink-3)"]);
+    drs.push(["Salvage by cashing", A.lockable!=null?sgn$(A.lockable):"—", "var(--ink-3)"]);
+    drs.push(["Already committed", fmt$(-S.bet.stake), "var(--neg)"]);
+  } else {
+    drs.push(["Expected right now", sgn$(evNow), evNow>=0?"var(--pos)":"var(--neg)"]);
+    drs.push(["Walk away now", A.lockable!=null?sgn$(A.lockable):"—", "var(--ink)"]);
+    drs.push(["Worst case", fmt$(-S.bet.stake), "var(--neg)"]);
+  }
+  $("m-dollars").innerHTML = drs.map(d=>'<div class="dr"><span>'+esc(d[0])+'</span><b style="color:'+d[2]+'">'+d[1]+'</b></div>').join("");
+  $("m-devil").textContent = A.counter ? "Devil's advocate: "+A.counter : "";
+  $("m-cost").textContent = A.offer>0
+    ? "Cost of doing nothing: lose from here and the "+fmt$(A.offer)+" on the table becomes $0."
+    : "";
+
+  /* action row */
+  const holdExp = evNow;
+  const cashVal = A.lockable;
+  let hedgeExp = null;
+  if(S.live.hedgeOdds && A.hedgeActive){
+    const dH = amer2dec(S.live.hedgeOdds), h = A.payout/dH;
+    hedgeExp = A.p*(A.payout - S.bet.stake - h) + (1-A.p)*(h*(dH-1) - S.bet.stake);
+  }
+  const actsM = [
+    {id:"hold",  n:"HOLD",          v: sgn$(holdExp), dim:false},
+    {id:"cash",  n:A.verbs.cash,    v: cashVal!=null? sgn$(cashVal) : "—", dim: cashVal==null},
+    {id:"hedge", n:A.verbs.hedge,   v: hedgeExp!=null? sgn$(hedgeExp) : (A.hedgeActive?"price it":"not now"), dim: hedgeExp==null},
+    {id:"noact", n:"NO ACTION",     v:"✓ valid", dim:false},
+  ];
+  const bestVal = Math.max(holdExp, cashVal??-Infinity, hedgeExp??-Infinity);
+  $("m-actions").innerHTML = actsM.map(a=>{
+    const isBest = (a.id==="hold"&&holdExp===bestVal)||(a.id==="cash"&&cashVal===bestVal)||(a.id==="hedge"&&hedgeExp===bestVal);
+    return '<button data-act="'+a.id+'" class="'+(a.dim?"dim ":"")+(isBest?"best":"")+'"><span class="an">'+esc(a.n)+'</span><span class="av num">'+a.v+'</span></button>';
+  }).join("");
+  $("m-actions").querySelectorAll("[data-act]").forEach(b=>b.addEventListener("click", ()=>showActDetail(b.dataset.act, A, evNow)));
+
+  /* contextual promotions — the orchestrator grants screen space */
+  const ctx = [];
+  if(A.ratio!=null && A.ratio>=0.97)
+    ctx.push('<div class="ctx"><div class="ct">Cash-out at fair value</div>The book is offering '+fmt$(A.offer)+' against a fair '+fmt$(A.ehv)+'. '+esc(A.coWhy)+'</div>');
+  if(A.hedgeActive && S.live.hedgeOdds){
+    const dH = amer2dec(S.live.hedgeOdds), h = A.payout/dH;
+    const worst = Math.min(A.payout - S.bet.stake - h, h*(dH-1) - S.bet.stake);
+    if(worst>0) ctx.push('<div class="ctx"><div class="ct">'+esc(A.verbs.hedge)+' locks a profit</div>Place '+fmt$(h)+' on the other side and you cannot finish below '+sgn$(worst)+'.</div>');
+  }
+  if(A.mission==="preserve"){
+    ctx.push('<div class="ctx"><div class="ct">Recovery board</div>'+(bestR
+      ? "One independent trade clears the bar: <b>"+esc(bestR.label)+"</b> ("+(bestR.ev*100).toFixed(1)+"% EV, stake "+fmt$(bestR.stake)+"). It qualifies on its own merit — not because you're down."
+      : "Nothing on the board clears the EV bar. <b>NO RECOVERY TRADE.</b> Standing down is the correct trade.")+'</div>');
+  }
+  $("m-context").innerHTML = ctx.join("");
+}
+
+function showActDetail(id, A, evNow){
+  const d = $("m-act-detail");
+  $("m-actions").querySelectorAll("button").forEach(b=>b.classList.toggle("sel", b.dataset.act===id));
+  let html = "";
+  if(id==="hold"){
+    html = 'Stay in. Expected <b>'+sgn$(evNow)+'</b> · best case <b>'+sgn$(A.payout-S.bet.stake)+'</b> · worst case <b>'+fmt$(-S.bet.stake)+'</b>.';
+  } else if(id==="cash"){
+    html = A.lockable!=null
+      ? 'Take the book\'s '+fmt$(A.offer)+' now: you keep <b>'+sgn$(A.lockable)+'</b> guaranteed and give up the remaining upside of <b>'+sgn$((A.payout-S.bet.stake)-A.lockable)+'</b>.'
+      : 'No offer entered yet — add the cash-out offer in your next check-in and this becomes a real number.';
+  } else if(id==="hedge"){
+    if(!A.hedgeActive) html = 'Not now — hedging works between 25–80% win probability. Outside that range it just burns value.';
+    else if(S.live.hedgeOdds==null) html = 'Tell me the other side\'s odds: <input id="m-hedge-odds" type="text" inputmode="text" placeholder="+160" style="width:90px;background:var(--surface);border:1px solid var(--border-strong);border-radius:6px;color:var(--ink);padding:8px;font-size:16px"> <button class="btn" id="m-hedge-go" style="min-height:40px">Price it</button>';
+    else {
+      const dH = amer2dec(S.live.hedgeOdds), h = A.payout/dH;
+      const ifO = A.payout - S.bet.stake - h, ifH = h*(dH-1) - S.bet.stake;
+      html = 'Place <b>'+fmt$(h)+'</b> on the other side: finish <b>'+sgn$(ifO)+'</b> if your bet wins, <b>'+sgn$(ifH)+'</b> if it doesn\'t.';
+    }
+  } else if(id==="noact"){
+    html = 'Doing nothing is a decision — and right now it costs nothing extra to wait for one more look. '+(A.offer>0 ? 'What it risks: the '+fmt$(A.offer)+' on the table if the match turns.' : '')+' No Action is always a valid call here.';
+  }
+  d.innerHTML = html;
+  d.classList.remove("hidden");
+  const hg = $("m-hedge-go");
+  if(hg) hg.addEventListener("click", ()=>{
+    const v = parseAmerican($("m-hedge-odds").value);
+    if(v==null) return;
+    S.live.hedgeOdds = v; persist(); renderDesk();
+    showActDetail("hedge", analyze(S), (analyze(S).p*analyze(S).payout - S.bet.stake));
+  });
 }
 
 function alertField(el){ el.style.borderColor = "var(--neg)"; setTimeout(()=>el.style.borderColor="",1200); }
 
-/* ================= TIMELINE CHART (core, adapter-parameterized) ================= */
+/* ================= TIMELINE CHART (desktop review) ================= */
 let chartPts = [];
 function drawChart(){
   const cv = $("chart"); if(!cv || !S) return;
   const wrap = cv.parentElement;
   const W = wrap.clientWidth, H = 230, dpr = window.devicePixelRatio||1;
+  if(!W) return; // hidden on mobile
   cv.width = W*dpr; cv.height = H*dpr;
   const ctx = cv.getContext("2d"); ctx.scale(dpr,dpr);
   const css = getComputedStyle(document.documentElement);
@@ -1309,19 +1634,20 @@ function openPosition(cfg){
     params: cfg.params, bank: cfg.bank||null,
     bet: cfg.bet, openedAt: new Date().toISOString(),
     live,
-    markets: [], alerts: [], history: [], closing: false,
-    entryEdge: null,
+    markets: [], alerts: [], history: [], actions: [], closing: false,
+    entryEdge: null, lastCheckinAt: Date.now(), lastShift: null, lastEvent: null,
   };
   const A = analyze(S);
   S.entryEdge = A.edge;
   S.history.push(snap(A, null));
-  pushAlert("info", "Position opened: "+betLabel(S)+" "+fmtAmer(S.bet.odds)+" for $"+S.bet.stake+". Entry edge "+(A.edge!=null?pctS(A.edge):"n/a")+".", 0);
+  pushAlert("info", "Position opened: "+betLabel(S)+" "+fmtAmer(S.bet.odds)+" for $"+S.bet.stake+".", 0);
   persist(); syncConsole(); renderDesk();
 }
 
 function snap(A, ev){
   const L = S.live;
-  return {min:L.min, sh:L.sh, sa:L.sa, probs: ADAPTER.snapshotProbs(A.M), pBet:A.p, ev};
+  return {min:L.min, sh:L.sh, sa:L.sa, probs: ADAPTER.snapshotProbs(A.M), pBet:A.p,
+          rec:A.rec, co:A.coRec, mission:A.mission, ev};
 }
 
 function syncConsole(){
@@ -1350,9 +1676,28 @@ function commitUpdate(){
   L.cash = parseFloat($("l-cash").value)||0;
   const A = analyze(S);
   const ev = ADAPTER.detectEvents(prev, L, S).ev;
+  if(ev) S.lastEvent = {ev, min:L.min, from: prevA.p*prevA.payout, to: A.p*A.payout};
+  if(A.mission !== prevA.mission){
+    S.lastShift = {from: prevA.mission, to: A.mission, min: L.min};
+    if(!ev) S.lastEvent = null;
+    pushAlert("high", "OBJECTIVE SHIFT — "+prevA.mission.toUpperCase()+" → "+A.mission.toUpperCase()+".");
+  }
   S.history.push(snap(A, ev));
+  S.lastCheckinAt = Date.now();
   diffAlerts(prev, prevA, A);
   persist(); renderDesk();
+}
+
+/* TEC-97 — Recommendation tracking (facts) */
+function recordAction(advice, did){
+  S.actions.push({min: S.live.min, advice, did, t: Date.now()});
+}
+function followed(a){
+  const adv = a.advice || "";
+  if(a.did==="Held")   return adv.startsWith("HOLD") || adv==="SETTLE" || adv==="WRITE IT OFF";
+  if(a.did==="Cashed") return adv.includes("CASH") || adv==="LOCK IT IN";
+  if(a.did==="Hedged") return adv.includes("HEDGE") || adv.includes("SPLIT");
+  return false;
 }
 
 /* recovery add-market */
@@ -1366,6 +1711,77 @@ function addMarket(){
   S.markets.push({marketId, line: isNaN(line)?0.5:line, odds, manual});
   $("r-odds").value=""; $("r-prob").value="";
   persist(); renderDesk();
+}
+
+/* ================= CHECK-IN SHEET (mobile) ================= */
+const QUESTIONS = [
+  "Look up: who looks dangerous right now?",
+  "Honest check: are we reacting emotionally?",
+  "Has your original thesis actually changed?",
+  "Is momentum real — or did one moment just sting?",
+  "Is this a real opportunity, or a chase?",
+];
+let ms = null; // sheet state
+
+function openSheet(){
+  if(!S || S.closing) return;
+  const elapsed = S.lastCheckinAt ? Math.floor((Date.now()-S.lastCheckinAt)/60000) : 0;
+  ms = {
+    min: Math.min(120, S.live.min + Math.max(0, elapsed)),
+    sh: S.live.sh, sa: S.live.sa, mom: S.live.mom,
+    did: null, advice: (S.history[S.history.length-1]||{}).rec || null,
+  };
+  $("ms-h-lbl").textContent = S.home;
+  $("ms-a-lbl").textContent = S.away;
+  $("ms-cash").value = S.live.cash || "";
+  $("ms-odds").value = S.live.odds!=null ? fmtAmer(S.live.odds) : "";
+  $("ms-question").textContent = QUESTIONS[S.history.length % QUESTIONS.length];
+  const didWrap = $("ms-did").parentElement;
+  if(ms.advice && S.history.length > 1){
+    didWrap.classList.remove("hidden");
+    $("ms-did-lbl").textContent = "Last call was "+ms.advice+" — what did you actually do?";
+    renderDidSeg();
+  } else didWrap.classList.add("hidden");
+  renderSheet();
+  $("m-sheet").classList.remove("hidden");
+  $("m-backdrop").classList.remove("hidden");
+}
+function renderSheet(){
+  $("ms-min").textContent = ms.min+"'";
+  $("ms-sh").textContent = ms.sh;
+  $("ms-sa").textContent = ms.sa;
+  renderMomSeg("ms-mom", ms.mom, v=>{ ms.mom = v; });
+}
+function renderDidSeg(){
+  const el = $("ms-did");
+  el.innerHTML = "";
+  ["Held","Cashed","Hedged","Other"].forEach(t=>{
+    const b = document.createElement("button");
+    b.type="button"; b.textContent = t;
+    if(ms.did===t) b.classList.add("on");
+    b.addEventListener("click", ()=>{ ms.did = ms.did===t ? null : t; renderDidSeg(); });
+    el.appendChild(b);
+  });
+}
+function closeSheet(){
+  $("m-sheet").classList.add("hidden");
+  $("m-backdrop").classList.add("hidden");
+  ms = null;
+}
+function commitSheet(){
+  if(!ms) return;
+  const odds = $("ms-odds").value.trim();
+  if(odds && parseAmerican(odds)==null){ alertField($("ms-odds")); return; }
+  if(ms.did && ms.advice) recordAction(ms.advice, ms.did);
+  $("l-min").value = ms.min;
+  $("l-sh").value = ms.sh;
+  $("l-sa").value = ms.sa;
+  $("l-mom").value = ms.mom;
+  $("l-cash").value = $("ms-cash").value;
+  $("l-odds").value = odds;
+  closeSheet();
+  commitUpdate();
+  window.scrollTo({top:0});
 }
 
 /* ================= JOURNAL ENGINE (core) ================= */
@@ -1388,6 +1804,21 @@ function renderReview(){
   $("rv-checks").querySelectorAll("[data-dq]").forEach(cb=>cb.addEventListener("change",()=>{
     dqState[cb.dataset.dq] = cb.checked; updateDQS();
   }));
+
+  /* what we said · what you did (TEC-97) */
+  const hist = S.history.slice(1);
+  const actByIdx = {};
+  S.actions.forEach(a=>{ actByIdx[a.min+"|"+a.advice] = a.did; });
+  const rowsH = hist.map(h=>{
+    const did = (S.actions.find(a=>a.min===h.min) || {}).did;
+    return '<tr><td class="mono">'+esc(ADAPTER.clock.fmt(h.min))+'</td><td>'+esc(h.rec||"—")+'</td><td>'+(did?esc(did):'<span class="mut">—</span>')+'</td></tr>';
+  }).join("");
+  $("rv-history").innerHTML = '<thead><tr><th>Minute</th><th>We said</th><th>You did</th></tr></thead><tbody>'+
+    (rowsH || '<tr><td colspan="3" class="mut">No check-ins recorded.</td></tr>')+'</tbody>';
+  const answered = S.actions.filter(a=>a.did);
+  const nf = answered.filter(followed).length;
+  $("rv-followed-tag").textContent = answered.length ? "Followed "+nf+" of "+answered.length : "No tracking answers";
+
   updateDQS(); updatePL();
 }
 function dqs(){ return DQ_CHECKS.reduce((s,c)=> s + (dqState[c.k]?c.pts:0), 0); }
@@ -1410,6 +1841,7 @@ function updatePL(){
 
 function saveJournal(){
   const A = analyze(S);
+  const answered = S.actions.filter(a=>a.did);
   journal.unshift({
     date: new Date().toISOString().slice(0,10),
     market: S.market,
@@ -1423,6 +1855,9 @@ function saveJournal(){
     entryEdge: S.entryEdge,
     lessons: $("rv-lessons").value || "",
     updates: S.history.length,
+    checkins: Math.max(0, S.history.length-1),
+    adviceFollowed: answered.length ? answered.filter(followed).length+"/"+answered.length : null,
+    recTrail: S.history.slice(1).map(h=>({min:h.min, rec:h.rec, did:(S.actions.find(a=>a.min===h.min)||{}).did||null})),
   });
   store.set(LSJ, JSON.stringify(journal));
   S = null; dqState = {}; persist();
@@ -1439,13 +1874,11 @@ function renderJournal(){
   const totPL = journal.reduce((s,j)=>s+j.pl,0);
   const w = journal.filter(j=>j.pl>0).length, l = journal.filter(j=>j.pl<0).length;
   const avgD = journal.reduce((s,j)=>s+j.dqs,0)/journal.length;
-  const avgT = journal.reduce((s,j)=>s+(j.tradeScore||0),0)/journal.length;
   st.innerHTML = [
     ["Matches", journal.length, "var(--ink)"],
     ["Record", w+"W – "+l+"L", "var(--ink)"],
     ["Net P/L", fmt$(totPL), totPL>=0?"var(--pos)":"var(--neg)"],
     ["Avg DQS", avgD.toFixed(0)+" / 100", avgD>=70?"var(--pos)":"var(--warn)"],
-    ["Avg Trade Score", avgT.toFixed(0), "var(--ink)"],
   ].map(k=>'<div class="kpi"><div class="l">'+k[0]+'</div><div class="v num" style="color:'+k[2]+'">'+k[1]+'</div></div>').join("");
   $("jList").innerHTML = journal.map((j,i)=>
     '<div class="j-entry" data-j="'+i+'"><div class="j-head">'+
@@ -1456,17 +1889,15 @@ function renderJournal(){
     '</div><div class="j-body"><div class="tbl-wrap"><table>'+
     '<tr><td class="mut">Bet</td><td class="r mono">'+esc(j.bet)+' '+esc(j.odds)+' · $'+j.stake+'</td></tr>'+
     '<tr><td class="mut">Settled</td><td class="r mono">'+esc(j.outcome)+'</td></tr>'+
+    '<tr><td class="mut">Check-ins</td><td class="r mono">'+(j.checkins??j.updates)+'</td></tr>'+
+    (j.adviceFollowed?'<tr><td class="mut">Advice followed</td><td class="r mono">'+esc(j.adviceFollowed)+'</td></tr>':"")+
     '<tr><td class="mut">Entry edge</td><td class="r mono">'+(j.entryEdge!=null?pctS(j.entryEdge):"—")+'</td></tr>'+
-    '<tr><td class="mut">Trade score at close</td><td class="r mono">'+(j.tradeScore??"—")+'</td></tr>'+
-    '<tr><td class="mut">Live updates logged</td><td class="r mono">'+j.updates+'</td></tr>'+
     (j.lessons?'<tr><td class="mut">Lessons</td><td class="r">'+esc(j.lessons)+'</td></tr>':"")+
     '</table></div></div></div>').join("");
   $("jList").querySelectorAll(".j-entry .j-head").forEach(h=>h.addEventListener("click",()=>h.parentElement.classList.toggle("open")));
 }
 
-/* ================= DEMOS (adapter-scripted) ================= */
-/* Demo steps write to the console INPUTS (not S.live directly) so commitUpdate
-   sees a genuine before/after diff and fires event alerts. */
+/* ================= DEMOS ================= */
 function runDemo(i){
   const d = ADAPTER.demos[i];
   if(!d) return;
@@ -1515,6 +1946,7 @@ $("btn-commit").addEventListener("click", commitUpdate);
 $("btn-addmkt").addEventListener("click", addMarket);
 $("btn-clearalerts").addEventListener("click", ()=>{ if(S){S.alerts=[]; persist(); renderDesk();} });
 $("btn-close").addEventListener("click", ()=>{ if(S){ S.closing = true; persist(); renderDesk(); } });
+$("m-close").addEventListener("click", ()=>{ if(S){ S.closing = true; persist(); renderDesk(); window.scrollTo({top:0}); } });
 $("btn-back-desk").addEventListener("click", ()=>{ if(S){ S.closing = false; persist(); renderDesk(); } });
 $("btn-save-journal").addEventListener("click", saveJournal);
 $("btn-discard").addEventListener("click", ()=>{ S = null; dqState = {}; persist(); renderDesk(); });
@@ -1528,6 +1960,24 @@ $("btn-export").addEventListener("click", ()=>{
 document.addEventListener("keydown", e=>{
   if(e.key==="Enter" && S && !S.closing && e.target.closest("#workstation")) commitUpdate();
 });
+
+/* mobile cockpit wiring */
+$("m-pulse-open").addEventListener("click", openSheet);
+$("ms-cancel").addEventListener("click", closeSheet);
+$("m-backdrop").addEventListener("click", closeSheet);
+$("ms-commit").addEventListener("click", commitSheet);
+$("m-sheet").addEventListener("click", e=>{
+  const b = e.target.closest("[data-step]");
+  if(!b || !ms) return;
+  const [k, d] = b.dataset.step.split(":");
+  const delta = parseInt(d,10);
+  if(k==="min") ms.min = Math.max(0, Math.min(120, ms.min+delta));
+  if(k==="sh")  ms.sh  = Math.max(0, ms.sh+delta);
+  if(k==="sa")  ms.sa  = Math.max(0, ms.sa+delta);
+  renderSheet();
+});
+$("m-strip").addEventListener("click", ()=> window.scrollTo({top:0, behavior:"smooth"}));
+$("m-alerts-toggle").addEventListener("click", ()=> document.body.classList.toggle("show-alerts"));
 
 /* init */
 document.querySelectorAll(".ver").forEach(el=>el.textContent = "v"+VERSION);
