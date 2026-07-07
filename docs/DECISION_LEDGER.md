@@ -76,6 +76,16 @@ Entry format: Problem · Evidence · Alternatives Considered · Decision · Reas
 **Tradeoffs:** More vertical space in the Live Console; more advice text per verdict (kept to one sentence each); case studies contain "Unknown / needs operator input" gaps by policy rather than invented detail.
 **Date:** 2026-07-07 · **Linear:** TEC-104 · **Commit:** (this commit) · **Release:** v0.1.1 · **Status:** Active
 
+## Decision #8 — Canonical ownership: one owner per knowledge object
+
+**Problem:** Product knowledge was growing in three places (repo docs, Linear issues, Decision Ledger) with no rule preventing drift or conflicting truth.
+**Evidence:** Founder observation 2026-07-07 after TEC-105–110 created full narratives inside Linear that overlap with `docs/CASE_STUDIES/`.
+**Alternatives considered:** Linear as permanent archive (fast but unversioned, drifts from git); docs-only (loses fast capture and discussability); accept duplication (guarantees eventual conflict).
+**Decision:** Every knowledge object has exactly one canonical owner (table in OPERATING_MODEL.md). Lifecycle: Observe → Capture (Linear) → Distill (Ledger) → Archive (GitHub docs) → Build → Ship. Graduation rule: Linear holds raw narratives temporarily; reviewed knowledge graduates to docs; the issue keeps summary + links. Weekly anti-drift ritual.
+**Reasoning:** Capture needs speed; archives need permanence and version history. Splitting the roles gets both; the graduation step is the bridge. Duplication is temporary; conflicting truth is never permanent.
+**Tradeoffs:** Graduation is a manual step that relies on the weekly ritual; TEC-105–110 remain intentionally un-graduated until David reviews and fills the unknowns.
+**Date:** 2026-07-07 · **Linear:** TEC-96 · **Commit:** (this commit) · **Release:** post-v0.1.1 · **Status:** Active
+
 ---
 
-*Next entry: #8. Append only; never rewrite history — supersede with a new entry and update the old entry's Status.*
+*Next entry: #9. Append only; never rewrite history — supersede with a new entry and update the old entry's Status.*

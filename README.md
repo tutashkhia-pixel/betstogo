@@ -63,7 +63,7 @@ See [docs/ROADMAP.md](docs/ROADMAP.md). Current milestone: validate the hypothes
 
 ## Docs
 
-- [North Star](docs/NORTH_STAR.md) · [Product Vision](docs/PRODUCT_VISION.md) · [Architecture](docs/ARCHITECTURE.md) · [Roadmap](docs/ROADMAP.md) · [Experiment Log](docs/EXPERIMENT_LOG.md)
+- [North Star](docs/NORTH_STAR.md) · [Product Vision](docs/PRODUCT_VISION.md) · [Architecture](docs/ARCHITECTURE.md) · [Operating Model](docs/OPERATING_MODEL.md) · [Founder Manifesto](docs/FOUNDER_MANIFESTO.md) · [Decision Ledger](docs/DECISION_LEDGER.md) · [Roadmap](docs/ROADMAP.md) · [Experiment Log](docs/EXPERIMENT_LOG.md) · [Case Studies](docs/CASE_STUDIES/)
 
 ## Screenshot
 
