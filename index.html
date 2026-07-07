@@ -899,7 +899,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
 <script>
 "use strict";
 /* ============================================================
-   BETS→GO — core application (v0.3.0)
+   BETS→GO — core application (v0.3.1)
 
    Architecture
    ------------
@@ -914,7 +914,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
    See docs/ARCHITECTURE.md and docs/OPERATING_MODEL.md.
    ============================================================ */
 
-const VERSION = "0.3.0";
+const VERSION = "0.3.1";
 
 /* ================= UTILITIES (core) ================= */
 const $ = id => document.getElementById(id);
@@ -1099,6 +1099,13 @@ let ADAPTER = ADAPTERS.football;
 const LSK = "betstogo_state_v1", LSJ = "betstogo_journal_v1";
 const LEGACY = {betstogo_state_v1:"ftos_state_v1", betstogo_journal_v1:"ftos_journal_v1"}; // pre-v0.1.0 FTOS-era keys
 const readKey = k => store.get(k) ?? store.get(LEGACY[k]);
+
+/* escape hatch: /?reset wipes the open position; /?reset=all also wipes the journal */
+if(/[?&]reset/.test(location.search)){
+  store.del(LSK); store.del(LEGACY[LSK]);
+  if(/reset=all/.test(location.search)){ store.del(LSJ); store.del(LEGACY[LSJ]); }
+  try { history.replaceState(null, "", location.pathname); } catch(e){}
+}
 
 let S = null;
 let journal = [];
