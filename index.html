@@ -1,0 +1,1503 @@
+<title>BETS→GO — Football Trading Terminal</title>
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg:#EEF0F5; --surface:#FFFFFF; --surface-2:#F6F7FA; --inset:#F1F3F8;
+  --border:#D9DEE9; --border-strong:#C3CAD9;
+  --ink:#151A26; --ink-2:#49536B; --ink-3:#7E88A0;
+  --accent:#9A6708; --accent-hi:#B87F14; --accent-bg:rgba(184,127,20,.09);
+  --pos:#0B7A43; --pos-bg:rgba(11,122,67,.09);
+  --neg:#BB3540; --neg-bg:rgba(187,53,64,.08);
+  --warn:#8A6410; --warn-bg:rgba(250,178,25,.14);
+  --crit:#C03038; --hi:#B25325; --med:#8A6410; --info:#0B7A43;
+  --s1:#2a78d6; --s2:#1baf7a; --s3:#eda100;
+  --grid:#E3E6EE; --axis:#B9C0D0;
+  --shadow:0 1px 2px rgba(21,26,38,.06), 0 4px 16px rgba(21,26,38,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#080B12; --surface:#0F1522; --surface-2:#131A2B; --inset:#0B101C;
+    --border:#222B42; --border-strong:#313C5A;
+    --ink:#E7EBF5; --ink-2:#98A3BC; --ink-3:#5F6B87;
+    --accent:#F2A93B; --accent-hi:#FFC061; --accent-bg:rgba(242,169,59,.10);
+    --pos:#3DD68C; --pos-bg:rgba(61,214,140,.10);
+    --neg:#F0616B; --neg-bg:rgba(240,97,107,.10);
+    --warn:#FAB219; --warn-bg:rgba(250,178,25,.12);
+    --crit:#F0616B; --hi:#EC835A; --med:#FAB219; --info:#3DD68C;
+    --s1:#3987e5; --s2:#1baf7a; --s3:#c98500;
+    --grid:#1D2437; --axis:#313C5A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="light"]{
+  --bg:#EEF0F5; --surface:#FFFFFF; --surface-2:#F6F7FA; --inset:#F1F3F8;
+  --border:#D9DEE9; --border-strong:#C3CAD9;
+  --ink:#151A26; --ink-2:#49536B; --ink-3:#7E88A0;
+  --accent:#9A6708; --accent-hi:#B87F14; --accent-bg:rgba(184,127,20,.09);
+  --pos:#0B7A43; --pos-bg:rgba(11,122,67,.09);
+  --neg:#BB3540; --neg-bg:rgba(187,53,64,.08);
+  --warn:#8A6410; --warn-bg:rgba(250,178,25,.14);
+  --crit:#C03038; --hi:#B25325; --med:#8A6410; --info:#0B7A43;
+  --s1:#2a78d6; --s2:#1baf7a; --s3:#eda100;
+  --grid:#E3E6EE; --axis:#B9C0D0;
+  --shadow:0 1px 2px rgba(21,26,38,.06), 0 4px 16px rgba(21,26,38,.05);
+}
+:root[data-theme="dark"]{
+  --bg:#080B12; --surface:#0F1522; --surface-2:#131A2B; --inset:#0B101C;
+  --border:#222B42; --border-strong:#313C5A;
+  --ink:#E7EBF5; --ink-2:#98A3BC; --ink-3:#5F6B87;
+  --accent:#F2A93B; --accent-hi:#FFC061; --accent-bg:rgba(242,169,59,.10);
+  --pos:#3DD68C; --pos-bg:rgba(61,214,140,.10);
+  --neg:#F0616B; --neg-bg:rgba(240,97,107,.10);
+  --warn:#FAB219; --warn-bg:rgba(250,178,25,.12);
+  --crit:#F0616B; --hi:#EC835A; --med:#FAB219; --info:#3DD68C;
+  --s1:#3987e5; --s2:#1baf7a; --s3:#c98500;
+  --grid:#1D2437; --axis:#313C5A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.35);
+}
+
+/* ============ BASE ============ */
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:14px; line-height:1.5; margin:0; min-height:100vh;
+}
+.mono{font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace}
+.num{font-variant-numeric:tabular-nums}
+h1,h2,h3{margin:0; text-wrap:balance}
+button{font:inherit; cursor:pointer}
+input,select{font:inherit}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+@media (prefers-reduced-motion: reduce){ *{animation:none!important; transition:none!important} }
+
+.app{max-width:1240px; margin:0 auto; padding:0 20px 48px}
+
+/* ============ TOP BAR ============ */
+.topbar{
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  padding:14px 0 12px; border-bottom:2px solid var(--border-strong);
+  margin-bottom:18px;
+}
+.brand{display:flex; align-items:baseline; gap:10px}
+.brand .logo{
+  font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
+  font-size:22px; font-weight:700; letter-spacing:.08em; color:var(--ink);
+}
+.brand .logo b{color:var(--accent); padding:0 3px}
+.brand .sub{font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-3)}
+.top-status{
+  margin-left:auto; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:12px;
+}
+.tabs{display:flex; gap:2px; width:100%; border-bottom:1px solid var(--border); margin-bottom:20px}
+.tab{
+  background:none; border:none; border-bottom:2px solid transparent;
+  padding:8px 14px; color:var(--ink-2); font-size:11px; letter-spacing:.16em;
+  text-transform:uppercase; font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--accent); border-bottom-color:var(--accent)}
+
+/* ============ PANELS ============ */
+.panel{
+  background:var(--surface); border:1px solid var(--border); border-radius:6px;
+  box-shadow:var(--shadow); overflow:hidden;
+}
+.panel-h{
+  display:flex; align-items:center; gap:8px; padding:9px 14px;
+  border-bottom:1px solid var(--border); background:var(--surface-2);
+}
+.panel-h h2{
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-2);
+}
+.panel-h .tag{margin-left:auto}
+.panel-b{padding:14px}
+
+.grid{display:grid; gap:14px}
+.g-main{grid-template-columns:1fr; margin-bottom:14px}
+@media(min-width:960px){
+  .g-decide{grid-template-columns:1.6fr 1fr}
+  .g-two{grid-template-columns:1fr 1fr}
+  .g-matrix{grid-template-columns:1fr 1.4fr}
+}
+.g-decide,.g-two,.g-matrix{display:grid; gap:14px; margin-bottom:14px}
+
+/* ============ CHIPS / TAGS ============ */
+.tag{
+  display:inline-flex; align-items:center; gap:6px;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:10.5px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+  padding:3px 9px; border-radius:999px; border:1px solid var(--border-strong);
+  color:var(--ink-2); background:var(--surface);
+  white-space:nowrap;
+}
+.tag.pos{color:var(--pos); border-color:var(--pos); background:var(--pos-bg)}
+.tag.neg{color:var(--neg); border-color:var(--neg); background:var(--neg-bg)}
+.tag.warn{color:var(--warn); border-color:var(--warn); background:var(--warn-bg)}
+.tag.accent{color:var(--accent); border-color:var(--accent); background:var(--accent-bg)}
+.dot{width:7px; height:7px; border-radius:50%; background:currentColor; flex:none}
+
+/* ============ DECISION PANEL ============ */
+.verdict{display:flex; gap:18px; flex-wrap:wrap; align-items:stretch}
+.verdict-main{flex:1 1 260px; display:flex; flex-direction:column; gap:8px}
+.verdict-word{
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:44px; font-weight:700; letter-spacing:.02em; line-height:1.05;
+}
+.verdict-why{color:var(--ink-2); font-size:13px; max-width:56ch}
+.scorebox{
+  flex:0 0 150px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:2px; background:var(--inset); border:1px solid var(--border); border-radius:6px; padding:12px;
+}
+.scorebox .big{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:38px; font-weight:700; line-height:1}
+.scorebox .lbl{font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-3)}
+.kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(118px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:6px; overflow:hidden; margin-top:14px}
+.kpi{background:var(--surface); padding:9px 12px}
+.kpi .l{font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3)}
+.kpi .v{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:16px; font-weight:600; margin-top:2px}
+
+/* ============ FORMS ============ */
+.f-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px 12px}
+.f{display:flex; flex-direction:column; gap:4px}
+.f label{font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3)}
+.f input,.f select{
+  background:var(--inset); border:1px solid var(--border); border-radius:4px;
+  color:var(--ink); padding:7px 9px;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:13px;
+}
+.f input:focus,.f select:focus{border-color:var(--accent); outline:none}
+.btn{
+  border:1px solid var(--border-strong); background:var(--surface-2); color:var(--ink);
+  border-radius:4px; padding:8px 16px; font-size:12px; font-weight:600;
+  letter-spacing:.08em; text-transform:uppercase;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+.btn:hover{border-color:var(--accent); color:var(--accent)}
+.btn.primary{background:var(--accent); border-color:var(--accent); color:#14100A}
+.btn.primary:hover{background:var(--accent-hi); border-color:var(--accent-hi); color:#14100A}
+.btn.ghost{background:none}
+.btn.danger:hover{border-color:var(--neg); color:var(--neg)}
+.btn-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; align-items:center}
+.hint{font-size:12px; color:var(--ink-3)}
+
+/* momentum slider */
+.mom{display:flex; flex-direction:column; gap:4px}
+.mom input[type=range]{width:100%; accent-color:var(--accent)}
+.mom .ends{display:flex; justify-content:space-between; font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3)}
+
+/* ============ TABLES ============ */
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse; width:100%; font-size:13px}
+th{
+  text-align:left; font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);
+  font-weight:600; padding:6px 10px; border-bottom:1px solid var(--border-strong); white-space:nowrap;
+}
+td{padding:8px 10px; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; white-space:nowrap}
+td.mono,th.r,td.r{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+th.r,td.r{text-align:right}
+tr:last-child td{border-bottom:none}
+.pos-t{color:var(--pos); font-weight:600}
+.neg-t{color:var(--neg); font-weight:600}
+.mut{color:var(--ink-3)}
+
+/* ============ PROB BARS ============ */
+.pbars{display:flex; flex-direction:column; gap:10px}
+.pbar .top{display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px}
+.pbar .top .n{color:var(--ink-2)}
+.pbar .top .v{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-weight:600}
+.pbar .rail{height:8px; background:var(--inset); border-radius:4px; overflow:hidden; border:1px solid var(--border)}
+.pbar .fill{height:100%; border-radius:4px 0 0 4px}
+.mini-probs{display:grid; grid-template-columns:1fr 1fr; gap:8px 16px; margin-top:14px; padding-top:12px; border-top:1px solid var(--border)}
+.mini-probs .row{display:flex; justify-content:space-between; font-size:12.5px}
+.mini-probs .row b{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-weight:600}
+
+/* ============ CHART ============ */
+.chart-wrap{position:relative}
+.chart-wrap canvas{display:block; width:100%; height:230px}
+.chart-tip{
+  position:absolute; pointer-events:none; display:none; z-index:5;
+  background:var(--surface); border:1px solid var(--border-strong); border-radius:5px;
+  padding:7px 10px; font-size:12px; box-shadow:var(--shadow); min-width:130px;
+}
+.chart-tip .t{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:10.5px; color:var(--ink-3); letter-spacing:.08em; margin-bottom:3px}
+.chart-tip .r{display:flex; align-items:center; gap:6px; justify-content:space-between}
+.chart-tip .r b{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.chart-tip .sw{width:8px; height:8px; border-radius:2px; flex:none}
+.legend{display:flex; gap:16px; flex-wrap:wrap; padding:2px 2px 8px; font-size:11.5px; color:var(--ink-2)}
+.legend .li{display:flex; align-items:center; gap:6px}
+.legend .sw{width:10px; height:3px; border-radius:2px}
+
+/* ============ MATRIX ============ */
+.matrix{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px}
+.mx{background:var(--inset); border:1px solid var(--border); border-radius:5px; padding:9px 11px}
+.mx .l{font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3)}
+.mx .v{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:14px; font-weight:700; margin-top:3px}
+
+/* ============ ALERTS ============ */
+.alerts{display:flex; flex-direction:column; gap:6px; max-height:300px; overflow-y:auto}
+.alert{
+  display:flex; gap:10px; align-items:baseline; padding:7px 10px;
+  background:var(--inset); border:1px solid var(--border); border-left-width:3px; border-radius:4px;
+  font-size:12.5px;
+}
+.alert .min{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; color:var(--ink-3); flex:none; width:34px; text-align:right}
+.alert .lv{flex:none; font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:9.5px; font-weight:700; letter-spacing:.1em; width:64px}
+.alert.crit{border-left-color:var(--crit)} .alert.crit .lv{color:var(--crit)}
+.alert.high{border-left-color:var(--hi)} .alert.high .lv{color:var(--hi)}
+.alert.med{border-left-color:var(--med)} .alert.med .lv{color:var(--med)}
+.alert.info{border-left-color:var(--info)} .alert.info .lv{color:var(--info)}
+.empty{color:var(--ink-3); font-size:13px; padding:6px 2px}
+
+/* ============ SETUP HERO ============ */
+.setup-hero{padding:26px 0 20px; max-width:70ch}
+.setup-hero h1{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:26px; letter-spacing:.02em; margin-bottom:8px}
+.setup-hero p{color:var(--ink-2); margin:0 0 4px}
+.section-gap{height:14px}
+
+/* ============ JOURNAL ============ */
+.j-stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:6px; overflow:hidden; margin-bottom:14px}
+.j-entry{border:1px solid var(--border); border-radius:6px; margin-bottom:10px; overflow:hidden; background:var(--surface)}
+.j-head{display:flex; gap:12px; align-items:center; padding:10px 14px; cursor:pointer; flex-wrap:wrap; background:var(--surface-2)}
+.j-head:hover{background:var(--inset)}
+.j-head .m{font-weight:600}
+.j-head .d{color:var(--ink-3); font-size:12px}
+.j-body{padding:12px 14px; border-top:1px solid var(--border); display:none}
+.j-entry.open .j-body{display:block}
+.checkrow{display:flex; align-items:center; gap:8px; padding:5px 0; font-size:13px}
+.checkrow input{accent-color:var(--accent); width:15px; height:15px}
+.checkrow .pts{margin-left:auto; color:var(--ink-3); font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:11px}
+
+/* ============ MODEL DOC ============ */
+.doc{max-width:72ch}
+.doc h3{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin:22px 0 6px}
+.doc p,.doc li{color:var(--ink-2); font-size:13.5px}
+.doc code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:12.5px; background:var(--inset); border:1px solid var(--border); border-radius:3px; padding:1px 5px}
+.doc ul{padding-left:20px; margin:6px 0}
+
+/* ============ FOOTER ============ */
+.foot{
+  margin-top:28px; padding-top:14px; border-top:1px solid var(--border);
+  font-size:11.5px; color:var(--ink-3); max-width:90ch;
+}
+.hidden{display:none!important}
+</style>
+
+<div class="app">
+  <div class="topbar">
+    <div class="brand">
+      <span class="logo">BETS<b>&rarr;</b>GO</span>
+      <span class="sub">Football Trading Terminal</span>
+    </div>
+    <div class="top-status" id="topStatus"></div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-tab="desk" role="tab">Trade Desk</button>
+    <button class="tab" data-tab="journal" role="tab">Match Journal</button>
+    <button class="tab" data-tab="model" role="tab">Model &amp; Method</button>
+  </div>
+
+  <!-- ==================== TRADE DESK ==================== -->
+  <div id="view-desk">
+
+    <!-- ---------- SETUP ---------- -->
+    <div id="setup">
+      <div class="setup-hero">
+        <h1>Open a position.</h1>
+        <p>BETS→GO is a decision-support workstation for live football trading: it prices your position against an explainable in-play model and tells you the highest-quality action available — including <b>No Action</b>.</p>
+        <p class="hint">It never promises profit. It grades the decision, not the result.</p>
+      </div>
+
+      <div class="panel">
+        <div class="panel-h"><h2>Match Setup</h2></div>
+        <div class="panel-b">
+          <div class="f-grid">
+            <div class="f"><label>Competition</label><input id="s-comp" placeholder="UEFA Nations League"></div>
+            <div class="f"><label>Home Team</label><input id="s-home" placeholder="Spain"></div>
+            <div class="f"><label>Away Team</label><input id="s-away" placeholder="Portugal"></div>
+            <div id="s-params" style="display:contents"></div>
+            <div class="f"><label>Bankroll $ (optional)</label><input id="s-bank" type="number" step="10" placeholder="1000"></div>
+          </div>
+        </div>
+      </div>
+      <div class="section-gap"></div>
+      <div class="panel">
+        <div class="panel-h"><h2>Original Bet · Hard Rock</h2></div>
+        <div class="panel-b">
+          <div class="f-grid">
+            <div class="f"><label>Market</label>
+              <select id="s-market"></select>
+            </div>
+            <div class="f"><label>Line (O/U · spread, e.g. -1.5)</label><input id="s-line" type="number" step="0.5" value="2.5"></div>
+            <div class="f"><label>Hard Rock Odds (American)</label><input id="s-odds" placeholder="+120"></div>
+            <div class="f"><label>Stake $</label><input id="s-stake" type="number" step="5" placeholder="100"></div>
+          </div>
+          <div id="s-preview" class="hint" style="margin-top:10px"></div>
+          <div class="btn-row">
+            <button class="btn primary" id="btn-open">Open Position</button>
+            <button class="btn" id="btn-demo1">Demo · Live winning spot</button>
+            <button class="btn" id="btn-demo2">Demo · Recovery scenario</button>
+            <span class="hint">Demos preload the Spain–Portugal walkthrough.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- WORKSTATION ---------- -->
+    <div id="workstation" class="hidden">
+
+      <div class="panel" style="margin-bottom:14px">
+        <div class="panel-h"><h2>Risk &amp; Exposure — live dollars</h2></div>
+        <div class="panel-b"><div class="matrix" id="riskStrip"></div></div>
+      </div>
+
+      <div class="g-decide">
+        <div class="panel">
+          <div class="panel-h"><h2>Primary Decision</h2><span class="tag" id="riskTag"></span></div>
+          <div class="panel-b">
+            <div class="verdict">
+              <div class="verdict-main">
+                <div class="verdict-word" id="vWord"></div>
+                <div class="verdict-why" id="vWhy"></div>
+                <div class="hint" id="vImprove"></div>
+              </div>
+              <div class="scorebox">
+                <div class="big num" id="vScore"></div>
+                <div class="lbl">Trade Score</div>
+                <div style="height:8px"></div>
+                <div class="big num" id="vConf" style="font-size:22px"></div>
+                <div class="lbl">Confidence / 10</div>
+              </div>
+            </div>
+            <div class="kpis" id="kpis"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-h"><h2>Live Console</h2><span class="tag accent" id="posTag"></span></div>
+          <div class="panel-b">
+            <div class="f-grid" style="grid-template-columns:repeat(auto-fit,minmax(96px,1fr))">
+              <div class="f"><label>Minute</label><input id="l-min" type="number" min="0" max="120" value="0"></div>
+              <div class="f"><label id="lbl-sh">Home Goals</label><input id="l-sh" type="number" min="0" value="0"></div>
+              <div class="f"><label id="lbl-sa">Away Goals</label><input id="l-sa" type="number" min="0" value="0"></div>
+              <div id="l-extra" style="display:contents"></div>
+            </div>
+            <div style="height:10px"></div>
+            <div class="f-grid" style="grid-template-columns:1fr 1fr">
+              <div class="f"><label>Live Odds — your bet (Amer.)</label><input id="l-odds" placeholder="-250"></div>
+              <div class="f"><label>Cash-Out Offer $</label><input id="l-cash" type="number" step="1" placeholder="0"></div>
+            </div>
+            <div style="height:12px"></div>
+            <div class="mom">
+              <label class="f" style="display:block"><span style="font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)">Momentum (last ~10 min)</span></label>
+              <input type="range" id="l-mom" min="-3" max="3" step="1" value="0">
+              <div class="ends"><span id="mom-away">Away dominating</span><span>Neutral</span><span id="mom-home">Home dominating</span></div>
+            </div>
+            <div class="btn-row">
+              <button class="btn primary" id="btn-commit">Commit Update ⏎</button>
+              <button class="btn ghost danger" id="btn-close">Close &amp; Review</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:14px">
+        <div class="panel-h"><h2>Action Board — every option, priced in dollars</h2></div>
+        <div class="panel-b">
+          <div class="tbl-wrap"><table id="actionBoard"></table></div>
+          <p class="hint" style="margin:10px 0 0">Expected = probability-weighted net P/L from here. Worst / Best = net P/L in the worst and best final result. Hedge rows assume the hedge wins whenever your bet loses.</p>
+        </div>
+      </div>
+
+      <div class="g-two">
+        <div class="panel">
+          <div class="panel-h"><h2>Probability Engine</h2><span class="tag" id="xgTag"></span></div>
+          <div class="panel-b">
+            <div class="pbars" id="pbars"></div>
+            <div class="mini-probs" id="miniProbs"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-h"><h2>Win Probability Timeline</h2></div>
+          <div class="panel-b">
+            <div class="legend" id="chartLegend"></div>
+            <div class="chart-wrap">
+              <canvas id="chart"></canvas>
+              <div class="chart-tip" id="chartTip"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="g-two">
+        <div class="panel">
+          <div class="panel-h"><h2>Cash-Out Engine</h2><span class="tag" id="coTag"></span></div>
+          <div class="panel-b" id="cashoutBody"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-h"><h2>Hedge Engine</h2><span class="tag" id="hedgeTag"></span></div>
+          <div class="panel-b" id="hedgeBody"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:14px">
+        <div class="panel-h"><h2>Recovery Opportunity Engine</h2><span class="tag" id="roeTag"></span></div>
+        <div class="panel-b">
+          <p class="hint" style="margin:0 0 10px">Independent trades priced on their own merit — never because the ticket is losing. Enter the live markets Hard Rock is showing you.</p>
+          <div class="f-grid" style="grid-template-columns:minmax(170px,1.4fr) 90px 110px 110px auto; align-items:end">
+            <div class="f"><label>Market</label>
+              <select id="r-type"></select>
+            </div>
+            <div class="f"><label>Line</label><input id="r-line" type="number" step="0.5" value="3.5"></div>
+            <div class="f"><label>HR Odds</label><input id="r-odds" placeholder="+110"></div>
+            <div class="f"><label>Manual %</label><input id="r-prob" type="number" min="1" max="99" placeholder="auto"></div>
+            <div class="f"><button class="btn" id="btn-addmkt">Add</button></div>
+          </div>
+          <div style="height:12px"></div>
+          <div class="tbl-wrap"><table id="roeTable"></table></div>
+          <div id="roeVerdict" style="margin-top:10px"></div>
+        </div>
+      </div>
+
+      <div class="g-matrix">
+        <div class="panel">
+          <div class="panel-h"><h2>Live Action Matrix</h2></div>
+          <div class="panel-b"><div class="matrix" id="matrix"></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-h"><h2>Alert Feed</h2><button class="btn ghost" id="btn-clearalerts" style="margin-left:auto;padding:2px 10px;font-size:10px">Clear</button></div>
+          <div class="panel-b"><div class="alerts" id="alertFeed"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- POST-MATCH REVIEW ---------- -->
+    <div id="review" class="hidden">
+      <div class="setup-hero" style="padding-bottom:10px">
+        <h1>Post-match review.</h1>
+        <p>Grade the process, not just the result. This entry goes to your Match Journal.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-h"><h2>Result</h2></div>
+        <div class="panel-b">
+          <div class="f-grid">
+            <div class="f"><label>Original bet settled</label>
+              <select id="rv-outcome">
+                <option value="won">Won</option>
+                <option value="lost">Lost</option>
+                <option value="cashout">Cashed out</option>
+                <option value="void">Void / push</option>
+              </select>
+            </div>
+            <div class="f"><label>Cash-out received $ (if any)</label><input id="rv-cash" type="number" step="1" value="0"></div>
+            <div class="f"><label>Hedge / recovery net $ (±)</label><input id="rv-side" type="number" step="1" value="0"></div>
+            <div class="f"><label>Final score</label><input id="rv-score" placeholder="1-0"></div>
+          </div>
+          <div class="hint" style="margin-top:8px" id="rv-pl"></div>
+        </div>
+      </div>
+      <div class="section-gap"></div>
+      <div class="panel">
+        <div class="panel-h"><h2>Decision Quality</h2><span class="tag accent" id="rv-dqs-tag"></span></div>
+        <div class="panel-b">
+          <div id="rv-checks"></div>
+          <div class="f" style="margin-top:12px"><label>Lessons learned</label><input id="rv-lessons" placeholder="What would you repeat? What would you change?"></div>
+          <div class="btn-row">
+            <button class="btn primary" id="btn-save-journal">Save to Journal</button>
+            <button class="btn ghost" id="btn-back-desk">Back to desk</button>
+            <button class="btn ghost danger" id="btn-discard">Discard without saving</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== JOURNAL ==================== -->
+  <div id="view-journal" class="hidden">
+    <div class="setup-hero" style="padding-bottom:12px">
+      <h1>Match Journal.</h1>
+      <p>Every closed position, graded on process. Decision Quality Score is the long-term optimization metric — not P/L.</p>
+    </div>
+    <div class="j-stats" id="jStats"></div>
+    <div id="jList"></div>
+    <div class="btn-row">
+      <button class="btn ghost" id="btn-export">Export journal (JSON)</button>
+    </div>
+  </div>
+
+  <!-- ==================== MODEL ==================== -->
+  <div id="view-model" class="hidden">
+    <div class="setup-hero" style="padding-bottom:0">
+      <h1>Model &amp; method.</h1>
+      <p>Every number BETS→GO shows is computed from these rules — nothing is a black box. Under the hood the core engines are market-agnostic and produce facts only; a single Decision Orchestrator turns facts into advice. This page documents the Football market adapter, the first supported market.</p>
+    </div>
+    <div class="doc">
+      <h3>1 · In-play goal model</h3>
+      <p>Remaining goals for each side follow a Poisson process. Base rate is your pre-match xG scaled by time remaining, with a late-game uplift (second halves produce ~55% of goals):</p>
+      <p><code>λ = xG × (90 − min)/90 × (1 + 0.20 × min/90)</code></p>
+      <ul>
+        <li><b>Red cards:</b> the short-handed side's rate ×0.72 per card; opponent ×1.18.</li>
+        <li><b>Momentum:</b> each slider step shifts rates ±9% between the sides.</li>
+        <li><b>Game state:</b> after 55', a trailing side pushes (+6% per goal down, max 2); the leader manages (−5%).</li>
+      </ul>
+      <p>The joint distribution of additional goals (0–10 each side) prices every derivative market: 1X2, totals, team totals, handicaps, BTTS, next goal. "Next goal" assumes the next scorer splits by rate share: <code>P = λ_team/(λ_h+λ_a) × P(≥1 more goal)</code>.</p>
+      <h3>2 · Edge &amp; EV</h3>
+      <p>American odds convert to implied probability (<code>+120 → 45.5%</code>, <code>−150 → 60%</code>). <b>Edge</b> = model probability − implied probability. <b>EV per $1</b> = <code>p×(dec−1) − (1−p)</code>. Implied probabilities include the book's margin, so a small positive edge may just be vig — BETS→GO flags edges under 2 points as noise.</p>
+      <h3>3 · Trade Score &amp; confidence</h3>
+      <p><code>Trade Score = 50 + edge(pts) × 3.2</code>, clamped 0–100. 50 = fairly priced. Confidence blends edge size, match progress (later = more certain), and input completeness.</p>
+      <h3>4 · Cash-Out Engine</h3>
+      <p><b>Expected Hold Value</b> = P(bet wins) × total payout. The offer is judged by <code>ratio = offer / EHV</code>: ≥1.05 full cash out · 0.97–1.05 partial · 0.88–0.97 wait · &lt;0.88 hold. Books price cash-outs below fair value on purpose; taking a sub-0.9 ratio repeatedly is a slow leak.</p>
+      <h3>5 · Hedge Engine</h3>
+      <p>Active only while the original bet retains realistic winning probability (25–80%). Equal-profit stake: <code>hedge = payout / dec_hedge</code>. BETS→GO shows net in every scenario plus the worst case; it recommends a hedge only when it locks value, not to soothe nerves.</p>
+      <h3>6 · Recovery Opportunity Engine</h3>
+      <p>Activates only when the original position is effectively dead (win probability &lt; 25%). Every live market is priced independently: model probability vs. implied. Positive-EV markets are ranked; suggested stake is quarter-Kelly, capped at 50% of the original stake. If nothing clears the bar the verdict is <b>NO RECOVERY TRADE</b> — being down is never a reason to bet.</p>
+      <h3>7 · Action Board</h3>
+      <p>Every available option — hold, full/partial cash-out, hedge, best recovery trade — is priced as net P/L in dollars: <b>Expected</b> (probability-weighted), <b>Worst case</b>, <b>Best case</b>. Ranks: 🥇 highest expected value · 🛡 highest worst-case (capital protection) · ⚖ best risk-adjusted (<code>expected − 0.4 × (expected − worst)</code>). "Hold / No action" is always on the board — preserving capital is a position.</p>
+      <h3>8 · Decision Quality Score</h3>
+      <p>0–100, scored at close: positive-edge entry (20) · stake ≤ 5% of bankroll (15) · followed the cash-out engine (20) · no negative-EV recovery placed (20) · no chasing / emotional adds (15) · review completed (10). DQS is the number to maximize over a season.</p>
+      <h3>Honest limits</h3>
+      <p>This MVP prices from your manual inputs and pre-match xG estimates — it has no injury feeds, lineups, sharp-money data, or live stats. Treat outputs as a disciplined second opinion, not ground truth.</p>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span class="mono ver" style="float:right;color:var(--ink-3)"></span>
+    <b>Advisory only.</b> BETS→GO analyzes data, quantifies trade-offs, and explains its reasoning; it does not guarantee outcomes and the final wagering decision is always yours. Never bet money you can't afford to lose. If gambling stops being fun, call or text 1-800-GAMBLER (US). 21+.
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ============================================================
+   BETS→GO — core application (v0.1.0)
+
+   Architecture
+   ------------
+   • CORE ENGINES are market-agnostic: Position, Probability,
+     Cash-Out, Hedge, Recovery, Alert, Journal. They operate on
+     positions, odds, probabilities, market references, a clock,
+     and events — never on any sport concept.
+   • MARKET ADAPTERS plug sport/market-specific logic into the
+     core: the in-play model, market catalog with pricing
+     functions, event detection, clock, and inputs. Football is
+     the first adapter; future markets are new adapters, not
+     core rewrites.
+   • RULE: every engine produces FACTS. Only the DECISION
+     ORCHESTRATOR produces ADVICE (recommendations + reasoning).
+
+   See docs/ARCHITECTURE.md in the repository.
+   ============================================================ */
+
+const VERSION = "0.1.0";
+
+/* ================= UTILITIES (core) ================= */
+const $ = id => document.getElementById(id);
+const fmt$ = v => (v<0?"−$":"$") + Math.abs(v).toFixed(2).replace(/\.00$/,"");
+const sgn$ = v => (v>=0?"+":"") + fmt$(v);
+const pct = p => (p*100).toFixed(1) + "%";
+const pctS = p => (p>=0?"+":"−") + Math.abs(p*100).toFixed(1) + " pts";
+const esc = s => String(s??"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* Sandboxed iframes (hosted artifacts) throw on any localStorage access —
+   degrade to in-memory so every engine still works; persistence is a bonus. */
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch(e){} },
+  del(k){ try { localStorage.removeItem(k); } catch(e){} },
+};
+
+/* ================= ODDS MATH (core facts) ================= */
+function parseAmerican(str){
+  if(str==null) return null;
+  const v = parseInt(String(str).replace(/[^\d+-]/g,""),10);
+  if(isNaN(v) || Math.abs(v) < 100) return null;
+  return v;
+}
+const amer2dec  = a => a>0 ? 1 + a/100 : 1 + 100/(-a);
+const amer2prob = a => a>0 ? 100/(a+100) : (-a)/((-a)+100);
+const fmtAmer   = a => (a>0?"+":"") + a;
+const evPerDollar = (p, dec) => p*(dec-1) - (1-p);
+const kellyFrac = (p, dec) => Math.max(0, (p*dec-1)/(dec-1));
+function pois(l,k){ let p = Math.exp(-l); for(let i=1;i<=k;i++) p *= l/i; return p; }
+
+/* ============================================================
+   MARKET ADAPTER CONTRACT
+   An adapter supplies everything market/sport-specific:
+     id, name                     — identity
+     clock                        — {max, axisMax, ticks[], fmt(min)}
+     scoreLabels(st)              — [homeScoreLabel, awayScoreLabel]
+     setupParams[]                — pre-match model inputs {key,label,def,step}
+     liveInputs[]                 — extra live console fields {key,label,def,min,max}
+     momentum                     — {min,max,ends(st)->[awayLabel,homeLabel]}
+     checkpoints[]                — pulse-check minutes
+     checkpointLabel(min)         — alert text for a checkpoint
+     model(st)                    — in-play model snapshot (opaque to the core)
+     snapshotProbs(M)             — small serializable probe for the timeline chart
+     chartDefs(st)                — [[label, snapshotKey, cssVar], ...]
+     probBars(M, st)              — primary outcome bars [[label, prob, cssColor]]
+     miniStats(M, st)             — secondary probability rows [[label, prob]]
+     expectancyTag(M)             — header tag for the probability panel
+     markets{}                    — catalog: id -> {option, forBet, forRecovery,
+                                    needsLine, prob(M,st,line,manual), label(st,line)}
+     betOrder[], recoveryOrder[]  — market ids for the two dropdowns
+     detectEvents(prev, live, st) — {alerts:[{level,msg}], ev} from a state diff
+     demos[]                      — scripted walkthroughs {setup, steps, markets}
+   ============================================================ */
+
+const FootballAdapter = (() => {
+  function rates(st){
+    const min = Math.min(st.live.min, 90);
+    const tf = Math.max(0, (90-min)/90) * (1 + 0.20*min/90);
+    let lh = st.params.xgh * tf, la = st.params.xga * tf;
+    lh *= Math.pow(0.72, st.live.rh) * Math.pow(1.18, st.live.ra);
+    la *= Math.pow(0.72, st.live.ra) * Math.pow(1.18, st.live.rh);
+    const m = st.live.mom;
+    lh *= Math.max(0.3, 1 + 0.09*m);
+    la *= Math.max(0.3, 1 - 0.09*m);
+    if(min >= 55){
+      const diff = st.live.sh - st.live.sa;
+      if(diff < 0){ lh *= 1 + 0.06*Math.min(-diff,2); la *= 0.95; }
+      if(diff > 0){ la *= 1 + 0.06*Math.min(diff,2);  lh *= 0.95; }
+    }
+    return {lh: Math.max(lh, 1e-6), la: Math.max(la, 1e-6)};
+  }
+
+  function model(st){
+    const {lh, la} = rates(st);
+    const N = 10, sh = st.live.sh, sa = st.live.sa;
+    const ph=[], pa=[];
+    for(let k=0;k<=N;k++){ ph.push(pois(lh,k)); pa.push(pois(la,k)); }
+    let pH=0, pD=0, pA=0, bttsYes=0;
+    const mat = [];
+    for(let h=0;h<=N;h++){
+      for(let a=0;a<=N;a++){
+        const p = ph[h]*pa[a];
+        const fh = sh+h, fa = sa+a;
+        if(fh>fa) pH+=p; else if(fh===fa) pD+=p; else pA+=p;
+        if(fh>=1 && fa>=1) bttsYes+=p;
+        mat.push({p, fh, fa});
+      }
+    }
+    const overFull = line => { let s=0; for(const c of mat) if(c.fh+c.fa > line) s+=c.p; return s; };
+    const teamOver = (side,line) => { let s=0; for(const c of mat) if((side==="h"?c.fh:c.fa) > line) s+=c.p; return s; };
+    const handicap = (side,line) => {
+      let s=0;
+      for(const c of mat){ const d = side==="h" ? (c.fh-c.fa) : (c.fa-c.fh); if(d + line > 0) s+=c.p; }
+      return s;
+    };
+    const pAnyMore = 1 - ph[0]*pa[0];
+    const shareH = lh/(lh+la);
+    return {
+      lh, la, pH, pD, pA, bttsYes, bttsNo: 1-bttsYes,
+      xgRemain: lh+la, totalNow: sh+sa,
+      overFull, teamOver, handicap, pAnyMore,
+      nextHome: shareH * pAnyMore,
+      nextAway: (1-shareH) * pAnyMore,
+    };
+  }
+
+  const line$ = L => (L>0?"+":"")+L;
+  const markets = {
+    "home-ml":      {option:"Home Moneyline",              forBet:true,  forRecovery:true,  needsLine:false, prob:(M)=>M.pH,                   label:st=>st.home+" ML"},
+    "draw":         {option:"Draw",                        forBet:true,  forRecovery:true,  needsLine:false, prob:(M)=>M.pD,                   label:()=>"Draw"},
+    "away-ml":      {option:"Away Moneyline",              forBet:true,  forRecovery:true,  needsLine:false, prob:(M)=>M.pA,                   label:st=>st.away+" ML"},
+    "over":         {option:"Over (total goals)",          forBet:true,  forRecovery:true,  needsLine:true,  prob:(M,st,L)=>M.overFull(L),     label:(st,L)=>"Over "+L},
+    "under":        {option:"Under (total goals)",         forBet:true,  forRecovery:true,  needsLine:true,  prob:(M,st,L)=>1-M.overFull(L),   label:(st,L)=>"Under "+L},
+    "home-hc":      {option:"Home spread / handicap",      forBet:true,  forRecovery:true,  needsLine:true,  prob:(M,st,L)=>M.handicap("h",L), label:(st,L)=>st.home+" "+line$(L)},
+    "away-hc":      {option:"Away spread / handicap",      forBet:true,  forRecovery:true,  needsLine:true,  prob:(M,st,L)=>M.handicap("a",L), label:(st,L)=>st.away+" "+line$(L)},
+    "btts-yes":     {option:"BTTS — Yes",                  forBet:true,  forRecovery:true,  needsLine:false, prob:(M)=>M.bttsYes,              label:()=>"BTTS Yes"},
+    "btts-no":      {option:"BTTS — No",                   forBet:true,  forRecovery:false, needsLine:false, prob:(M)=>M.bttsNo,               label:()=>"BTTS No"},
+    "home-next":    {option:"Home scores next",            forBet:false, forRecovery:true,  needsLine:false, prob:(M)=>M.nextHome,             label:st=>st.home+" scores next"},
+    "away-next":    {option:"Away scores next",            forBet:false, forRecovery:true,  needsLine:false, prob:(M)=>M.nextAway,             label:st=>st.away+" scores next"},
+    "home-tt-over": {option:"Home team total over (line)", forBet:false, forRecovery:true,  needsLine:true,  prob:(M,st,L)=>M.teamOver("h",L), label:(st,L)=>st.home+" total over "+L},
+    "away-tt-over": {option:"Away team total over (line)", forBet:false, forRecovery:true,  needsLine:true,  prob:(M,st,L)=>M.teamOver("a",L), label:(st,L)=>st.away+" total over "+L},
+    "custom":       {option:"Custom (manual %)",           forBet:false, forRecovery:true,  needsLine:false, prob:(M,st,L,man)=>(man||50)/100, label:()=>"Custom market"},
+  };
+
+  return {
+    id: "football",
+    name: "Football",
+    clock: {max:90, axisMax:95, ticks:[0,15,30,45,60,75,90], fmt: m => m+"'"},
+    scoreLabels: st => [st.home+" goals", st.away+" goals"],
+    setupParams: [
+      {key:"xgh", label:"Pre-match xG · Home", def:1.45, step:0.05},
+      {key:"xga", label:"Pre-match xG · Away", def:1.15, step:0.05},
+    ],
+    liveInputs: [
+      {key:"rh", label:"Reds · H", def:0, min:0, max:3},
+      {key:"ra", label:"Reds · A", def:0, min:0, max:3},
+    ],
+    momentum: {min:-3, max:3, ends: st => [st.away+" dominating", st.home+" dominating"]},
+    checkpoints: [45,70,80,85,88],
+    checkpointLabel: m => (m===45 ? "HALFTIME" : m+"' pulse check") + " — review cash-out and exposure.",
+    model,
+    snapshotProbs: M => ({pH:M.pH, pD:M.pD, pA:M.pA}),
+    chartDefs: st => [[st.home,"pH","--s1"],["Draw","pD","--s3"],[st.away,"pA","--s2"]],
+    probBars: (M,st) => [["1 · "+st.home, M.pH, "var(--s1)"], ["X · Draw", M.pD, "var(--s3)"], ["2 · "+st.away, M.pA, "var(--s2)"]],
+    miniStats: (M,st) => {
+      const totalLine = Math.floor(M.totalNow + M.xgRemain) + 0.5;
+      return [
+        ["Over "+totalLine, M.overFull(totalLine)], ["Under "+totalLine, 1-M.overFull(totalLine)],
+        ["BTTS Yes", M.bttsYes], ["≥1 more goal", M.pAnyMore],
+        ["Next: "+st.home, M.nextHome], ["Next: "+st.away, M.nextAway],
+      ];
+    },
+    expectancyTag: M => "xG remaining "+M.xgRemain.toFixed(2),
+    markets,
+    betOrder:      ["home-ml","draw","away-ml","over","under","home-hc","away-hc","btts-yes","btts-no"],
+    recoveryOrder: ["away-next","home-next","over","under","home-tt-over","away-tt-over","home-hc","away-hc","home-ml","draw","away-ml","btts-yes","custom"],
+    detectEvents: (prev, L, st) => {
+      const alerts = []; let ev = null;
+      if(L.sh > prev.sh){ alerts.push({level:"crit", msg:"GOAL — "+st.home+" ("+L.sh+"–"+L.sa+"). Full recalculation done."}); ev = "GOAL "+st.home; }
+      if(L.sa > prev.sa){ alerts.push({level:"crit", msg:"GOAL — "+st.away+" ("+L.sh+"–"+L.sa+"). Full recalculation done."}); ev = ev || "GOAL "+st.away; }
+      if(L.rh > prev.rh){ alerts.push({level:"crit", msg:"RED CARD — "+st.home+" down to "+(11-L.rh)+" men."}); ev = ev || "RED CARD"; }
+      if(L.ra > prev.ra){ alerts.push({level:"crit", msg:"RED CARD — "+st.away+" down to "+(11-L.ra)+" men."}); ev = ev || "RED CARD"; }
+      return {alerts, ev};
+    },
+    demos: [
+      {
+        setup: {comp:"UEFA Nations League — Final", home:"Spain", away:"Portugal",
+                params:{xgh:1.45, xga:1.15}, bank:1000,
+                bet:{marketId:"home-ml", line:2.5, odds:120, stake:100}},
+        steps: [
+          {min:15, sh:0, sa:0, mom:1, odds:130,  cash:88},
+          {min:31, sh:1, sa:0, mom:2, odds:-160, cash:128},
+          {min:45, sh:1, sa:0, mom:1, odds:-175, cash:132},
+          {min:60, sh:1, sa:0, mom:0, odds:-210, cash:141},
+          {min:68, sh:1, sa:0, mom:1, odds:-220, cash:148},
+        ],
+        markets: [],
+      },
+      {
+        setup: {comp:"UEFA Nations League — Final", home:"Spain", away:"Portugal",
+                params:{xgh:1.45, xga:1.15}, bank:1000,
+                bet:{marketId:"home-ml", line:2.5, odds:120, stake:100}},
+        steps: [
+          {min:22, sh:0, sa:1, mom:-2, odds:210,  cash:52},
+          {min:47, sh:0, sa:2, mom:-2, odds:800,  cash:14},
+          {min:64, sh:0, sa:3, mom:-3, odds:5000, cash:2},
+          {min:80, sh:0, sa:3, mom:-3, odds:null, cash:0},
+        ],
+        markets: [
+          {marketId:"away-next", line:0.5, odds:125, manual:null},
+          {marketId:"over",      line:3.5, odds:260, manual:null},
+          {marketId:"btts-yes",  line:0.5, odds:550, manual:null},
+        ],
+      },
+    ],
+  };
+})();
+
+/* Adapter registry — future markets plug in here; the core never changes. */
+const ADAPTERS = { football: FootballAdapter };
+let ADAPTER = ADAPTERS.football;
+
+/* ================= STATE / PERSISTENCE (core) ================= */
+const LSK = "betstogo_state_v1", LSJ = "betstogo_journal_v1";
+const LEGACY = {betstogo_state_v1:"ftos_state_v1", betstogo_journal_v1:"ftos_journal_v1"}; // pre-v0.1.0 FTOS-era keys
+const readKey = k => store.get(k) ?? store.get(LEGACY[k]);
+
+let S = null;           // active position state
+let journal = [];
+try { S = JSON.parse(readKey(LSK)) || null; } catch(e){ S = null; }
+try { journal = JSON.parse(readKey(LSJ)) || []; } catch(e){ journal = []; }
+
+/* migrate pre-adapter state shapes (top-level xg params, bet.type, sport field) */
+if(S && !S.params && "xgh" in S){ S.params = {xgh:S.xgh, xga:S.xga}; delete S.xgh; delete S.xga; }
+if(S && S.bet && S.bet.type && !S.bet.marketId){ S.bet.marketId = S.bet.type; delete S.bet.type; }
+if(S && Array.isArray(S.markets)) S.markets.forEach(m => { if(m.type && !m.marketId){ m.marketId = m.type; delete m.type; } });
+if(S && S.history) S.history.forEach(h => { if(!h.probs && "pH" in h) h.probs = {pH:h.pH, pD:h.pD, pA:h.pA}; });
+if(S && !S.market) S.market = S.sport || "football";
+if(S && ADAPTERS[S.market]) ADAPTER = ADAPTERS[S.market];
+
+function persist(){ if(S) store.set(LSK, JSON.stringify(S)); else store.del(LSK); }
+
+/* ================= MARKET PRICING (core facts) ================= */
+const marketDef = id => ADAPTER.markets[id];
+const marketProb = (id, line, manual, M, st) => marketDef(id).prob(M, st, line, manual);
+const marketLabel = (id, line, st) => marketDef(id).label(st, line);
+const betLabel = st => marketLabel(st.bet.marketId, st.bet.line, st);
+
+/* ============================================================
+   CORE ENGINES — facts only. No advice below this line until
+   the Decision Orchestrator.
+   ============================================================ */
+
+/* Position + Probability + Cash-Out + Hedge engines → facts */
+function computeFacts(st){
+  const M = ADAPTER.model(st);                                     // Probability Engine (adapter model)
+  const p = marketProb(st.bet.marketId, st.bet.line, null, M, st); // P(original bet wins)
+  const dec = amer2dec(st.bet.odds);
+  const payout = st.bet.stake * dec;                               // Position Engine facts
+  const liveOdds = st.live.odds;
+  const impLive = liveOdds!=null ? amer2prob(liveOdds) : null;
+  const edge = impLive!=null ? p - impLive : null;
+
+  const ehv = p * payout;                                          // Cash-Out Engine facts
+  const offer = st.live.cash || 0;
+  const ratio = ehv>0 && offer>0 ? offer/ehv : null;
+  const coRating = ratio!=null ? Math.max(0, Math.min(10, (ratio-0.7)/0.4*10)) : null;
+
+  const hedgeActive = p>=0.25 && p<=0.80;                          // Hedge Engine gate (fact)
+
+  return {M, p, dec, payout, impLive, edge, ehv, offer, ratio, coRating, hedgeActive};
+}
+
+/* Recovery Engine → facts (independent EV per live market) */
+function analyzeMarkets(st, A){
+  return (st.markets||[]).map((m,i)=>{
+    const prob = marketProb(m.marketId, m.line, m.manual, A.M, st);
+    const imp = amer2prob(m.odds);
+    const dec = amer2dec(m.odds);
+    const ev = evPerDollar(prob, dec);
+    const bank = st.bank || st.bet.stake*10;
+    const stake = Math.min(kellyFrac(prob, dec)*0.25*bank, st.bet.stake*0.5);
+    const scoreR = ev >= 0.10 ? "HIGH" : ev >= 0.04 ? "MEDIUM" : ev > 0 ? "LOW" : "—";
+    return {i, m, label: marketLabel(m.marketId, m.line, st), prob, imp, dec, ev, stake, scoreR};
+  });
+}
+
+/* ============================================================
+   DECISION ORCHESTRATOR — the only producer of advice.
+   Consumes engine facts, emits recommendations + reasoning.
+   ============================================================ */
+function orchestrate(st, F){
+  const edgePts = F.edge!=null ? F.edge*100 : 0;
+  const score = Math.max(0, Math.min(100, Math.round(50 + edgePts*3.2)));
+  let conf = 5 + Math.min(Math.abs(edgePts)*0.15, 2) + (st.live.min/ADAPTER.clock.max)*2;
+  if(F.impLive==null) conf -= 1.5;
+  conf = Math.max(1, Math.min(10, conf));
+  const risk = F.p>=0.75 ? "LOW" : F.p>=0.55 ? "MEDIUM" : F.p>=0.35 ? "ELEVATED" : "HIGH";
+
+  let coRec = "NO OFFER", coWhy = "Enter the current cash-out offer to price it.";
+  if(F.ratio!=null){
+    if(F.ratio>=1.05){ coRec="FULL CASH OUT"; coWhy="Offer exceeds model hold value — the book is overpaying you."; }
+    else if(F.ratio>=0.97){ coRec="PARTIAL CASH OUT"; coWhy="Offer is at fair value. Taking part reduces variance at no EV cost."; }
+    else if(F.ratio>=0.88){ coRec="WAIT"; coWhy="Offer is slightly under value. Re-check after the next event."; }
+    else { coRec="HOLD"; coWhy="Offer is well below expected hold value — accepting it leaks EV."; }
+  }
+
+  let rec, why;
+  if(F.p >= 0.995){ rec="SETTLE"; why="Position is effectively won."; }
+  else if(coRec==="FULL CASH OUT"){ rec="CASH OUT"; why=coWhy; }
+  else if(coRec==="PARTIAL CASH OUT"){ rec="PARTIAL CASH OUT"; why=coWhy; }
+  else if(F.p < 0.10){ rec="WRITE IT OFF"; why="Win probability is "+pct(F.p)+". Don't chase — check the Recovery Engine for independent value, or take No Action."; }
+  else if(F.edge!=null && F.edge <= -0.06 && F.hedgeActive){ rec="CONSIDER HEDGE"; why="Market prices your outcome "+Math.abs(edgePts).toFixed(0)+" pts above the model — locking value is on the table."; }
+  else if(F.edge!=null && F.edge >= 0.02){ rec="HOLD"; why="Model has your bet at "+pct(F.p)+" vs market "+pct(F.impLive)+" — you're holding "+pctS(F.edge)+" of edge."; }
+  else { rec="HOLD / MONITOR"; why="No actionable mispricing right now. No Action is a position."; }
+
+  return {score, conf, risk, coRec, coWhy, rec, why};
+}
+
+/* Facts + advice, flattened for rendering. */
+function analyze(st){
+  const F = computeFacts(st);
+  const D = orchestrate(st, F);
+  return {...F, ...D};
+}
+
+/* Action board (orchestrator output) — every option priced in dollars, ranked. */
+function actionBoard(st, A, bestRecovery){
+  const s = st.bet.stake, pay = A.payout, p = A.p, offer = A.offer;
+  const acts = [];
+  acts.push({name:"Hold / No action", exp: p*pay - s, worst: -s, best: pay - s});
+  if(offer > 0){
+    acts.push({name:"Full cash out", exp: offer - s, worst: offer - s, best: offer - s});
+    acts.push({name:"Partial cash out (50%)", exp: offer/2 + p*pay/2 - s, worst: offer/2 - s, best: offer/2 + pay/2 - s});
+  }
+  if(st.live.hedgeOdds && A.hedgeActive){
+    const dH = amer2dec(st.live.hedgeOdds), h = pay/dH;
+    const ifO = pay - s - h, ifH = h*(dH-1) - s;
+    acts.push({name:"Equal-profit hedge ("+fmt$(h)+")", exp: p*ifO + (1-p)*ifH, worst: Math.min(ifO,ifH), best: Math.max(ifO,ifH)});
+  }
+  if(bestRecovery){
+    const r = bestRecovery;
+    acts.push({name:"Recovery: "+r.label+" ("+fmt$(r.stake)+")", sideBet:true,
+      exp: r.ev*r.stake, worst: -r.stake, best: r.stake*(r.dec-1)});
+  }
+  const by = f => acts.reduce((b,a)=> f(a) > f(b) ? a : b, acts[0]);
+  const radj = a => a.exp - 0.4*(a.exp - a.worst);
+  by(a=>a.exp).evBest = true;
+  by(a=>a.worst).protBest = true;
+  by(radj).radjBest = true;
+  return acts.sort((a,b)=> b.exp - a.exp);
+}
+
+/* what extra information would sharpen the recommendation */
+function improveHints(st, A){
+  const need = [];
+  if(A.impLive==null) need.push("the book's current live odds on your bet");
+  if(!A.offer) need.push("the current cash-out offer");
+  if(A.hedgeActive && !st.live.hedgeOdds) need.push("odds on the opposite outcome (Hedge Engine)");
+  if(st.live.min >= 20 && st.live.mom === 0) need.push("a momentum read from the last ~10 minutes");
+  return need.length ? "To sharpen this: enter " + need.join(" · ") + "." : "";
+}
+
+/* ================= ALERT ENGINE (core) ================= */
+function pushAlert(level, msg, min){
+  S.alerts.unshift({level, msg, min: min ?? S.live.min, t: Date.now()});
+  S.alerts = S.alerts.slice(0, 60);
+}
+function diffAlerts(prev, prevA, A){
+  const L = S.live;
+  if(prev){
+    ADAPTER.detectEvents(prev, L, S).alerts.forEach(a => pushAlert(a.level, a.msg));
+    for(const mk of ADAPTER.checkpoints) if(prev.min < mk && L.min >= mk)
+      pushAlert(mk===ADAPTER.checkpoints[0] ? "med" : "high", ADAPTER.checkpointLabel(mk));
+  }
+  if(prevA && prevA.p - A.p >= 0.15)
+    pushAlert("high", "Bet win probability dropped "+pctS(A.p-prevA.p)+" → "+pct(A.p)+".");
+  if(prevA && A.p - prevA.p >= 0.15)
+    pushAlert("info", "Bet win probability improved "+pctS(A.p-prevA.p)+" → "+pct(A.p)+".");
+  if(A.ratio!=null && A.ratio>=0.97 && (!prevA || prevA.ratio==null || prevA.ratio<0.97))
+    pushAlert("high", "Cash-out offer reached fair value ("+(A.ratio*100).toFixed(0)+"% of hold EV).");
+  if(A.p < 0.25){
+    const best = analyzeMarkets(S, A).filter(r=>r.ev>0).sort((a,b)=>b.ev-a.ev)[0];
+    if(best) pushAlert("high", "Recovery Engine: +EV market found — "+best.label+" ("+(best.ev*100).toFixed(1)+"% EV).");
+  }
+}
+
+/* ================= RENDER ================= */
+function tabTo(name){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.tab===name));
+  $("view-desk").classList.toggle("hidden", name!=="desk");
+  $("view-journal").classList.toggle("hidden", name!=="journal");
+  $("view-model").classList.toggle("hidden", name!=="model");
+  if(name==="journal") renderJournal();
+}
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>tabTo(t.dataset.tab)));
+
+function renderTop(A){
+  const el = $("topStatus");
+  if(!S){ el.innerHTML = '<span class="tag"><span class="dot"></span>No active position</span>'; return; }
+  const L = S.live;
+  el.innerHTML =
+    '<span class="tag accent">'+esc(S.home)+' '+L.sh+'–'+L.sa+' '+esc(S.away)+'</span>' +
+    '<span class="tag">'+esc(ADAPTER.clock.fmt(L.min))+'</span>' +
+    (A ? '<span class="tag '+(A.rec.includes("HOLD")?"pos":A.rec.includes("CASH")?"warn":"")+'">'+esc(A.rec)+'</span>' : '');
+}
+
+/* fill adapter-driven controls (setup params, market dropdowns, live inputs) */
+function renderAdapterStatics(){
+  $("s-market").innerHTML = ADAPTER.betOrder
+    .map(id=>'<option value="'+id+'">'+esc(ADAPTER.markets[id].option)+'</option>').join("");
+  $("r-type").innerHTML = ADAPTER.recoveryOrder
+    .map(id=>'<option value="'+id+'">'+esc(ADAPTER.markets[id].option)+'</option>').join("");
+  $("s-params").innerHTML = ADAPTER.setupParams.map(p=>
+    '<div class="f"><label>'+esc(p.label)+'</label><input id="s-p-'+p.key+'" type="number" step="'+p.step+'" value="'+p.def+'"></div>').join("");
+  $("l-extra").innerHTML = ADAPTER.liveInputs.map(p=>
+    '<div class="f"><label>'+esc(p.label)+'</label><input id="l-x-'+p.key+'" type="number" min="'+p.min+'" max="'+p.max+'" value="'+p.def+'"></div>').join("");
+  const mom = $("l-mom");
+  mom.min = ADAPTER.momentum.min; mom.max = ADAPTER.momentum.max;
+}
+
+function renderDesk(){
+  const active = !!S && !S.closing;
+  $("setup").classList.toggle("hidden", !!S);
+  $("workstation").classList.toggle("hidden", !active);
+  $("review").classList.toggle("hidden", !(S && S.closing));
+  if(!S){ renderTop(null); return; }
+  if(S.closing){ renderTop(null); renderReview(); return; }
+
+  const A = analyze(S);
+  renderTop(A);
+
+  // decision panel
+  $("vWord").textContent = A.rec;
+  $("vWord").style.color = A.rec.startsWith("HOLD")||A.rec==="SETTLE" ? "var(--pos)"
+    : A.rec.includes("CASH")||A.rec.includes("HEDGE") ? "var(--warn)"
+    : A.rec==="WRITE IT OFF" ? "var(--neg)" : "var(--ink)";
+  $("vWhy").textContent = A.why;
+  $("vImprove").textContent = improveHints(S, A);
+  $("vScore").textContent = A.score;
+  $("vScore").style.color = A.score>=65 ? "var(--pos)" : A.score<=40 ? "var(--neg)" : "var(--ink)";
+  $("vConf").textContent = A.conf.toFixed(1);
+  const riskTag = $("riskTag");
+  riskTag.textContent = "RISK · "+A.risk;
+  riskTag.className = "tag " + (A.risk==="LOW"?"pos":A.risk==="MEDIUM"?"warn":"neg");
+
+  $("posTag").textContent = betLabel(S)+" · "+fmtAmer(S.bet.odds)+" · $"+S.bet.stake;
+  $("kpis").innerHTML = [
+    ["AI Win Prob", pct(A.p), A.p>=0.5?"var(--pos)":"var(--ink)"],
+    ["Market Prob", A.impLive!=null?pct(A.impLive):"—", "var(--ink)"],
+    ["Edge", A.edge!=null?pctS(A.edge):"—", A.edge>0.02?"var(--pos)":A.edge<-0.02?"var(--neg)":"var(--ink-2)"],
+    ["Potential Payout", fmt$(A.payout), "var(--ink)"],
+    ["Hold EV", fmt$(A.ehv), "var(--ink)"],
+    ["Cash-Out Offer", A.offer?fmt$(A.offer):"—", "var(--ink)"],
+  ].map(k=>'<div class="kpi"><div class="l">'+k[0]+'</div><div class="v num" style="color:'+k[2]+'">'+k[1]+'</div></div>').join("");
+
+  // risk & exposure strip — dollars first
+  const sVal = S.bet.stake;
+  const lockable = A.offer>0 ? A.offer - sVal : null;
+  const evNow = A.p*A.payout - sVal;
+  $("riskStrip").innerHTML = [
+    ["Current Exposure", fmt$(sVal), "var(--ink)"],
+    ["Max Loss (if held)", fmt$(-sVal), "var(--neg)"],
+    ["Upside if Won", sgn$(A.payout - sVal), "var(--pos)"],
+    ["Lockable Now (cash-out)", lockable==null ? "—" : sgn$(lockable), lockable>0?"var(--pos)":"var(--ink-3)"],
+    ["Expected Value Now", sgn$(evNow), evNow>=0?"var(--pos)":"var(--neg)"],
+    ["Decision Score", A.score+" / 100", A.score>=65?"var(--pos)":A.score<=40?"var(--neg)":"var(--ink)"],
+  ].map(m=>'<div class="mx"><div class="l">'+m[0]+'</div><div class="v num" style="color:'+m[2]+'">'+m[1]+'</div></div>').join("");
+
+  // console labels (adapter-driven)
+  const [shLbl, saLbl] = ADAPTER.scoreLabels(S);
+  $("lbl-sh").textContent = shLbl;
+  $("lbl-sa").textContent = saLbl;
+  const [awayEnd, homeEnd] = ADAPTER.momentum.ends(S);
+  $("mom-away").textContent = awayEnd;
+  $("mom-home").textContent = homeEnd;
+
+  // probability engine panel
+  const M = A.M;
+  $("pbars").innerHTML = ADAPTER.probBars(M, S).map(b=>
+    '<div class="pbar"><div class="top"><span class="n">'+esc(b[0])+'</span><span class="v num">'+pct(b[1])+'</span></div>'+
+    '<div class="rail"><div class="fill" style="width:'+(b[1]*100)+'%;background:'+b[2]+'"></div></div></div>').join("");
+  $("miniProbs").innerHTML = ADAPTER.miniStats(M, S)
+    .map(r=>'<div class="row"><span>'+esc(r[0])+'</span><b class="num">'+pct(r[1])+'</b></div>').join("");
+  $("xgTag").textContent = ADAPTER.expectancyTag(M);
+
+  // cash-out panel
+  const co = $("cashoutBody");
+  if(A.ratio==null){
+    co.innerHTML = '<div class="empty">Enter a cash-out offer in the Live Console. The engine compares it to Expected Hold Value = P(win) × payout.</div>';
+    $("coTag").textContent = "IDLE"; $("coTag").className = "tag";
+  } else {
+    $("coTag").textContent = A.coRec; $("coTag").className = "tag "+(A.coRec==="HOLD"?"pos":A.coRec==="WAIT"?"":"warn");
+    co.innerHTML =
+      '<div class="tbl-wrap"><table>'+
+      '<tr><td class="mut">Offer</td><td class="r mono">'+fmt$(A.offer)+'</td></tr>'+
+      '<tr><td class="mut">Expected Hold Value</td><td class="r mono">'+fmt$(A.ehv)+'</td></tr>'+
+      '<tr><td class="mut">Offer / EHV</td><td class="r mono '+(A.ratio>=0.97?"pos-t":A.ratio<0.88?"neg-t":"")+'">'+(A.ratio*100).toFixed(0)+'%</td></tr>'+
+      '<tr><td class="mut">Cash-Out Rating</td><td class="r mono">'+A.coRating.toFixed(1)+' / 10</td></tr>'+
+      '</table></div>'+
+      '<p class="hint" style="margin:10px 0 0">'+esc(A.coWhy)+'</p>';
+  }
+
+  // hedge panel
+  const hb = $("hedgeBody");
+  if(!A.hedgeActive){
+    $("hedgeTag").textContent = "NOT ACTIVE"; $("hedgeTag").className="tag";
+    hb.innerHTML = '<div class="empty">'+(A.p>0.8
+      ? "Win probability "+pct(A.p)+" — hedging a heavy favorite burns edge. Revisit if it tightens."
+      : "Win probability "+pct(A.p)+" — the original bet no longer has realistic upside. A hedge here just locks the loss; see the Recovery Engine instead.")+'</div>';
+  } else {
+    $("hedgeTag").textContent = "AVAILABLE"; $("hedgeTag").className="tag warn";
+    const hOdds = S.live.hedgeOdds;
+    let inner = '<div class="f-grid" style="grid-template-columns:1fr auto;align-items:end">'+
+      '<div class="f"><label>Hedge odds — opposite outcome (Amer.)</label><input id="h-odds" value="'+(hOdds?fmtAmer(hOdds):"")+'" placeholder="+160"></div>'+
+      '<div class="f"><button class="btn" id="btn-hedge">Price it</button></div></div>';
+    if(hOdds){
+      const dH = amer2dec(hOdds);
+      const stake = A.payout / dH;
+      const ifOrig = A.payout - S.bet.stake - stake;
+      const ifHedge = stake*dH - stake - S.bet.stake;
+      inner += '<div style="height:10px"></div><div class="tbl-wrap"><table>'+
+        '<tr><td class="mut">Equal-profit hedge stake</td><td class="r mono">'+fmt$(stake)+'</td></tr>'+
+        '<tr><td class="mut">Net if '+esc(betLabel(S))+' wins</td><td class="r mono '+(ifOrig>=0?"pos-t":"neg-t")+'">'+fmt$(ifOrig)+'</td></tr>'+
+        '<tr><td class="mut">Net if hedge wins</td><td class="r mono '+(ifHedge>=0?"pos-t":"neg-t")+'">'+fmt$(ifHedge)+'</td></tr>'+
+        '<tr><td class="mut">Worst case</td><td class="r mono '+(Math.min(ifOrig,ifHedge)>=0?"pos-t":"neg-t")+'">'+fmt$(Math.min(ifOrig,ifHedge))+'</td></tr>'+
+        '</table></div>'+
+        '<p class="hint" style="margin:10px 0 0">'+(Math.min(ifOrig,ifHedge)>0
+          ? "This hedge locks a profit in every scenario — a legitimate value lock."
+          : "This hedge does not lock profit; it trades EV for certainty. Only take it if variance reduction is worth the cost.")+'</p>';
+    }
+    hb.innerHTML = inner;
+    const hbtn = $("btn-hedge");
+    if(hbtn) hbtn.addEventListener("click", ()=>{
+      const v = parseAmerican($("h-odds").value);
+      if(v==null){ alertField($("h-odds")); return; }
+      S.live.hedgeOdds = v; persist(); renderDesk();
+    });
+  }
+
+  // recovery engine panel
+  const rows = analyzeMarkets(S, A);
+  const roeActive = A.p < 0.25;
+  $("roeTag").textContent = roeActive ? "ACTIVE" : "NOT ACTIVE";
+  $("roeTag").className = "tag " + (roeActive ? "accent" : "");
+  const tbl = $("roeTable");
+  if(!rows.length){
+    tbl.innerHTML = "";
+    $("roeVerdict").innerHTML = '<div class="empty">'+(roeActive
+      ? "Original position is effectively dead ("+pct(A.p)+"). Add the live markets on your screen and BETS→GO will price each on its own merit."
+      : "Engine arms automatically when the original bet's win probability falls below 25%. You can still price markets any time.")+'</div>';
+  } else {
+    const best = rows.filter(r=>r.ev>=0.04).sort((a,b)=>b.ev-a.ev)[0];
+    tbl.innerHTML = '<thead><tr><th>Market</th><th class="r">Book Odds</th><th class="r">AI Prob</th><th class="r">Market Prob</th><th class="r">EV / $1</th><th class="r">Score</th><th class="r">Stake*</th><th>Action</th><th></th></tr></thead><tbody>'+
+      rows.map(r=>{
+        const isBest = best && r.i===best.i;
+        const act = isBest ? '<span class="tag pos">Best opportunity</span>'
+          : r.ev>=0.04 ? '<span class="tag warn">Consider</span>'
+          : r.ev>0 ? '<span class="tag">Thin — pass</span>'
+          : '<span class="tag neg">Pass</span>';
+        return '<tr><td>'+esc(r.label)+'</td><td class="r mono">'+fmtAmer(r.m.odds)+'</td>'+
+          '<td class="r mono">'+pct(r.prob)+'</td><td class="r mono">'+pct(r.imp)+'</td>'+
+          '<td class="r mono '+(r.ev>0?"pos-t":"neg-t")+'">'+(r.ev>=0?"+":"−")+Math.abs(r.ev*100).toFixed(1)+'%</td>'+
+          '<td class="r mono">'+r.scoreR+'</td>'+
+          '<td class="r mono">'+(r.ev>=0.04?fmt$(r.stake):"—")+'</td>'+
+          '<td>'+act+'</td>'+
+          '<td class="r"><button class="btn ghost" data-del="'+r.i+'" style="padding:1px 8px;font-size:10px">✕</button></td></tr>';
+      }).join("")+'</tbody>';
+    tbl.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>{
+      S.markets.splice(+b.dataset.del,1); persist(); renderDesk();
+    }));
+    $("roeVerdict").innerHTML = best
+      ? '<p class="hint">*Quarter-Kelly, capped at 50% of original stake. Best opportunity clears the +4% EV bar on its own merit — not because the ticket is losing.</p>'
+      : '<div class="tag neg" style="font-size:12px">NO RECOVERY TRADE — nothing on the board clears the EV bar. Standing down is the correct trade.</div>';
+  }
+
+  // action board — ranked options in dollars
+  const bestR = rows.filter(r=>r.ev>=0.04).sort((a,b)=>b.ev-a.ev)[0];
+  const sgnT = v => '<td class="r mono '+(v>=0?"pos-t":"neg-t")+'">'+sgn$(v)+'</td>';
+  const acts = actionBoard(S, A, roeActive ? bestR : null);
+  $("actionBoard").innerHTML =
+    '<thead><tr><th>Action</th><th class="r">Expected</th><th class="r">Worst Case</th><th class="r">Best Case</th><th>Rank</th></tr></thead><tbody>'+
+    acts.map(a=>{
+      const badges =
+        (a.evBest   ? '<span class="tag pos">🥇 Best EV</span> '        : '')+
+        (a.protBest ? '<span class="tag">🛡 Best protection</span> '    : '')+
+        (a.radjBest ? '<span class="tag warn">⚖ Best risk-adjusted</span>' : '');
+      return '<tr><td>'+esc(a.name)+(a.sideBet?' <span class="mut">(independent side trade)</span>':'')+'</td>'+
+        sgnT(a.exp)+sgnT(a.worst)+sgnT(a.best)+'<td>'+(badges||'<span class="mut">—</span>')+'</td></tr>';
+    }).join("")+'</tbody>';
+
+  // live action matrix
+  $("matrix").innerHTML = [
+    ["Original Bet", A.rec.startsWith("HOLD")?"HOLD":A.rec, A.rec.startsWith("HOLD")?"var(--pos)":"var(--ink)"],
+    ["Cash Out", A.coRec, A.coRec==="HOLD"||A.coRec==="NO OFFER"?"var(--ink)":"var(--warn)"],
+    ["Hedge", A.hedgeActive?"AVAILABLE":"NO", A.hedgeActive?"var(--warn)":"var(--ink-3)"],
+    ["Recovery Trade", roeActive ? (bestR?"OPPORTUNITY":"NONE FOUND") : "NOT ACTIVE", bestR?"var(--pos)":"var(--ink-3)"],
+    ["Risk", A.risk, A.risk==="LOW"?"var(--pos)":A.risk==="MEDIUM"?"var(--warn)":"var(--neg)"],
+    ["Confidence", A.conf.toFixed(1)+" / 10", "var(--ink)"],
+  ].map(m=>'<div class="mx"><div class="l">'+m[0]+'</div><div class="v" style="color:'+m[2]+'">'+esc(m[1])+'</div></div>').join("");
+
+  // alert feed
+  const feed = $("alertFeed");
+  feed.innerHTML = S.alerts.length ? S.alerts.map(a=>
+    '<div class="alert '+a.level+'"><span class="min">'+esc(ADAPTER.clock.fmt(a.min))+'</span><span class="lv">'+
+    ({crit:"CRITICAL",high:"HIGH",med:"MEDIUM",info:"INFO"}[a.level])+'</span><span>'+esc(a.msg)+'</span></div>').join("")
+    : '<div class="empty">No alerts yet. Commit a live update to start the feed.</div>';
+
+  drawChart();
+}
+
+function alertField(el){ el.style.borderColor = "var(--neg)"; setTimeout(()=>el.style.borderColor="",1200); }
+
+/* ================= TIMELINE CHART (core, adapter-parameterized) ================= */
+let chartPts = [];
+function drawChart(){
+  const cv = $("chart"); if(!cv || !S) return;
+  const wrap = cv.parentElement;
+  const W = wrap.clientWidth, H = 230, dpr = window.devicePixelRatio||1;
+  cv.width = W*dpr; cv.height = H*dpr;
+  const ctx = cv.getContext("2d"); ctx.scale(dpr,dpr);
+  const css = getComputedStyle(document.documentElement);
+  const col = v => css.getPropertyValue(v).trim();
+  const hist = S.history;
+  const defs = ADAPTER.chartDefs(S);
+  $("chartLegend").innerHTML = defs.map(d=>
+    '<span class="li"><span class="sw" style="background:'+col(d[2])+'"></span>'+esc(d[0])+'</span>').join("");
+  ctx.clearRect(0,0,W,H);
+  const padL=34, padR=14, padT=10, padB=22;
+  const iw = W-padL-padR, ih = H-padT-padB;
+  const x = min => padL + (min/ADAPTER.clock.axisMax)*iw;
+  const y = p => padT + (1-p)*ih;
+  ctx.strokeStyle = col("--grid"); ctx.lineWidth = 1;
+  ctx.fillStyle = col("--ink-3"); ctx.font = "10px ui-monospace, Menlo, monospace";
+  for(const g of [0,0.25,0.5,0.75,1]){
+    ctx.beginPath(); ctx.moveTo(padL, y(g)); ctx.lineTo(W-padR, y(g)); ctx.stroke();
+    ctx.fillText((g*100)+"%", 4, y(g)+3);
+  }
+  ctx.textAlign = "center";
+  for(const m of ADAPTER.clock.ticks) ctx.fillText(ADAPTER.clock.fmt(m), x(m), H-6);
+  ctx.textAlign = "left";
+  if(hist.length < 1){ chartPts=[]; return; }
+  chartPts = [];
+  for(const [,key,cvar] of defs){
+    ctx.strokeStyle = col(cvar); ctx.lineWidth = 2; ctx.lineJoin="round";
+    ctx.beginPath();
+    hist.forEach((pt,i)=>{ i===0 ? ctx.moveTo(x(pt.min), y(pt.probs[key])) : ctx.lineTo(x(pt.min), y(pt.probs[key])); });
+    ctx.stroke();
+    const last = hist[hist.length-1];
+    ctx.fillStyle = col(cvar);
+    ctx.beginPath(); ctx.arc(x(last.min), y(last.probs[key]), 3.5, 0, 7); ctx.fill();
+    ctx.fillText(Math.round(last.probs[key]*100)+"%", Math.min(x(last.min)+7, W-30), y(last.probs[key])+3);
+  }
+  hist.forEach(pt=>{
+    if(pt.ev){
+      ctx.strokeStyle = col("--axis"); ctx.setLineDash([3,3]);
+      ctx.beginPath(); ctx.moveTo(x(pt.min), padT); ctx.lineTo(x(pt.min), H-padB); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    chartPts.push({px:x(pt.min), pt});
+  });
+}
+(function(){
+  const cv = $("chart"), tip = $("chartTip");
+  if(!cv) return;
+  cv.addEventListener("mousemove", e=>{
+    if(!chartPts.length || !S){ tip.style.display="none"; return; }
+    const r = cv.getBoundingClientRect();
+    const mx = e.clientX - r.left;
+    let best=null, bd=1e9;
+    const seen = new Set();
+    for(const c of chartPts){
+      if(seen.has(c.pt)) continue; seen.add(c.pt);
+      const d = Math.abs(c.px-mx); if(d<bd){bd=d;best=c;}
+    }
+    if(!best || bd>60){ tip.style.display="none"; return; }
+    const css = getComputedStyle(document.documentElement);
+    const col = v => css.getPropertyValue(v).trim();
+    const p = best.pt;
+    tip.innerHTML = '<div class="t">'+esc(ADAPTER.clock.fmt(p.min))+' · '+p.sh+'–'+p.sa+(p.ev?' · '+esc(p.ev):'')+'</div>'+
+      ADAPTER.chartDefs(S).map(d=>
+      '<div class="r"><span style="display:flex;align-items:center;gap:6px"><span class="sw" style="background:'+col(d[2])+'"></span>'+esc(d[0])+'</span><b>'+pct(p.probs[d[1]])+'</b></div>').join("");
+    tip.style.display="block";
+    const tw = tip.offsetWidth;
+    tip.style.left = Math.min(Math.max(best.px - tw/2, 0), cv.clientWidth-tw) + "px";
+    tip.style.top = "8px";
+  });
+  cv.addEventListener("mouseleave", ()=> tip.style.display="none");
+  window.addEventListener("resize", ()=>{ if(S && !S.closing) drawChart(); });
+})();
+
+/* ================= POSITION ENGINE (core) ================= */
+function openPosition(cfg){
+  const live = {min:0, sh:0, sa:0, mom:0, odds: cfg.bet.odds, cash: 0, hedgeOdds: null};
+  ADAPTER.liveInputs.forEach(p => live[p.key] = p.def);
+  S = {
+    market: ADAPTER.id,
+    comp: cfg.comp, home: cfg.home, away: cfg.away,
+    params: cfg.params, bank: cfg.bank||null,
+    bet: cfg.bet, openedAt: new Date().toISOString(),
+    live,
+    markets: [], alerts: [], history: [], closing: false,
+    entryEdge: null,
+  };
+  const A = analyze(S);
+  S.entryEdge = A.edge;
+  S.history.push(snap(A, null));
+  pushAlert("info", "Position opened: "+betLabel(S)+" "+fmtAmer(S.bet.odds)+" for $"+S.bet.stake+". Entry edge "+(A.edge!=null?pctS(A.edge):"n/a")+".", 0);
+  persist(); syncConsole(); renderDesk();
+}
+
+function snap(A, ev){
+  const L = S.live;
+  return {min:L.min, sh:L.sh, sa:L.sa, probs: ADAPTER.snapshotProbs(A.M), pBet:A.p, ev};
+}
+
+function syncConsole(){
+  if(!S) return;
+  const L = S.live;
+  $("l-min").value = L.min; $("l-sh").value = L.sh; $("l-sa").value = L.sa;
+  ADAPTER.liveInputs.forEach(p => { const el = $("l-x-"+p.key); if(el) el.value = L[p.key] ?? p.def; });
+  $("l-mom").value = L.mom;
+  $("l-odds").value = L.odds!=null ? fmtAmer(L.odds) : "";
+  $("l-cash").value = L.cash || "";
+}
+
+function commitUpdate(){
+  if(!S) return;
+  const prev = {...S.live};
+  const prevA = analyze(S);
+  const L = S.live;
+  L.min = Math.max(0, parseInt($("l-min").value)||0);
+  L.sh = Math.max(0, parseInt($("l-sh").value)||0);
+  L.sa = Math.max(0, parseInt($("l-sa").value)||0);
+  ADAPTER.liveInputs.forEach(p => { const el = $("l-x-"+p.key); if(el) L[p.key] = Math.max(p.min, Math.min(p.max, parseInt(el.value)||0)); });
+  L.mom = parseInt($("l-mom").value)||0;
+  const lo = parseAmerican($("l-odds").value);
+  if($("l-odds").value.trim() && lo==null){ alertField($("l-odds")); return; }
+  L.odds = lo;
+  L.cash = parseFloat($("l-cash").value)||0;
+  const A = analyze(S);
+  const ev = ADAPTER.detectEvents(prev, L, S).ev;
+  S.history.push(snap(A, ev));
+  diffAlerts(prev, prevA, A);
+  persist(); renderDesk();
+}
+
+/* recovery add-market */
+function addMarket(){
+  const marketId = $("r-type").value;
+  const odds = parseAmerican($("r-odds").value);
+  if(odds==null){ alertField($("r-odds")); return; }
+  const line = parseFloat($("r-line").value);
+  const manual = parseFloat($("r-prob").value)||null;
+  if(marketId==="custom" && !manual){ alertField($("r-prob")); return; }
+  S.markets.push({marketId, line: isNaN(line)?0.5:line, odds, manual});
+  $("r-odds").value=""; $("r-prob").value="";
+  persist(); renderDesk();
+}
+
+/* ================= JOURNAL ENGINE (core) ================= */
+const DQ_CHECKS = [
+  {k:"edge",  pts:20, auto:true,  label:"Entry had positive model edge (auto)"},
+  {k:"stake", pts:15, auto:false, label:"Stake was ≤ 5% of bankroll / plan"},
+  {k:"co",    pts:20, auto:false, label:"Followed the Cash-Out Engine (took/held per model)"},
+  {k:"roe",   pts:20, auto:false, label:"No negative-EV recovery trade placed"},
+  {k:"tilt",  pts:15, auto:false, label:"No chasing, no emotional stake increases"},
+  {k:"review",pts:10, auto:true,  label:"Post-match review completed (auto)"},
+];
+let dqState = {};
+
+function renderReview(){
+  $("rv-score").value = S.live.sh+"-"+S.live.sa;
+  dqState = {edge: (S.entryEdge??0) > 0, review: true, stake: true, co: true, roe: true, tilt: true, ...dqState};
+  $("rv-checks").innerHTML = DQ_CHECKS.map(c=>
+    '<label class="checkrow"><input type="checkbox" data-dq="'+c.k+'" '+(dqState[c.k]?"checked":"")+(c.auto?" disabled":"")+'> '+
+    esc(c.label)+'<span class="pts">'+c.pts+' pts</span></label>').join("");
+  $("rv-checks").querySelectorAll("[data-dq]").forEach(cb=>cb.addEventListener("change",()=>{
+    dqState[cb.dataset.dq] = cb.checked; updateDQS();
+  }));
+  updateDQS(); updatePL();
+}
+function dqs(){ return DQ_CHECKS.reduce((s,c)=> s + (dqState[c.k]?c.pts:0), 0); }
+function updateDQS(){ $("rv-dqs-tag").textContent = "DQS "+dqs()+" / 100"; }
+function computePL(){
+  const out = $("rv-outcome").value;
+  const cash = parseFloat($("rv-cash").value)||0;
+  const side = parseFloat($("rv-side").value)||0;
+  const st = S.bet.stake, dec = amer2dec(S.bet.odds);
+  let pl = 0;
+  if(out==="won") pl = st*(dec-1);
+  else if(out==="lost") pl = -st;
+  else if(out==="cashout") pl = cash - st;
+  return pl + side;
+}
+function updatePL(){
+  const pl = computePL();
+  $("rv-pl").innerHTML = 'Net P/L this match: <b class="'+(pl>=0?"pos-t":"neg-t")+' mono">'+fmt$(pl)+'</b>';
+}
+
+function saveJournal(){
+  const A = analyze(S);
+  journal.unshift({
+    date: new Date().toISOString().slice(0,10),
+    market: S.market,
+    comp: S.comp, home: S.home, away: S.away,
+    finalScore: $("rv-score").value || (S.live.sh+"-"+S.live.sa),
+    bet: betLabel(S), odds: fmtAmer(S.bet.odds), stake: S.bet.stake,
+    outcome: $("rv-outcome").value,
+    pl: +computePL().toFixed(2),
+    dqs: dqs(),
+    tradeScore: A.score,
+    entryEdge: S.entryEdge,
+    lessons: $("rv-lessons").value || "",
+    updates: S.history.length,
+  });
+  store.set(LSJ, JSON.stringify(journal));
+  S = null; dqState = {}; persist();
+  renderDesk(); tabTo("journal");
+}
+
+function renderJournal(){
+  const st = $("jStats");
+  if(!journal.length){
+    st.innerHTML = "";
+    $("jList").innerHTML = '<div class="empty">No entries yet. Close a position from the Trade Desk to create your first review.</div>';
+    return;
+  }
+  const totPL = journal.reduce((s,j)=>s+j.pl,0);
+  const w = journal.filter(j=>j.pl>0).length, l = journal.filter(j=>j.pl<0).length;
+  const avgD = journal.reduce((s,j)=>s+j.dqs,0)/journal.length;
+  const avgT = journal.reduce((s,j)=>s+(j.tradeScore||0),0)/journal.length;
+  st.innerHTML = [
+    ["Matches", journal.length, "var(--ink)"],
+    ["Record", w+"W – "+l+"L", "var(--ink)"],
+    ["Net P/L", fmt$(totPL), totPL>=0?"var(--pos)":"var(--neg)"],
+    ["Avg DQS", avgD.toFixed(0)+" / 100", avgD>=70?"var(--pos)":"var(--warn)"],
+    ["Avg Trade Score", avgT.toFixed(0), "var(--ink)"],
+  ].map(k=>'<div class="kpi"><div class="l">'+k[0]+'</div><div class="v num" style="color:'+k[2]+'">'+k[1]+'</div></div>').join("");
+  $("jList").innerHTML = journal.map((j,i)=>
+    '<div class="j-entry" data-j="'+i+'"><div class="j-head">'+
+    '<span class="m">'+esc(j.home)+' '+esc(j.finalScore)+' '+esc(j.away)+'</span>'+
+    '<span class="d">'+esc(j.comp||"")+' · '+j.date+'</span>'+
+    '<span class="tag" style="margin-left:auto">DQS '+j.dqs+'</span>'+
+    '<span class="tag '+(j.pl>=0?"pos":"neg")+'">'+fmt$(j.pl)+'</span>'+
+    '</div><div class="j-body"><div class="tbl-wrap"><table>'+
+    '<tr><td class="mut">Bet</td><td class="r mono">'+esc(j.bet)+' '+esc(j.odds)+' · $'+j.stake+'</td></tr>'+
+    '<tr><td class="mut">Settled</td><td class="r mono">'+esc(j.outcome)+'</td></tr>'+
+    '<tr><td class="mut">Entry edge</td><td class="r mono">'+(j.entryEdge!=null?pctS(j.entryEdge):"—")+'</td></tr>'+
+    '<tr><td class="mut">Trade score at close</td><td class="r mono">'+(j.tradeScore??"—")+'</td></tr>'+
+    '<tr><td class="mut">Live updates logged</td><td class="r mono">'+j.updates+'</td></tr>'+
+    (j.lessons?'<tr><td class="mut">Lessons</td><td class="r">'+esc(j.lessons)+'</td></tr>':"")+
+    '</table></div></div></div>').join("");
+  $("jList").querySelectorAll(".j-entry .j-head").forEach(h=>h.addEventListener("click",()=>h.parentElement.classList.toggle("open")));
+}
+
+/* ================= DEMOS (adapter-scripted) ================= */
+/* Demo steps write to the console INPUTS (not S.live directly) so commitUpdate
+   sees a genuine before/after diff and fires event alerts. */
+function runDemo(i){
+  const d = ADAPTER.demos[i];
+  if(!d) return;
+  openPosition(JSON.parse(JSON.stringify(d.setup)));
+  d.steps.forEach(u=>{
+    $("l-min").value = u.min; $("l-sh").value = u.sh; $("l-sa").value = u.sa;
+    $("l-mom").value = u.mom;
+    $("l-odds").value = u.odds!=null ? fmtAmer(u.odds) : "";
+    $("l-cash").value = u.cash || "";
+    commitUpdate();
+  });
+  if(d.markets.length){
+    S.markets = JSON.parse(JSON.stringify(d.markets));
+    persist(); renderDesk();
+  }
+}
+
+/* ================= WIRE-UP ================= */
+$("btn-open").addEventListener("click", ()=>{
+  const odds = parseAmerican($("s-odds").value);
+  const stake = parseFloat($("s-stake").value);
+  const home = $("s-home").value.trim(), away = $("s-away").value.trim();
+  if(!home){ alertField($("s-home")); return; }
+  if(!away){ alertField($("s-away")); return; }
+  if(odds==null){ alertField($("s-odds")); return; }
+  if(!stake || stake<=0){ alertField($("s-stake")); return; }
+  const params = {};
+  ADAPTER.setupParams.forEach(p => params[p.key] = parseFloat($("s-p-"+p.key).value) || p.def);
+  openPosition({
+    comp: $("s-comp").value.trim(), home, away, params,
+    bank: parseFloat($("s-bank").value)||null,
+    bet: {marketId: $("s-market").value, line: parseFloat($("s-line").value)||2.5, odds, stake}
+  });
+});
+["s-odds","s-stake","s-market"].forEach(id=>$(id).addEventListener("input", ()=>{
+  const a = parseAmerican($("s-odds").value);
+  const el = $("s-preview");
+  if(a==null){ el.textContent=""; return; }
+  const stake = parseFloat($("s-stake").value)||0;
+  el.textContent = "Implied probability "+pct(amer2prob(a))+
+    (stake? " · payout if won "+fmt$(stake*amer2dec(a))+" (profit "+fmt$(stake*(amer2dec(a)-1))+")" : "");
+}));
+$("btn-demo1").addEventListener("click", ()=>runDemo(0));
+$("btn-demo2").addEventListener("click", ()=>runDemo(1));
+$("btn-commit").addEventListener("click", commitUpdate);
+$("btn-addmkt").addEventListener("click", addMarket);
+$("btn-clearalerts").addEventListener("click", ()=>{ if(S){S.alerts=[]; persist(); renderDesk();} });
+$("btn-close").addEventListener("click", ()=>{ if(S){ S.closing = true; persist(); renderDesk(); } });
+$("btn-back-desk").addEventListener("click", ()=>{ if(S){ S.closing = false; persist(); renderDesk(); } });
+$("btn-save-journal").addEventListener("click", saveJournal);
+$("btn-discard").addEventListener("click", ()=>{ S = null; dqState = {}; persist(); renderDesk(); });
+["rv-outcome","rv-cash","rv-side"].forEach(id=>$(id).addEventListener("input", ()=>{ if(S && S.closing) updatePL(); }));
+$("btn-export").addEventListener("click", ()=>{
+  const blob = new Blob([JSON.stringify(journal,null,2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "betstogo-journal.json"; a.click();
+  URL.revokeObjectURL(a.href);
+});
+document.addEventListener("keydown", e=>{
+  if(e.key==="Enter" && S && !S.closing && e.target.closest("#workstation")) commitUpdate();
+});
+
+/* init */
+document.querySelectorAll(".ver").forEach(el=>el.textContent = "v"+VERSION);
+renderAdapterStatics();
+renderDesk();
+if(S && !S.closing) syncConsole();
+</script>
