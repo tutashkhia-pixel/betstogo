@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>BETS→GO — Football Trading Terminal</title>
+<title>BETS→GO — Decision Cockpit</title>
 <style>
 /* ============ TOKENS ============ */
 :root{
@@ -79,62 +79,57 @@ a{color:var(--accent)}
 /* ============ TOP BAR ============ */
 .topbar{
   display:flex; align-items:center; gap:16px; flex-wrap:wrap;
-  padding:14px 0 12px; border-bottom:2px solid var(--border-strong);
+  padding:16px 0 14px; border-bottom:1px solid var(--border);
   margin-bottom:18px;
 }
 .brand{display:flex; align-items:baseline; gap:10px}
 .brand .logo{
-  font-family:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
-  font-size:22px; font-weight:700; letter-spacing:.08em; color:var(--ink);
+  font-size:21px; font-weight:800; letter-spacing:-.01em; color:var(--ink);
 }
-.brand .logo b{color:var(--accent); padding:0 3px}
-.brand .sub{font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-3)}
+.brand .logo b{color:var(--accent); padding:0 2px}
+.brand .sub{font-size:12.5px; color:var(--ink-3); font-weight:500}
 .top-status{
   margin-left:auto; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:12px;
+  font-size:12px;
 }
-.tabs{display:flex; gap:2px; width:100%; border-bottom:1px solid var(--border); margin-bottom:20px}
+.tabs{display:flex; gap:2px; width:100%; border-bottom:1px solid var(--border); margin-bottom:22px}
 .tab{
   background:none; border:none; border-bottom:2px solid transparent;
-  padding:8px 14px; color:var(--ink-2); font-size:11px; letter-spacing:.16em;
-  text-transform:uppercase; font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  padding:10px 14px; color:var(--ink-2); font-size:13.5px; font-weight:600;
 }
 .tab:hover{color:var(--ink)}
 .tab.active{color:var(--accent); border-bottom-color:var(--accent)}
 
 /* ============ PANELS ============ */
 .panel{
-  background:var(--surface); border:1px solid var(--border); border-radius:6px;
+  background:var(--surface); border:1px solid var(--border); border-radius:14px;
   box-shadow:var(--shadow); overflow:hidden;
 }
 .panel-h{
-  display:flex; align-items:center; gap:8px; padding:9px 14px;
-  border-bottom:1px solid var(--border); background:var(--surface-2);
+  display:flex; align-items:center; gap:10px; padding:15px 18px 0;
 }
 .panel-h h2{
-  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-  font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-2);
+  font-size:14px; font-weight:650; color:var(--ink); letter-spacing:-.01em;
 }
 .panel-h .tag{margin-left:auto}
-.panel-b{padding:14px}
+.panel-b{padding:14px 18px 18px}
 
-.grid{display:grid; gap:14px}
-.g-main{grid-template-columns:1fr; margin-bottom:14px}
+.grid{display:grid; gap:16px}
+.g-main{grid-template-columns:1fr; margin-bottom:16px}
 @media(min-width:960px){
   .g-decide{grid-template-columns:1.6fr 1fr}
   .g-two{grid-template-columns:1fr 1fr}
   .g-matrix{grid-template-columns:1fr 1.4fr}
 }
-.g-decide,.g-two,.g-matrix{display:grid; gap:14px; margin-bottom:14px}
+.g-decide,.g-two,.g-matrix{display:grid; gap:16px; margin-bottom:16px}
 
 /* ============ CHIPS / TAGS ============ */
 .tag{
   display:inline-flex; align-items:center; gap:6px;
-  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-  font-size:10.5px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
-  padding:3px 9px; border-radius:999px; border:1px solid var(--border-strong);
+  font-size:11px; font-weight:600; letter-spacing:.04em; text-transform:uppercase;
+  padding:3px 10px; border-radius:999px; border:1px solid var(--border);
   color:var(--ink-2); background:var(--surface);
-  white-space:nowrap;
+  white-space:nowrap; font-variant-numeric:tabular-nums;
 }
 .tag.pos{color:var(--pos); border-color:var(--pos); background:var(--pos-bg)}
 .tag.neg{color:var(--neg); border-color:var(--neg); background:var(--neg-bg)}
@@ -146,36 +141,33 @@ a{color:var(--accent)}
 .verdict{display:flex; gap:18px; flex-wrap:wrap; align-items:stretch}
 .verdict-main{flex:1 1 260px; display:flex; flex-direction:column; gap:8px}
 .verdict-word{
-  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-  font-size:44px; font-weight:700; letter-spacing:.02em; line-height:1.05;
+  font-size:40px; font-weight:800; letter-spacing:-.02em; line-height:1.05;
 }
-.verdict-why{color:var(--ink-2); font-size:13px; max-width:56ch}
+.verdict-why{color:var(--ink-2); font-size:13.5px; max-width:56ch}
 .scorebox{
   flex:0 0 150px; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:2px; background:var(--inset); border:1px solid var(--border); border-radius:6px; padding:12px;
+  gap:2px; background:var(--inset); border-radius:12px; padding:14px;
 }
 .scorebox .big{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:38px; font-weight:700; line-height:1}
-.scorebox .lbl{font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-3)}
-.kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(118px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:6px; overflow:hidden; margin-top:14px}
-.kpi{background:var(--surface); padding:9px 12px}
-.kpi .l{font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3)}
+.scorebox .lbl{font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
+.kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(118px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-top:16px}
+.kpi{background:var(--surface); padding:10px 13px}
+.kpi .l{font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3)}
 .kpi .v{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:16px; font-weight:600; margin-top:2px}
 
 /* ============ FORMS ============ */
-.f-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px 12px}
-.f{display:flex; flex-direction:column; gap:4px}
-.f label{font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3)}
+.f-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px 14px}
+.f{display:flex; flex-direction:column; gap:5px}
+.f label{font-size:12px; color:var(--ink-2); font-weight:500}
 .f input,.f select{
-  background:var(--inset); border:1px solid var(--border); border-radius:4px;
-  color:var(--ink); padding:7px 9px;
-  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:13px;
+  background:var(--inset); border:1px solid var(--border); border-radius:10px;
+  color:var(--ink); padding:9px 12px;
+  font-size:14px; font-variant-numeric:tabular-nums;
 }
 .f input:focus,.f select:focus{border-color:var(--accent); outline:none}
 .btn{
-  border:1px solid var(--border-strong); background:var(--surface-2); color:var(--ink);
-  border-radius:4px; padding:8px 16px; font-size:12px; font-weight:600;
-  letter-spacing:.08em; text-transform:uppercase;
-  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  border:1px solid var(--border); background:var(--surface-2); color:var(--ink);
+  border-radius:10px; padding:9px 18px; font-size:13.5px; font-weight:600;
 }
 .btn:hover{border-color:var(--accent); color:var(--accent)}
 .btn.primary{background:var(--accent); border-color:var(--accent); color:#14100A}
@@ -188,11 +180,11 @@ a{color:var(--accent)}
 /* momentum slider */
 .mom{display:flex; flex-direction:column; gap:4px}
 .mom input[type=range]{width:100%; accent-color:var(--accent)}
-.mom .ends{display:flex; justify-content:space-between; font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3)}
+.mom .ends{display:flex; justify-content:space-between; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3)}
 
 /* pulse questions — the field observer's prompts */
-.pulse-qs{margin-top:12px; background:var(--inset); border:1px solid var(--border); border-radius:5px; padding:9px 12px}
-.pulse-qs .pq-title{font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); margin-bottom:5px}
+.pulse-qs{margin-top:12px; background:var(--inset); border-radius:12px; padding:11px 14px}
+.pulse-qs .pq-title{font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); margin-bottom:5px}
 .pulse-qs ul{margin:0; padding-left:16px; color:var(--ink-2); font-size:12.5px}
 .pulse-qs li{margin:2px 0}
 
@@ -200,9 +192,9 @@ a{color:var(--accent)}
 .tbl-wrap{overflow-x:auto}
 table{border-collapse:collapse; width:100%; font-size:13px}
 th{
-  text-align:left; font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-  font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);
-  font-weight:600; padding:6px 10px; border-bottom:1px solid var(--border-strong); white-space:nowrap;
+  text-align:left;
+  font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-3);
+  font-weight:600; padding:6px 10px; border-bottom:1px solid var(--border); white-space:nowrap;
 }
 td{padding:8px 10px; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; white-space:nowrap}
 td.mono,th.r,td.r{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
@@ -219,7 +211,7 @@ tr:last-child td{border-bottom:none}
 .pbar .top .v{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-weight:600}
 .pbar .rail{height:8px; background:var(--inset); border-radius:4px; overflow:hidden; border:1px solid var(--border)}
 .pbar .fill{height:100%; border-radius:4px 0 0 4px}
-.mini-probs{display:grid; grid-template-columns:1fr 1fr; gap:8px 16px; margin-top:14px; padding-top:12px; border-top:1px solid var(--border)}
+.mini-probs{display:grid; grid-template-columns:1fr 1fr; gap:8px 16px; margin-top:16px; padding-top:14px; border-top:1px solid var(--border)}
 .mini-probs .row{display:flex; justify-content:space-between; font-size:12.5px}
 .mini-probs .row b{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-weight:600}
 
@@ -240,20 +232,20 @@ tr:last-child td{border-bottom:none}
 .legend .sw{width:10px; height:3px; border-radius:2px}
 
 /* ============ MATRIX ============ */
-.matrix{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px}
-.mx{background:var(--inset); border:1px solid var(--border); border-radius:5px; padding:9px 11px}
-.mx .l{font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3)}
+.matrix{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px}
+.mx{background:var(--inset); border-radius:12px; padding:10px 13px}
+.mx .l{font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3)}
 .mx .v{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:14px; font-weight:700; margin-top:3px}
 
 /* ============ ALERTS ============ */
 .alerts{display:flex; flex-direction:column; gap:6px; max-height:300px; overflow-y:auto}
 .alert{
-  display:flex; gap:10px; align-items:baseline; padding:7px 10px;
-  background:var(--inset); border:1px solid var(--border); border-left-width:3px; border-radius:4px;
+  display:flex; gap:10px; align-items:baseline; padding:8px 12px;
+  background:var(--inset); border-left:3px solid var(--border); border-radius:10px;
   font-size:12.5px;
 }
 .alert .min{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; color:var(--ink-3); flex:none; width:34px; text-align:right}
-.alert .lv{flex:none; font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:9.5px; font-weight:700; letter-spacing:.1em; width:64px}
+.alert .lv{flex:none; font-size:10px; font-weight:700; letter-spacing:.06em; width:64px; text-transform:uppercase}
 .alert.crit{border-left-color:var(--crit)} .alert.crit .lv{color:var(--crit)}
 .alert.high{border-left-color:var(--hi)} .alert.high .lv{color:var(--hi)}
 .alert.med{border-left-color:var(--med)} .alert.med .lv{color:var(--med)}
@@ -261,15 +253,22 @@ tr:last-child td{border-bottom:none}
 .empty{color:var(--ink-3); font-size:13px; padding:6px 2px}
 
 /* ============ SETUP HERO ============ */
-.setup-hero{padding:26px 0 20px; max-width:70ch}
-.setup-hero h1{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:26px; letter-spacing:.02em; margin-bottom:8px}
-.setup-hero p{color:var(--ink-2); margin:0 0 4px}
-.section-gap{height:14px}
+.setup-hero{padding:30px 0 22px; max-width:62ch}
+.setup-hero h1{font-size:30px; font-weight:800; letter-spacing:-.02em; margin-bottom:10px}
+.setup-hero p{color:var(--ink-2); margin:0 0 4px; font-size:15px; line-height:1.55}
+.section-gap{height:16px}
+.setup-flow{max-width:680px}
+.step-n{
+  width:24px; height:24px; border-radius:50%; flex:none;
+  background:var(--accent-bg); color:var(--accent);
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:12.5px; font-weight:700; font-variant-numeric:tabular-nums;
+}
 
 /* ============ JOURNAL ============ */
-.j-stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:6px; overflow:hidden; margin-bottom:14px}
-.j-entry{border:1px solid var(--border); border-radius:6px; margin-bottom:10px; overflow:hidden; background:var(--surface)}
-.j-head{display:flex; gap:12px; align-items:center; padding:10px 14px; cursor:pointer; flex-wrap:wrap; background:var(--surface-2)}
+.j-stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:16px}
+.j-entry{border:1px solid var(--border); border-radius:12px; margin-bottom:10px; overflow:hidden; background:var(--surface)}
+.j-head{display:flex; gap:12px; align-items:center; padding:12px 16px; cursor:pointer; flex-wrap:wrap; background:var(--surface-2)}
 .j-head:hover{background:var(--inset)}
 .j-head .m{font-weight:600}
 .j-head .d{color:var(--ink-3); font-size:12px}
@@ -281,7 +280,7 @@ tr:last-child td{border-bottom:none}
 
 /* ============ MODEL DOC ============ */
 .doc{max-width:72ch}
-.doc h3{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin:22px 0 6px}
+.doc h3{font-size:14.5px; font-weight:650; color:var(--accent); margin:24px 0 6px}
 .doc p,.doc li{color:var(--ink-2); font-size:13.5px}
 .doc code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:12.5px; background:var(--inset); border:1px solid var(--border); border-radius:3px; padding:1px 5px}
 .doc ul{padding-left:20px; margin:6px 0}
@@ -305,15 +304,20 @@ tr:last-child td{border-bottom:none}
   body.mission-preserve .roe-panel{display:block}
   .alerts-panel{display:none}
   body.show-alerts .alerts-panel{display:block}
-  .setup-hero h1{font-size:22px}
+  .setup-hero h1{font-size:26px}
+  .f input,.f select{font-size:16px; min-height:44px}
+}
+@media(max-width:600px){
+  #setup .f-grid{grid-template-columns:1fr}
+  #setup .btn-row .btn.primary{width:100%; min-height:48px}
 }
 
 /* segmented control (Them / Even / Us) */
 .seg{display:flex; gap:6px; margin-top:6px}
 .seg button{
-  flex:1; padding:11px 4px; border:1px solid var(--border-strong); border-radius:6px;
-  background:var(--inset); color:var(--ink-2); font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-  font-size:12px; font-weight:600; letter-spacing:.04em; min-height:44px;
+  flex:1; padding:11px 4px; border:1px solid var(--border); border-radius:10px;
+  background:var(--inset); color:var(--ink-2);
+  font-size:13px; font-weight:600; min-height:44px;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
 .seg button.on{border-color:var(--accent); color:var(--accent); background:var(--accent-bg)}
@@ -321,9 +325,9 @@ tr:last-child td{border-bottom:none}
 /* position strip */
 #m-strip{
   position:sticky; top:0; z-index:40; display:flex; align-items:center; gap:8px;
-  margin:0 -20px 12px; padding:10px 14px calc(10px);
-  background:var(--surface-2); border-bottom:2px solid var(--border-strong);
-  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:12.5px;
+  margin:0 -20px 14px; padding:11px 16px;
+  background:var(--surface-2); border-bottom:1px solid var(--border);
+  font-size:13px; font-variant-numeric:tabular-nums;
 }
 .m-mission{font-size:14px}
 .m-score{font-weight:700; color:var(--ink)}
@@ -335,23 +339,22 @@ tr:last-child td{border-bottom:none}
 
 /* objective shift / event banner */
 #m-banner{
-  border:1px solid var(--accent); background:var(--accent-bg); border-radius:8px;
-  padding:12px 14px; margin-bottom:12px; font-size:13.5px; color:var(--ink);
+  border:1px solid var(--accent); background:var(--accent-bg); border-radius:14px;
+  padding:13px 16px; margin-bottom:14px; font-size:13.5px; color:var(--ink);
 }
-#m-banner .bn-t{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-weight:700; letter-spacing:.08em; margin-bottom:4px}
+#m-banner .bn-t{font-weight:700; margin-bottom:4px}
 #m-banner .bn-x{float:right; background:none; border:none; color:var(--ink-3); font-size:16px; padding:0 2px}
 
 /* decision card */
 #m-card{
-  background:var(--surface); border:1px solid var(--border); border-radius:10px;
-  box-shadow:var(--shadow); padding:16px; margin-bottom:12px;
+  background:var(--surface); border:1px solid var(--border); border-radius:18px;
+  box-shadow:var(--shadow); padding:20px; margin-bottom:14px;
 }
 #m-verdict{
-  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-  font-size:34px; font-weight:700; line-height:1.05; margin-bottom:8px;
+  font-size:34px; font-weight:800; letter-spacing:-.02em; line-height:1.05; margin-bottom:8px;
 }
-#m-say{font-size:14.5px; color:var(--ink); line-height:1.45; max-width:56ch}
-#m-dollars{margin:12px 0 0; border-top:1px solid var(--border); padding-top:10px}
+#m-say{font-size:15px; color:var(--ink); line-height:1.5; max-width:56ch}
+#m-dollars{margin:14px 0 0; border-top:1px solid var(--border); padding-top:12px}
 #m-dollars .dr{display:flex; justify-content:space-between; padding:3px 0; font-size:13.5px}
 #m-dollars .dr span{color:var(--ink-2)}
 #m-dollars .dr b{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
@@ -359,60 +362,60 @@ tr:last-child td{border-bottom:none}
 #m-cost{margin-top:6px; font-size:12.5px; color:var(--ink-3)}
 
 /* action row */
-#m-actions{display:grid; grid-template-columns:repeat(4,1fr); gap:7px; margin-bottom:8px}
+#m-actions{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:10px}
 #m-actions button{
-  border:1px solid var(--border-strong); border-radius:8px; background:var(--surface);
+  border:1px solid var(--border); border-radius:12px; background:var(--surface);
   padding:10px 2px; min-height:64px; display:flex; flex-direction:column; align-items:center; gap:3px;
-  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; color:var(--ink);
+  color:var(--ink);
 }
-#m-actions button .an{font-size:10px; font-weight:700; letter-spacing:.06em; color:var(--ink-2)}
-#m-actions button .av{font-size:14px; font-weight:700}
+#m-actions button .an{font-size:10.5px; font-weight:700; letter-spacing:.03em; color:var(--ink-2)}
+#m-actions button .av{font-size:14px; font-weight:700; font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
 #m-actions button.best{border-color:var(--pos)}
 #m-actions button.dim .av{color:var(--ink-3)}
 #m-actions button.sel{border-color:var(--accent); background:var(--accent-bg)}
 #m-act-detail{
-  background:var(--inset); border:1px solid var(--border); border-radius:8px;
-  padding:12px 14px; margin-bottom:12px; font-size:13px; color:var(--ink-2);
+  background:var(--inset); border-radius:12px;
+  padding:13px 16px; margin-bottom:14px; font-size:13.5px; color:var(--ink-2); line-height:1.5;
 }
 #m-act-detail b{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; color:var(--ink)}
 
 /* contextual promotions */
 #m-context .ctx{
-  border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:8px;
-  background:var(--surface); padding:12px 14px; margin-bottom:10px; font-size:13px;
+  border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:12px;
+  background:var(--surface); padding:13px 16px; margin-bottom:10px; font-size:13.5px; line-height:1.5;
 }
-#m-context .ctx .ct{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); margin-bottom:5px}
+#m-context .ctx .ct{font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-3); margin-bottom:5px}
 .m-more{display:flex; gap:8px; margin:4px 0 10px}
-.m-more .btn{flex:1; font-size:10.5px; padding:8px 4px}
+.m-more .btn{flex:1; font-size:12.5px; padding:8px 4px}
 
 /* sticky bottom bar */
 #m-pulsebar{
   position:fixed; left:0; right:0; bottom:0; z-index:50;
   padding:10px 14px calc(10px + env(safe-area-inset-bottom));
-  background:var(--surface-2); border-top:1px solid var(--border-strong);
+  background:var(--surface-2); border-top:1px solid var(--border);
 }
 #m-pulse-open{
-  width:100%; min-height:52px; border-radius:8px; border:1px solid var(--accent);
-  background:var(--accent); color:#14100A; font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-  font-size:14px; font-weight:700; letter-spacing:.08em;
+  width:100%; min-height:52px; border-radius:14px; border:1px solid var(--accent);
+  background:var(--accent); color:#14100A;
+  font-size:15px; font-weight:700; letter-spacing:.01em;
 }
 
 /* check-in sheet */
 #m-backdrop{position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:60}
 #m-sheet{
   position:fixed; left:0; right:0; bottom:0; z-index:70;
-  background:var(--surface); border-top:1px solid var(--border-strong);
-  border-radius:14px 14px 0 0; padding:8px 18px calc(16px + env(safe-area-inset-bottom));
+  background:var(--surface); border-top:1px solid var(--border);
+  border-radius:20px 20px 0 0; padding:8px 20px calc(16px + env(safe-area-inset-bottom));
   max-height:86vh; overflow-y:auto;
 }
-.ms-grab{width:38px; height:4px; border-radius:2px; background:var(--border-strong); margin:4px auto 10px}
-.ms-title{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:15px; font-weight:700; margin-bottom:10px}
+.ms-grab{width:38px; height:4px; border-radius:2px; background:var(--border-strong); margin:6px auto 12px}
+.ms-title{font-size:17px; font-weight:700; letter-spacing:-.01em; margin-bottom:10px}
 .ms-row{display:flex; align-items:center; justify-content:space-between; padding:7px 0}
-.ms-lbl{font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
+.ms-lbl{font-size:13px; color:var(--ink-2); font-weight:500}
 .stepper{display:flex; align-items:center; gap:2px}
 .stepper button{
-  width:46px; height:44px; border:1px solid var(--border-strong); background:var(--inset);
-  color:var(--ink); font-size:20px; border-radius:8px;
+  width:46px; height:44px; border:1px solid var(--border); background:var(--inset);
+  color:var(--ink); font-size:20px; border-radius:12px;
 }
 .stepper b{min-width:52px; text-align:center; font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:18px}
 .ms-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:10px 0 4px}
@@ -423,7 +426,7 @@ tr:last-child td{border-bottom:none}
 .ms-actions .btn{flex:1; min-height:48px}
 
 /* mission theming — the objective shift must be FELT */
-body.mission-protect #m-strip{background:rgba(61,214,140,.10); border-bottom-color:var(--pos)}
+body.mission-protect #m-strip{background:linear-gradient(var(--pos-bg),var(--pos-bg)) var(--surface-2); border-bottom-color:var(--pos)}
 body.mission-protect #m-verdict{color:var(--pos)}
 body.mission-protect #m-card{border-color:var(--pos)}
 body.mission-preserve #m-strip{background:var(--inset); border-bottom-color:var(--border)}
@@ -436,7 +439,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
   <div class="topbar">
     <div class="brand">
       <span class="logo">BETS<b>&rarr;</b>GO</span>
-      <span class="sub">Football Trading Terminal</span>
+      <span class="sub">Decision Cockpit</span>
     </div>
     <div class="top-status" id="topStatus"></div>
   </div>
@@ -453,18 +456,19 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
     <!-- ---------- SETUP ---------- -->
     <div id="setup">
       <div class="setup-hero">
-        <h1>Open a position.</h1>
-        <p>BETS→GO is a decision-support workstation for live football trading: it prices your position against an explainable in-play model and tells you the highest-quality action available — including <b>No Action</b>.</p>
+        <h1>Start a trade.</h1>
+        <p>Tell BETS→GO about the match and your bet. From then on it watches the numbers with you and names the smartest move at every moment — even when that move is to do nothing.</p>
         <p class="hint">It never promises profit. It grades the decision, not the result.</p>
       </div>
 
+      <div class="setup-flow">
       <div class="panel">
-        <div class="panel-h"><h2>Match Setup</h2></div>
+        <div class="panel-h"><span class="step-n">1</span><h2>The match</h2></div>
         <div class="panel-b">
           <div class="f-grid">
             <div class="f"><label>Competition</label><input id="s-comp" placeholder="UEFA Nations League"></div>
-            <div class="f"><label>Home Team</label><input id="s-home" placeholder="Spain"></div>
-            <div class="f"><label>Away Team</label><input id="s-away" placeholder="Portugal"></div>
+            <div class="f"><label>Home team</label><input id="s-home" placeholder="Spain"></div>
+            <div class="f"><label>Away team</label><input id="s-away" placeholder="Portugal"></div>
             <div id="s-params" style="display:contents"></div>
             <div class="f"><label>Bankroll $ (optional)</label><input id="s-bank" type="number" step="10" placeholder="1000"></div>
           </div>
@@ -472,24 +476,25 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
       </div>
       <div class="section-gap"></div>
       <div class="panel">
-        <div class="panel-h"><h2>Original Bet · Hard Rock</h2></div>
+        <div class="panel-h"><span class="step-n">2</span><h2>Your bet</h2></div>
         <div class="panel-b">
           <div class="f-grid">
             <div class="f"><label>Market</label>
               <select id="s-market"></select>
             </div>
-            <div class="f"><label>Line (O/U · spread, e.g. -1.5)</label><input id="s-line" type="number" step="0.5" value="2.5"></div>
-            <div class="f"><label>Hard Rock Odds (American)</label><input id="s-odds" placeholder="+120"></div>
-            <div class="f"><label>Stake $</label><input id="s-stake" type="number" step="5" placeholder="100"></div>
+            <div class="f"><label>Line (e.g. 2.5 or -1.5)</label><input id="s-line" type="number" step="0.5" value="2.5"></div>
+            <div class="f"><label>Your odds (e.g. +120)</label><input id="s-odds" placeholder="+120"></div>
+            <div class="f"><label>Bet amount $</label><input id="s-stake" type="number" step="5" placeholder="100"></div>
           </div>
           <div id="s-preview" class="hint" style="margin-top:10px"></div>
           <div class="btn-row">
-            <button class="btn primary" id="btn-open">Open Position</button>
-            <button class="btn" id="btn-demo1">Demo · Live winning spot</button>
-            <button class="btn" id="btn-demo2">Demo · Recovery scenario</button>
-            <span class="hint">Demos preload the Spain–Portugal walkthrough.</span>
+            <button class="btn primary" id="btn-open">Start trade</button>
+            <button class="btn" id="btn-demo1">Demo · Winning spot</button>
+            <button class="btn" id="btn-demo2">Demo · Losing spot</button>
+            <span class="hint">Demos walk through Spain–Portugal with sample numbers.</span>
           </div>
         </div>
+      </div>
       </div>
     </div>
 
@@ -529,13 +534,13 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
       </div>
 
       <div class="panel d-only" style="margin-bottom:14px">
-        <div class="panel-h"><h2>Risk &amp; Exposure — live dollars</h2></div>
+        <div class="panel-h"><h2>Your money right now</h2></div>
         <div class="panel-b"><div class="matrix" id="riskStrip"></div></div>
       </div>
 
       <div class="g-decide d-only">
         <div class="panel">
-          <div class="panel-h"><h2>Primary Decision</h2><span class="tag" id="riskTag"></span></div>
+          <div class="panel-h"><h2>The call</h2><span class="tag" id="riskTag"></span></div>
           <div class="panel-b">
             <div class="verdict">
               <div class="verdict-main">
@@ -557,7 +562,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
         </div>
 
         <div class="panel">
-          <div class="panel-h"><h2>Live Console</h2><span class="tag accent" id="posTag"></span></div>
+          <div class="panel-h"><h2>Live update</h2><span class="tag accent" id="posTag"></span></div>
           <div class="panel-b">
             <div class="f-grid" style="grid-template-columns:repeat(auto-fit,minmax(96px,1fr))">
               <div class="f"><label>Minute</label><input id="l-min" type="number" min="0" max="120" value="0"></div>
@@ -567,12 +572,12 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
             </div>
             <div style="height:10px"></div>
             <div class="f-grid" style="grid-template-columns:1fr 1fr">
-              <div class="f"><label>Live Odds — your bet (Amer.)</label><input id="l-odds" placeholder="-250"></div>
-              <div class="f"><label>Cash-Out Offer $</label><input id="l-cash" type="number" step="1" placeholder="0"></div>
+              <div class="f"><label>Live odds on your bet</label><input id="l-odds" placeholder="-250"></div>
+              <div class="f"><label>Cash-out offer $</label><input id="l-cash" type="number" step="1" placeholder="0"></div>
             </div>
             <div style="height:12px"></div>
             <div class="mom">
-              <label class="f" style="display:block"><span style="font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)">Who's on top right now?</span></label>
+              <label class="f" style="display:block"><span style="font-size:12px;color:var(--ink-2);font-weight:500">Who's on top right now?</span></label>
               <input type="hidden" id="l-mom" value="0">
               <div class="seg" id="mom-seg"></div>
             </div>
@@ -586,19 +591,19 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
               </ul>
             </div>
             <div class="btn-row">
-              <button class="btn primary" id="btn-commit">Commit Update ⏎</button>
-              <button class="btn ghost danger" id="btn-close">Close &amp; Review</button>
+              <button class="btn primary" id="btn-commit">Update</button>
+              <button class="btn ghost danger" id="btn-close">Close &amp; review</button>
             </div>
           </div>
         </div>
       </div>
 
       <div class="panel d-only" style="margin-bottom:14px">
-        <div class="panel-h"><h2>Action Board — every option, priced in dollars</h2></div>
+        <div class="panel-h"><h2>Every option, in dollars</h2></div>
         <div class="panel-b">
           <div class="tbl-wrap"><table id="actionBoard"></table></div>
           <p class="hint" id="costNothing" style="margin:10px 0 0; color:var(--warn)"></p>
-          <p class="hint" style="margin:6px 0 0">Expected = probability-weighted net P/L from here. Worst / Best = net P/L in the worst and best final result. Hedge rows assume the hedge wins whenever your bet loses. "Hold / No action" is always on the board — standing down is a valid position.</p>
+          <p class="hint" style="margin:6px 0 0">Expected = probability-weighted net P/L from here. Worst / Best = net P/L in the worst and best final result. Hedge rows assume the hedge wins whenever your bet loses. "Hold / Do nothing" is always on the board — standing down is a valid position.</p>
         </div>
       </div>
 
@@ -636,13 +641,13 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
       <div class="panel roe-panel" style="margin-bottom:14px">
         <div class="panel-h"><h2>Recovery Opportunity Engine</h2><span class="tag" id="roeTag"></span></div>
         <div class="panel-b">
-          <p class="hint" style="margin:0 0 10px">Independent trades priced on their own merit — never because the ticket is losing. Enter the live markets Hard Rock is showing you.</p>
+          <p class="hint" style="margin:0 0 10px">Independent trades priced on their own merit — never because the ticket is losing. Enter the live markets your sportsbook is showing you.</p>
           <div class="f-grid" style="grid-template-columns:minmax(170px,1.4fr) 90px 110px 110px auto; align-items:end">
             <div class="f"><label>Market</label>
               <select id="r-type"></select>
             </div>
             <div class="f"><label>Line</label><input id="r-line" type="number" step="0.5" value="3.5"></div>
-            <div class="f"><label>HR Odds</label><input id="r-odds" placeholder="+110"></div>
+            <div class="f"><label>Odds</label><input id="r-odds" placeholder="+110"></div>
             <div class="f"><label>Manual %</label><input id="r-prob" type="number" min="1" max="99" placeholder="auto"></div>
             <div class="f"><button class="btn" id="btn-addmkt">Add</button></div>
           </div>
@@ -653,7 +658,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
       </div>
 
       <div class="panel alerts-panel" style="margin-bottom:14px">
-        <div class="panel-h"><h2>Alert Feed</h2><button class="btn ghost" id="btn-clearalerts" style="margin-left:auto;padding:2px 10px;font-size:10px">Clear</button></div>
+        <div class="panel-h"><h2>Alerts</h2><button class="btn ghost" id="btn-clearalerts" style="margin-left:auto;padding:3px 12px;font-size:12px">Clear</button></div>
         <div class="panel-b"><div class="alerts" id="alertFeed"></div></div>
       </div>
     </div>
@@ -747,7 +752,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
       <h3>6 · Recovery Opportunity Engine</h3>
       <p>Activates only when the original position is effectively dead (win probability &lt; 25%). Every live market is priced independently: model probability vs. implied. Positive-EV markets are ranked; suggested stake is quarter-Kelly, capped at 50% of the original stake. If nothing clears the bar the verdict is <b>NO RECOVERY TRADE</b> — being down is never a reason to bet.</p>
       <h3>7 · Action Board</h3>
-      <p>Every available option — hold, full/partial cash-out, hedge, best recovery trade — is priced as net P/L in dollars: <b>Expected</b> (probability-weighted), <b>Worst case</b>, <b>Best case</b>. Ranks: 🥇 highest expected value · 🛡 highest worst-case (capital protection) · ⚖ best risk-adjusted (<code>expected − 0.4 × (expected − worst)</code>). "Hold / No action" is always on the board — preserving capital is a position.</p>
+      <p>Every available option — hold, full/partial cash-out, hedge, best recovery trade — is priced as net P/L in dollars: <b>Expected</b> (probability-weighted), <b>Worst case</b>, <b>Best case</b>. Ranks: 🥇 highest expected value · 🛡 highest worst-case (capital protection) · ⚖ best risk-adjusted (<code>expected − 0.4 × (expected − worst)</code>). "Hold / Do nothing" is always on the board — preserving capital is a position.</p>
       <h3>8 · Decision Quality Score</h3>
       <p>0–100, scored at close: positive-edge entry (20) · stake ≤ 5% of bankroll (15) · followed the cash-out engine (20) · no negative-EV recovery placed (20) · no chasing / emotional adds (15) · review completed (10). DQS is the number to maximize over a season.</p>
       <h3>Honest limits</h3>
@@ -757,7 +762,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
 
   <!-- ========== MOBILE: sticky bottom bar + check-in sheet ========== -->
   <div class="m-only" id="m-pulsebar">
-    <button id="m-pulse-open">WHAT ARE YOU SEEING?</button>
+    <button id="m-pulse-open">What are you seeing?</button>
   </div>
   <div id="m-backdrop" class="hidden"></div>
   <div id="m-sheet" class="hidden" role="dialog" aria-label="Check-in">
@@ -788,7 +793,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
     <div class="ms-q hint" id="ms-question"></div>
     <div class="ms-actions">
       <button class="btn ghost" id="ms-cancel">Cancel</button>
-      <button class="btn primary" id="ms-commit">DONE</button>
+      <button class="btn primary" id="ms-commit">Done</button>
     </div>
   </div>
 
@@ -801,7 +806,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
 <script>
 "use strict";
 /* ============================================================
-   BETS→GO — core application (v0.2.0)
+   BETS→GO — core application (v0.2.1)
 
    Architecture
    ------------
@@ -816,7 +821,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
    See docs/ARCHITECTURE.md and docs/OPERATING_MODEL.md.
    ============================================================ */
 
-const VERSION = "0.2.0";
+const VERSION = "0.2.1";
 
 /* ================= UTILITIES (core) ================= */
 const $ = id => document.getElementById(id);
@@ -926,8 +931,8 @@ const FootballAdapter = (() => {
     clock: {max:90, axisMax:95, ticks:[0,15,30,45,60,75,90], fmt: m => m+"'"},
     scoreLabels: st => [st.home+" goals", st.away+" goals"],
     setupParams: [
-      {key:"xgh", label:"Pre-match xG · Home", def:1.45, step:0.05},
-      {key:"xga", label:"Pre-match xG · Away", def:1.15, step:0.05},
+      {key:"xgh", label:"Expected goals · Home", def:1.45, step:0.05},
+      {key:"xga", label:"Expected goals · Away", def:1.15, step:0.05},
     ],
     liveInputs: [
       {key:"rh", label:"Reds · H", def:0, min:0, max:3},
@@ -1084,9 +1089,9 @@ function orchestrate(st, F){
   let coRec = "NO OFFER", coWhy = "Enter the current cash-out offer to price it.";
   if(F.ratio!=null){
     if(F.ratio>=1.05){ coRec="FULL CASH OUT"; coWhy="Offer exceeds model hold value — the book is overpaying you."; }
-    else if(F.ratio>=0.97){ coRec="PARTIAL CASH OUT"; coWhy="Offer is at fair value. Taking part reduces variance at no EV cost."; }
-    else if(F.ratio>=0.88){ coRec="WAIT"; coWhy="Offer is slightly under value. Re-check after the next event."; }
-    else { coRec="HOLD"; coWhy="Offer is well below expected hold value — accepting it leaks EV."; }
+    else if(F.ratio>=0.97){ coRec="PARTIAL CASH OUT"; coWhy="The offer is fair. Taking part of it locks some profit without giving anything up."; }
+    else if(F.ratio>=0.88){ coRec="WAIT"; coWhy="The offer is a little low. Check again after the next big moment."; }
+    else { coRec="HOLD"; coWhy="The offer is well below what the bet is really worth — taking it now gives money away."; }
   }
 
   let rec, why;
@@ -1096,7 +1101,7 @@ function orchestrate(st, F){
   else if(F.p < 0.10){ rec="WRITE IT OFF"; why="Win probability is "+pct(F.p)+". Don't chase. Check the recovery board only if something there earns it on its own."; }
   else if(F.edge!=null && F.edge <= -0.06 && F.hedgeActive){ rec="CONSIDER "+verbs.hedge; why="The market prices your outcome "+Math.abs(edgePts).toFixed(0)+" points above the model — locking value is on the table."; }
   else if(F.edge!=null && F.edge >= 0.02){ rec="HOLD"; why="Your bet is worth more than the book is offering. Nothing meaningful has changed. Wait."; }
-  else { rec="HOLD"; why="No actionable mispricing right now. Doing nothing is a position. Wait."; }
+  else { rec="HOLD"; why="Nothing is clearly mispriced right now. The smart move is to wait."; }
 
   /* conversational lead by mission */
   const lead = mission==="protect" ? "You are winning. The job has changed: protect it."
@@ -1130,7 +1135,7 @@ function analyze(st){
 function actionBoard(st, A, bestRecovery){
   const s = st.bet.stake, pay = A.payout, p = A.p, offer = A.offer;
   const acts = [];
-  acts.push({name:"Hold / No action", exp: p*pay - s, worst: -s, best: pay - s});
+  acts.push({name:"Hold / Do nothing", exp: p*pay - s, worst: -s, best: pay - s});
   if(offer > 0){
     acts.push({name:"Full cash out", exp: offer - s, worst: offer - s, best: offer - s});
     acts.push({name:"Partial cash out (50%)", exp: offer/2 + p*pay/2 - s, worst: offer/2 - s, best: offer/2 + pay/2 - s});
@@ -1485,7 +1490,7 @@ function renderMobile(A, evNow, bestR){
     {id:"hold",  n:"HOLD",          v: sgn$(holdExp), dim:false},
     {id:"cash",  n:A.verbs.cash,    v: cashVal!=null? sgn$(cashVal) : "—", dim: cashVal==null},
     {id:"hedge", n:A.verbs.hedge,   v: hedgeExp!=null? sgn$(hedgeExp) : (A.hedgeActive?"price it":"not now"), dim: hedgeExp==null},
-    {id:"noact", n:"NO ACTION",     v:"✓ valid", dim:false},
+    {id:"noact", n:"DO NOTHING",    v:"✓ valid", dim:false},
   ];
   const bestVal = Math.max(holdExp, cashVal??-Infinity, hedgeExp??-Infinity);
   $("m-actions").innerHTML = actsM.map(a=>{
@@ -1530,7 +1535,7 @@ function showActDetail(id, A, evNow){
       html = 'Place <b>'+fmt$(h)+'</b> on the other side: finish <b>'+sgn$(ifO)+'</b> if your bet wins, <b>'+sgn$(ifH)+'</b> if it doesn\'t.';
     }
   } else if(id==="noact"){
-    html = 'Doing nothing is a decision — and right now it costs nothing extra to wait for one more look. '+(A.offer>0 ? 'What it risks: the '+fmt$(A.offer)+' on the table if the match turns.' : '')+' No Action is always a valid call here.';
+    html = 'Doing nothing is a decision — and right now it costs nothing extra to wait for one more look. '+(A.offer>0 ? 'What it risks: the '+fmt$(A.offer)+' on the table if the match turns.' : '')+' Doing nothing is always a valid call here.';
   }
   d.innerHTML = html;
   d.classList.remove("hidden");
@@ -1787,7 +1792,7 @@ function commitSheet(){
 /* ================= JOURNAL ENGINE (core) ================= */
 const DQ_CHECKS = [
   {k:"edge",  pts:20, auto:true,  label:"Entry had positive model edge (auto)"},
-  {k:"stake", pts:15, auto:false, label:"Stake was ≤ 5% of bankroll / plan"},
+  {k:"stake", pts:15, auto:false, label:"Bet size was ≤ 5% of bankroll / plan"},
   {k:"co",    pts:20, auto:false, label:"Followed the Cash-Out Engine (took/held per model)"},
   {k:"roe",   pts:20, auto:false, label:"No negative-EV recovery trade placed"},
   {k:"tilt",  pts:15, auto:false, label:"No chasing, no emotional stake increases"},
