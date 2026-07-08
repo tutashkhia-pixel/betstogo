@@ -443,10 +443,10 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
         <div class="panel-h"><span class="step-n">1</span><div class="step-head"><h2>The match</h2><span class="step-sub">Who's playing?</span></div></div>
         <div class="panel-b">
           <div class="f-grid">
-            <div class="f"><label>First team · left on Hard Rock</label><input id="s-home" autocomplete="off"></div>
-            <div class="f"><label>Second team · right on Hard Rock</label><input id="s-away" autocomplete="off"></div>
+            <div class="f"><label>First team</label><input id="s-home" autocomplete="off"></div>
+            <div class="f"><label>Second team</label><input id="s-away" autocomplete="off"></div>
           </div>
-          <p class="hint" style="margin:8px 0 0">Enter them in the order Hard Rock shows. Venue doesn't matter — World Cup in America is fine; the odds already carry everything.</p>
+          <p class="hint" style="margin:8px 0 0">Enter them in the order your sportsbook shows. Venue doesn't matter — the odds already carry everything.</p>
           <div class="mkt-t">Winner odds — copy Hard Rock's row (sets the model)</div>
           <div class="odds-row">
             <div class="odds-cell"><span class="onm" id="s-hr-h-lbl">Team 1</span><input id="s-hr-h" inputmode="text" placeholder="−270"></div>
@@ -466,7 +466,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
       </div>
       <div class="section-gap"></div>
       <div class="panel">
-        <div class="panel-h"><span class="step-n">2</span><div class="step-head"><h2>Your tickets</h2><span class="step-sub">Copy each bet from your Hard Rock bet slip</span></div></div>
+        <div class="panel-h"><span class="step-n">2</span><div class="step-head"><h2>My Bets</h2><span class="step-sub">Copy each bet from your bet slip</span></div></div>
         <div class="panel-b">
           <div class="t-row">
             <div class="f"><label>Market</label><select id="t-market"></select></div>
@@ -538,7 +538,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
       </details>
 
       <details class="panel">
-        <summary class="panel-h"><h2>Tickets in detail</h2></summary>
+        <summary class="panel-h"><h2>My Bets in detail</h2></summary>
         <div class="panel-b" id="tk-detail"></div>
       </details>
 
@@ -584,7 +584,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
         <p>Grade the process, not just the result. This entry goes to your Match Journal.</p>
       </div>
       <div class="panel">
-        <div class="panel-h"><h2>How did each ticket settle?</h2></div>
+        <div class="panel-h"><h2>How did each bet settle?</h2></div>
         <div class="panel-b">
           <div id="rv-settle"></div>
           <div class="f-grid" style="margin-top:14px">
@@ -720,7 +720,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
 <script>
 "use strict";
 /* ============================================================
-   BETS→GO — core application (v0.4.3 "The Translator")
+   BETS→GO — core application (v0.4.4 "The Translator")
 
    Architecture
    ------------
@@ -739,7 +739,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
    See docs/ARCHITECTURE.md and docs/OPERATING_MODEL.md.
    ============================================================ */
 
-const VERSION = "0.4.3";
+const VERSION = "0.4.4";
 
 /* ================= UTILITIES (core) ================= */
 const $ = id => document.getElementById(id);
@@ -1182,8 +1182,8 @@ function orchestrate(st, F){
   } else {
     rec="HOLD";
     why = mission==="preserve"
-      ? "Nothing on the board earns new money. The remaining tickets ride; the job is to lose nothing further."
-      : "Your tickets are worth more held than anything Hard Rock is offering. Nothing is mispriced. Wait.";
+      ? "Nothing on the board earns new money. The remaining bets ride; the job is to lose nothing further."
+      : "Your bets are worth more held than anything on offer. Nothing is mispriced. Wait.";
   }
 
   const lead = mission==="protect" ? "Your portfolio is winning. The job now is to keep it."
@@ -1387,10 +1387,9 @@ function teamNames(){
 }
 function optName(id){
   const t = teamNames();
-  let o = ADAPTER.markets[id].option;
-  if(t.home) o = o.replace(/\bHome\b/, t.home);
-  if(t.away) o = o.replace(/\bAway\b/, t.away);
-  return o;
+  return ADAPTER.markets[id].option
+    .replace(/\bHome\b/, t.home || "First team")
+    .replace(/\bAway\b/, t.away || "Second team");
 }
 function renderAdapterStatics(){
   const keep1 = $("t-market").value, keep2 = $("r-type").value;
@@ -1479,7 +1478,7 @@ function renderDesk(){
   $("m-verdict").textContent = A.rec + ".";
   $("m-say").textContent = A.say;
 
-  $("pf-list").innerHTML = '<div class="pf-t">Your tickets · net if held</div>' + A.pos.map(x=>{
+  $("pf-list").innerHTML = '<div class="pf-t">My Bets · net if held</div>' + A.pos.map(x=>{
     const P = x.P;
     if(P.status!=="open"){
       return '<div class="pos-row"><span class="ic" style="color:var(--ink-3)">–</span><span class="nm" style="color:var(--ink-3)">'+esc(x.label)+'</span><span class="st">'+esc(P.status)+'</span>'+
