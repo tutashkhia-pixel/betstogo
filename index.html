@@ -432,6 +432,13 @@ tr:last-child td{border-bottom:none}
 .wi .stk{width:80px; background:var(--surface); border:1px solid var(--border); border-radius:10px;
   color:var(--ink); padding:9px 10px; font-size:15px; font-variant-numeric:tabular-nums}
 #rec-card.tappable{cursor:pointer}
+.shot-btn{display:flex; flex-direction:column; align-items:flex-start; gap:2px; width:100%;
+  background:var(--inset); border:1px dashed var(--accent-bg); border-radius:14px;
+  padding:12px 16px; margin:2px 0 10px; color:var(--accent-hi); font:inherit; font-size:14px; font-weight:650;
+  box-shadow:0 0 0 1px var(--accent-bg)}
+.shot-btn .sub{font-size:11.5px; color:var(--ink-3); font-weight:400}
+.chip.ocr{box-shadow:0 0 0 1px var(--pos-bg); color:var(--pos)}
+.chip.ocr::before{content:"📷 "; font-size:11px}
 #roeTable tr[data-wi]{cursor:pointer}
 
 /* ============ MISSION THEMING — the shift re-lights the room ============ */
@@ -709,6 +716,9 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
     <div class="ms-grab"></div>
     <div class="ms-title">What happened?</div>
     <div class="ms-sub">Tap the event, then tap the numbers Hard Rock shows. Skip anything that didn't change.</div>
+    <button type="button" class="shot-btn" id="ms-shot">📷 Read my Hard Rock screenshot<span class="sub">Read on this phone — never uploaded. Found numbers appear as 📷 chips to tap.</span></button>
+    <input type="file" id="ms-file" accept="image/*" class="hidden">
+    <div id="ms-shot-status" class="hint hidden" style="margin:-4px 0 10px"></div>
     <div class="ev-row" id="ms-events"></div>
     <div class="ms-row">
       <span class="ms-lbl">Minute</span>
@@ -758,7 +768,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
 <script>
 "use strict";
 /* ============================================================
-   BETS→GO — core application (v0.5.0 "The 10-Second Loop")
+   BETS→GO — core application (v0.5.1 "The 10-Second Loop")
 
    Architecture
    ------------
@@ -777,7 +787,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
    See docs/ARCHITECTURE.md and docs/OPERATING_MODEL.md.
    ============================================================ */
 
-const VERSION = "0.5.0";
+const VERSION = "0.5.1";
 
 /* ================= UTILITIES (core) ================= */
 const $ = id => document.getElementById(id);
@@ -1807,6 +1817,49 @@ function sheetMarketRows(F){
   openPos(S).forEach(P=>{ if(ADAPTER.markets[P.marketId]) push(P.marketId, P.line, posLabel(P,S)); });
   return rows;
 }
+/* ---------- screenshot lane (v0.5.1) ----------
+   OCR is assistive, never trusted: found values only become extra 📷
+   chips; the operator still taps to confirm. Image never leaves the
+   device (tesseract.js runs in-browser, lazy-loaded on first use). */
+let ocrValues = null;
+async function runShot(file){
+  const st = $("ms-shot-status");
+  st.classList.remove("hidden");
+  st.textContent = "Reading the screenshot on this phone… first time takes ~15s.";
+  try {
+    const V = new URL("vendor/", location.href).href;
+    if(!window.Tesseract){
+      await Promise.race([
+        new Promise((res, rej)=>{
+          const s = document.createElement("script");
+          s.src = V+"tesseract.min.js";
+          s.onload = res; s.onerror = ()=>rej(new Error("load"));
+          document.head.appendChild(s);
+        }),
+        new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")), 30000)),
+      ]);
+    }
+    const {data} = await Promise.race([
+      Tesseract.recognize(file, "eng", {workerPath: V+"worker.min.js", corePath: V, langPath: V.replace(/\/$/,"")}),
+      new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")), 90000)),
+    ]);
+    const text = (data && data.text) || "";
+    const cash = [...text.matchAll(/\$\s?(\d{1,5}(?:[.,]\d{2})?)/g)]
+      .map(m=>parseFloat(m[1].replace(",","")))
+      .filter(v=>v>0 && v<100000);
+    const odds = [...text.matchAll(/[+\-\u2212]\s?(\d{3,5})\b/g)]
+      .map(m=>(m[0].trim().startsWith("+") ? 1 : -1)*parseInt(m[1],10))
+      .filter(v=>Math.abs(v)>=100 && Math.abs(v)<=20000);
+    ocrValues = {cash:[...new Set(cash)], odds:[...new Set(odds)]};
+    st.textContent = ocrValues.cash.length || ocrValues.odds.length
+      ? "Found "+ocrValues.cash.length+" dollar amounts · "+ocrValues.odds.length+" odds — they're the 📷 chips below. Tap the right ones."
+      : "Couldn't find numbers in that screenshot — use the chips or ⌨ instead.";
+    renderSheetDynamic();
+  } catch(e){
+    st.textContent = "Couldn't read that screenshot — use the chips or ⌨ instead.";
+  }
+}
+
 /* Law #0 — Hard Rock is the only source of truth. Chips are shortcuts;
    nothing is saved unless the operator taps it. Gold ~chips are guesses. */
 function chipRow(kind, key, chosen, preds, ghost){
@@ -1817,6 +1870,14 @@ function chipRow(kind, key, chosen, preds, ghost){
     if(seen.has(v.val)) return; seen.add(v.val);
     chips.push('<button class="chip'+(chosen===v.val?" sel":" pred")+'" data-ck="v" data-v="'+v.val+'">'+esc(v.txt)+'</button>');
   });
+  if(ocrValues){
+    const center = preds[1] ? preds[1].val : 0;
+    const pool = kind==="cash" ? ocrValues.cash : ocrValues.odds;
+    pool.slice().sort((a,b)=>Math.abs(a-center)-Math.abs(b-center)).slice(0,3).forEach(v=>{
+      if(seen.has(v)) return; seen.add(v);
+      chips.push('<button class="chip ocr'+(chosen===v?" sel":"")+'" data-ck="v" data-v="'+v+'">'+(kind==="cash"?fmt$(v):fmtAmer(v))+'</button>');
+    });
+  }
   if(chosen!=null && !seen.has(chosen))
     chips.push('<button class="chip sel" data-ck="v" data-v="'+chosen+'">'+(kind==="cash"?fmt$(chosen):fmtAmer(chosen))+'</button>');
   chips.push('<button class="chip kb" data-ck="kb" title="type it">⌨</button>');
@@ -1907,7 +1968,8 @@ function renderDidSeg(){
 function closeSheet(){
   $("m-sheet").classList.add("hidden");
   $("m-backdrop").classList.add("hidden");
-  ms = null;
+  ms = null; ocrValues = null;
+  $("ms-shot-status").classList.add("hidden");
 }
 function commitSheet(){
   if(!ms) return;
@@ -2282,6 +2344,12 @@ $("btn-export").addEventListener("click", ()=>{
 
 /* sheet wiring */
 $("m-pulse-open").addEventListener("click", openSheet);
+$("ms-shot").addEventListener("click", ()=>$("ms-file").click());
+$("ms-file").addEventListener("change", ()=>{
+  const f = $("ms-file").files[0];
+  if(f) runShot(f);
+  $("ms-file").value = "";
+});
 $("ms-cancel").addEventListener("click", closeSheet);
 $("m-backdrop").addEventListener("click", closeSheet);
 $("ms-commit").addEventListener("click", commitSheet);
