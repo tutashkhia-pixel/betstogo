@@ -720,7 +720,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
 <script>
 "use strict";
 /* ============================================================
-   BETS→GO — core application (v0.4.4 "The Translator")
+   BETS→GO — core application (v0.4.5 "The Translator")
 
    Architecture
    ------------
@@ -739,7 +739,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
    See docs/ARCHITECTURE.md and docs/OPERATING_MODEL.md.
    ============================================================ */
 
-const VERSION = "0.4.4";
+const VERSION = "0.4.5";
 
 /* ================= UTILITIES (core) ================= */
 const $ = id => document.getElementById(id);
@@ -1433,7 +1433,7 @@ function renderDesk(){
   $("review").classList.toggle("hidden", !(S && S.closing));
   $("m-pulsebar").classList.toggle("hidden", !active);
   document.body.classList.remove("mission-build","mission-protect","mission-preserve");
-  if(!S){ renderTop(null); renderTicketBuilder(); return; }
+  if(!S){ renderTop(null); renderAdapterStatics(); renderTicketBuilder(); return; }
   if(S.closing){ renderTop(null); renderReview(); return; }
 
   const A = analyze(S);
@@ -1922,6 +1922,7 @@ function saveJournal(){
   });
   store.set(LSJ, JSON.stringify(journal));
   S = null; dqState = {}; persist();
+  resetSetupForm();
   renderDesk(); tabTo("journal");
 }
 
@@ -2022,6 +2023,17 @@ function runDemo(i){
 
 /* ================= SETUP (ticket builder) ================= */
 let draft = [];
+function resetSetupForm(){
+  draft = [];
+  ["s-home","s-away","s-comp","s-bank","s-hr-h","s-hr-d","s-hr-a","t-odds","t-stake"].forEach(id=>{
+    const el = $(id); if(el) el.value = "";
+  });
+  $("s-hr-h-lbl").textContent = "Team 1";
+  $("s-hr-a-lbl").textContent = "Team 2";
+  ADAPTER.setupParams.forEach(p=>{ const el = $("s-p-"+p.key); if(el) el.value = p.def; });
+  renderAdapterStatics();
+  renderTicketBuilder();
+}
 function renderTicketBuilder(){
   const el = $("t-list"); if(!el) return;
   el.innerHTML = draft.map((t,i)=>{
@@ -2108,7 +2120,7 @@ $("btn-clearalerts").addEventListener("click", ()=>{ if(S){S.alerts=[]; persist(
 $("m-close").addEventListener("click", ()=>{ if(S){ S.closing = true; persist(); renderDesk(); window.scrollTo({top:0}); } });
 $("btn-back-desk").addEventListener("click", ()=>{ if(S){ S.closing = false; persist(); renderDesk(); } });
 $("btn-save-journal").addEventListener("click", saveJournal);
-$("btn-discard").addEventListener("click", ()=>{ S = null; dqState = {}; persist(); renderDesk(); });
+$("btn-discard").addEventListener("click", ()=>{ S = null; dqState = {}; persist(); resetSetupForm(); renderDesk(); });
 $("rv-side").addEventListener("input", ()=>{ if(S && S.closing) updatePL(); });
 $("btn-export").addEventListener("click", ()=>{
   const blob = new Blob([JSON.stringify(journal,null,2)], {type:"application/json"});
