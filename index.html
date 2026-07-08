@@ -434,7 +434,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
     <div id="setup">
       <div class="setup-hero">
         <h1>Start a match.</h1>
-        <p>Copy what Hard Rock shows you — the teams, the Winner odds, and your tickets. From kickoff, BETS→GO manages the whole portfolio and names the smartest move at every moment.</p>
+        <p>Copy what Hard Rock shows you — the teams, the Winner odds, and your bets. From kickoff, BETS→GO manages the whole portfolio and names the smartest move at every moment.</p>
         <p class="hint">It never promises profit. It grades the decision, not the result.</p>
       </div>
 
@@ -635,11 +635,11 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
   <div id="view-model" class="hidden">
     <div class="setup-hero" style="padding-bottom:0">
       <h1>Model &amp; method.</h1>
-      <p>Every number BETS→GO shows is computed from these rules — nothing is a black box. Core engines produce facts only; a single Decision Orchestrator turns facts into advice. Since v0.4 the fundamental unit of analysis is the <b>portfolio</b>: every ticket is a payoff rule over the same joint score distribution, and every recommendation is justified by how it changes the whole portfolio.</p>
+      <p>Every number BETS→GO shows is computed from these rules — nothing is a black box. Core engines produce facts only; a single Decision Orchestrator turns facts into advice. Since v0.4 the fundamental unit of analysis is the <b>portfolio</b>: every bet is a payoff rule over the same joint score distribution, and every recommendation is justified by how it changes the whole portfolio.</p>
     </div>
     <div class="doc">
       <h3>0 · Portfolio engine (v0.4)</h3>
-      <p>The in-play model produces a joint distribution over final scores. Each open ticket maps every possible final score to a profit or loss. Summing those maps gives the portfolio's net P/L per outcome — from which come portfolio expected value, worst case, best case, exposure per result, and correlated-risk overlap. Verdicts (HOLD · ADD · REDUCE · HEDGE · REBALANCE · CASH OUT) are justified only by the portfolio delta. Path-dependent markets (next goal) and manual-probability tickets contribute their expected value without a per-score map, and are labeled as such.</p>
+      <p>The in-play model produces a joint distribution over final scores. Each open bet maps every possible final score to a profit or loss. Summing those maps gives the portfolio's net P/L per outcome — from which come portfolio expected value, worst case, best case, exposure per result, and correlated-risk overlap. Verdicts (HOLD · ADD · REDUCE · HEDGE · REBALANCE · CASH OUT) are justified only by the portfolio delta. Path-dependent markets (next goal) and manual-probability bets contribute their expected value without a per-score map, and are labeled as such.</p>
       <h3>1 · In-play goal model</h3>
       <p>Remaining goals for each side follow a Poisson process. Base rate is the pre-match expected-goals pair (derived automatically from the Winner odds you enter) scaled by time remaining, with a late-game uplift (second halves produce ~55% of goals):</p>
       <p><code>λ = xG × (90 − min)/90 × (1 + 0.20 × min/90)</code></p>
@@ -652,9 +652,9 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
       <h3>2 · Edge &amp; EV</h3>
       <p>American odds convert to implied probability (<code>+120 → 45.5%</code>, <code>−150 → 60%</code>). <b>Edge</b> = model probability − implied probability. <b>EV per $1</b> = <code>p×(dec−1) − (1−p)</code>. Implied probabilities include the book's margin, so a small positive edge may just be vig — BETS→GO flags edges under 2 points as noise.</p>
       <h3>3 · Cash Out</h3>
-      <p>Per ticket: <b>Expected Hold Value</b> = P(ticket wins) × total payout. Hard Rock's Cash Out offer is judged by <code>ratio = offer / EHV</code>: ≥1.05 take it · 0.97–1.05 taking part is fair · &lt;0.88 the book is underpaying. Books price Cash Out below fair value on purpose; taking a sub-0.9 ratio repeatedly is a slow leak.</p>
+      <p>Per bet: <b>Expected Hold Value</b> = P(bet wins) × total payout. Hard Rock's Cash Out offer is judged by <code>ratio = offer / EHV</code>: ≥1.05 take it · 0.97–1.05 taking part is fair · &lt;0.88 the book is underpaying. Books price Cash Out below fair value on purpose; taking a sub-0.9 ratio repeatedly is a slow leak.</p>
       <h3>4 · Hedges &amp; adds</h3>
-      <p>A hedge is only recommended when it locks value against the portfolio's dominant exposure — never to soothe nerves. A new ticket (ADD) is only recommended when its market clears a +4% EV bar on its own merit <i>and</i> improves the portfolio: higher expected value, smaller downside, or upside where the portfolio is currently negative. Suggested stake is quarter-Kelly, capped at 50% of committed capital. If nothing clears the bar, the correct trade is no trade.</p>
+      <p>A hedge is only recommended when it locks value against the portfolio's dominant exposure — never to soothe nerves. A new bet (ADD) is only recommended when its market clears a +4% EV bar on its own merit <i>and</i> improves the portfolio: higher expected value, smaller downside, or upside where the portfolio is currently negative. Suggested stake is quarter-Kelly, capped at 50% of committed capital. If nothing clears the bar, the correct trade is no trade.</p>
       <h3>5 · Decision Quality Score</h3>
       <p>0–100, scored at close: positive-edge entries (20) · committed ≤ 5% of bankroll (15) · followed the Cash Out engine (20) · no negative-EV adds (20) · no chasing / emotional stake increases (15) · review completed (10). DQS is the number to maximize over a season.</p>
       <h3>Honest limits</h3>
@@ -720,7 +720,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
 <script>
 "use strict";
 /* ============================================================
-   BETS→GO — core application (v0.4.5 "The Translator")
+   BETS→GO — core application (v0.4.6 "The Translator")
 
    Architecture
    ------------
@@ -739,7 +739,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
    See docs/ARCHITECTURE.md and docs/OPERATING_MODEL.md.
    ============================================================ */
 
-const VERSION = "0.4.5";
+const VERSION = "0.4.6";
 
 /* ================= UTILITIES (core) ================= */
 const $ = id => document.getElementById(id);
@@ -1141,11 +1141,11 @@ function orchestrate(st, F){
 
   /* per-ticket Cash Out reads (Hard Rock's own tool) */
   F.open.forEach(x=>{
-    if(x.ratio==null){ x.coRec="NO OFFER"; x.coWhy="Enter Hard Rock's Cash Out for this ticket to price it."; }
-    else if(x.ratio>=1.05){ x.coRec="TAKE IT"; x.coWhy="Hard Rock's Cash Out is above what this ticket is really worth — they're overpaying."; }
+    if(x.ratio==null){ x.coRec="NO OFFER"; x.coWhy="Enter Hard Rock's Cash Out for this bet to price it."; }
+    else if(x.ratio>=1.05){ x.coRec="TAKE IT"; x.coWhy="Hard Rock's Cash Out is above what this bet is really worth — they're overpaying."; }
     else if(x.ratio>=0.97){ x.coRec="FAIR"; x.coWhy="The Cash Out is fair. Taking part locks profit without giving anything up."; }
     else if(x.ratio>=0.88){ x.coRec="LOW"; x.coWhy="The Cash Out is a little low. Check again after the next big moment."; }
-    else { x.coRec="KEEP"; x.coWhy="The Cash Out is well below what this ticket is worth — taking it gives money away."; }
+    else { x.coRec="KEEP"; x.coWhy="The Cash Out is well below what this bet is worth — taking it gives money away."; }
   });
 
   const cashables = F.open.filter(x=>x.coRec==="TAKE IT");
@@ -1158,7 +1158,7 @@ function orchestrate(st, F){
 
   let rec, why, target=null, addRec=null;
   if(nOpen===0){
-    rec="HOLD"; why="Every ticket is settled or cashed. Close the match and save the review.";
+    rec="HOLD"; why="Every bet is settled or cashed. Close the match and save the review.";
   } else if(cashables.length && bestAdd){
     rec="REBALANCE"; target=cashables[0]; addRec=bestAdd;
     why="Two moves improve the portfolio at once: take Hard Rock's Cash Out on "+cashables[0].label+
@@ -1166,7 +1166,7 @@ function orchestrate(st, F){
         (bestAdd.covers>0.4 ? " — and it pays exactly where your portfolio is weakest." : ".");
   } else if(cashables.length){
     rec="CASH OUT"; target=cashables[0];
-    why="Hard Rock's Cash Out on "+cashables[0].label+" ("+fmt$(cashables[0].offer)+") is above what the ticket is worth (about "+fmt$(cashables[0].ehv)+"). Taking it improves the portfolio no matter what happens next.";
+    why="Hard Rock's Cash Out on "+cashables[0].label+" ("+fmt$(cashables[0].offer)+") is above what the bet is worth (about "+fmt$(cashables[0].ehv)+"). Taking it improves the portfolio no matter what happens next.";
   } else if(bestAdd && bestAdd.covers>0.4 && F.exposure && Math.min(F.exposure.home,F.exposure.draw,F.exposure.away) < -0.4*F.committed){
     rec="HEDGE"; addRec=bestAdd;
     why=bestAdd.label+" at "+fmtAmer(bestAdd.odds)+" pays in the results where your portfolio loses most — it cuts the downside and the price still favors you.";
@@ -1175,7 +1175,7 @@ function orchestrate(st, F){
     why=bestAdd.label+" at "+fmtAmer(bestAdd.odds)+" is priced about "+(bestAdd.ev*100).toFixed(0)+"% in your favor on its own merit. About "+fmt$(bestAdd.stake)+" is the disciplined size.";
   } else if(hedgeable){
     rec="HEDGE"; target=hedgeable;
-    why="The market prices "+hedgeable.label+" well above the model. Locking value against it is on the table — tap the ticket for the exact numbers.";
+    why="The market prices "+hedgeable.label+" well above the model. Locking value against it is on the table — tap the bet for the exact numbers.";
   } else if(reducibles.length && mission==="protect"){
     rec="REDUCE"; target=reducibles[0];
     why="Hard Rock's Cash Out on "+reducibles[0].label+" is fair. Taking part of it banks profit without giving anything up.";
@@ -1246,7 +1246,7 @@ function actionBoard(st, A){
 function improveHints(st, A){
   const need = [];
   const noCash = A.open.filter(x=>!x.offer).length;
-  if(noCash) need.push(noCash===1 ? "the Cash Out on 1 ticket" : "the Cash Out on "+noCash+" tickets");
+  if(noCash) need.push(noCash===1 ? "the Cash Out on 1 bet" : "the Cash Out on "+noCash+" bets");
   if(st.hr.odds["home-ml"]==null) need.push("Hard Rock's current Winner odds");
   return need.length ? "To sharpen this: update " + need.join(" · ") + "." : "";
 }
@@ -1536,7 +1536,7 @@ function renderDesk(){
   $("xgTag").textContent = ADAPTER.expectancyTag(M);
 
   /* tickets in detail */
-  $("tk-detail").innerHTML = A.pos.length ? '<div class="tbl-wrap"><table><thead><tr><th>Ticket</th><th class="r">Odds</th><th class="r">Bet</th><th class="r">Win chance</th><th class="r">Worth held</th><th class="r">Cash Out</th><th>Read</th></tr></thead><tbody>'+
+  $("tk-detail").innerHTML = A.pos.length ? '<div class="tbl-wrap"><table><thead><tr><th>Bet</th><th class="r">Odds</th><th class="r">Risk $</th><th class="r">Win chance</th><th class="r">Worth held</th><th class="r">Cash Out</th><th>Read</th></tr></thead><tbody>'+
     A.pos.map(x=>'<tr><td>'+esc(x.label)+(x.hasMap?'':' <span class="mut">(expected-value only)</span>')+'</td>'+
       '<td class="r mono">'+fmtAmer(x.P.odds)+'</td><td class="r mono">$'+x.P.stake+'</td>'+
       '<td class="r mono">'+pct(x.prob)+'</td><td class="r mono">'+fmt$(x.ehv)+'</td>'+
@@ -1547,7 +1547,7 @@ function renderDesk(){
              : x.coRec==="NO OFFER"?'<span class="mut">no offer</span>':'<span class="tag pos">Keep</span>')+'</td></tr>').join("")+
     '</tbody></table></div>'+
     '<p class="hint" style="margin:10px 0 0">Net by result — '+esc(S.home)+' win: <b class="mono '+(A.exposure.home>=0?"pos-t":"neg-t")+'">'+sgn$(A.exposure.home)+'</b> · Draw: <b class="mono '+(A.exposure.draw>=0?"pos-t":"neg-t")+'">'+sgn$(A.exposure.draw)+'</b> · '+esc(S.away)+' win: <b class="mono '+(A.exposure.away>=0?"pos-t":"neg-t")+'">'+sgn$(A.exposure.away)+'</b></p>'
-    : '<div class="empty">No tickets.</div>';
+    : '<div class="empty">No bets.</div>';
 
   /* action board */
   const acts = actionBoard(S, A);
@@ -1641,7 +1641,7 @@ function openMatch(cfg){
   const edged = A.open.filter(x=>x.edge!=null);
   S.entryEdge = edged.length ? edged.reduce((s,x)=>s+x.edge*x.P.stake,0)/edged.reduce((s,x)=>s+x.P.stake,0) : null;
   S.history.push(snap(A, null));
-  pushAlert("info", "Match opened: "+positions.length+" ticket"+(positions.length>1?"s":"")+", "+fmt$(A.committed)+" committed.", 0);
+  pushAlert("info", "Match opened: "+positions.length+" bet"+(positions.length>1?"s":"")+", "+fmt$(A.committed)+" committed.", 0);
   persist(); renderDesk();
 }
 
@@ -1945,7 +1945,7 @@ function renderJournal(){
   $("jList").innerHTML = journal.map((j,i)=>
     '<div class="j-entry" data-j="'+i+'"><div class="j-head">'+
     '<span class="m">'+esc(j.home)+' '+esc(j.finalScore)+' '+esc(j.away)+'</span>'+
-    '<span class="d">'+esc(j.comp||"")+' · '+j.date+(j.tickets?' · '+j.tickets.length+' ticket'+(j.tickets.length>1?'s':''):'')+'</span>'+
+    '<span class="d">'+esc(j.comp||"")+' · '+j.date+(j.tickets?' · '+j.tickets.length+' bet'+(j.tickets.length>1?'s':''):'')+'</span>'+
     '<span class="tag" style="margin-left:auto">DQS '+j.dqs+'</span>'+
     '<span class="tag '+(j.pl>=0?"pos":"neg")+'">'+fmt$(j.pl)+'</span>'+
     '</div><div class="j-body"><div class="tbl-wrap"><table>'+
@@ -2047,7 +2047,7 @@ function renderTicketBuilder(){
   const bank = parseFloat($("s-bank").value)||0;
   const committed = draft.reduce((s,t)=>s+t.stake,0);
   $("s-preview").textContent = draft.length
-    ? draft.length+" ticket"+(draft.length>1?"s":"")+" · "+fmt$(committed)+" committed"+(bank>0?" ("+(committed/bank*100).toFixed(1).replace(/\.0$/,"")+"% of bankroll)":"")
+    ? draft.length+" bet"+(draft.length>1?"s":"")+" · "+fmt$(committed)+" committed"+(bank>0?" ("+(committed/bank*100).toFixed(1).replace(/\.0$/,"")+"% of bankroll)":"")
     : "";
 }
 function addTicket(){
