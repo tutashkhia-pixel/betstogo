@@ -1,70 +1,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>BETS→GO — Decision Cockpit</title>
+<title>BETS→GO — Live Manager</title>
 <style>
-/* ============ TOKENS — v0.3 warm-metal system ============ */
-/* Light: warm paper. Dark: warm near-black (primary theatre). Token names are
-   load-bearing — JS reads them via inline var() — values only change here. */
-:root{
-  --bg:#F1EDE3; --surface:#FCFAF5; --surface-2:#F5F1E8; --inset:#EDE8DB;
-  --border:rgba(82,64,30,.12); --border-strong:rgba(82,64,30,.24);
-  --ink:#28221A; --ink-2:#5C5443; --ink-3:#8B8270;
-  --accent:#9C7118; --accent-hi:#B8863B; --accent-bg:rgba(156,113,24,.10);
-  --accent-grad:linear-gradient(180deg,#C89A4C,#A87A24 55%,#8A6218);
-  --accent-ink:#FFF8EA;
-  --pos:#237A4E; --pos-bg:rgba(35,122,78,.10);
-  --neg:#BF4E45; --neg-bg:rgba(191,78,69,.08);
-  --warn:#8F6A14; --warn-bg:rgba(156,113,24,.12);
-  --crit:#BF4E45; --hi:#B25325; --med:#8F6A14; --info:#237A4E;
-  --s1:#2a72c8; --s2:#1d9a6c; --s3:#c08a00;
-  --grid:#E5DFD0; --axis:#B9B09A;
-  --shadow:0 1px 2px rgba(60,50,30,.07), 0 8px 24px rgba(60,50,30,.07);
-  --shadow-2:0 2px 4px rgba(60,50,30,.08), 0 16px 40px rgba(60,50,30,.10);
-  --edge:inset 0 1px 0 rgba(255,255,255,.65);
-  --card-grad:linear-gradient(180deg,var(--surface),var(--surface-2));
-  --ambient:radial-gradient(90% 480px at 85% -120px, rgba(156,113,24,.06), transparent 60%);
-}
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#0C0B09; --surface:#141210; --surface-2:#1B1815; --inset:#0F0E0B;
-    --border:rgba(235,220,190,.09); --border-strong:rgba(235,220,190,.18);
-    --ink:#F0EAE0; --ink-2:#B0A695; --ink-3:#77705F;
-    --accent:#D9A94F; --accent-hi:#EDC684; --accent-bg:rgba(217,169,79,.10);
-    --accent-grad:linear-gradient(180deg,#EDC684,#D9A94F 55%,#B8863B);
-    --accent-ink:#1A1206;
-    --pos:#6FC793; --pos-bg:rgba(111,199,147,.10);
-    --neg:#E08078; --neg-bg:rgba(224,128,120,.10);
-    --warn:#D9A94F; --warn-bg:rgba(217,169,79,.12);
-    --crit:#E08078; --hi:#DF9668; --med:#D9A94F; --info:#6FC793;
-    --s1:#5B8FD9; --s2:#4FB58B; --s3:#C99A3F;
-    --grid:#211D17; --axis:#3A342A;
-    --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px rgba(0,0,0,.35);
-    --shadow-2:0 2px 4px rgba(0,0,0,.5), 0 16px 48px rgba(0,0,0,.45);
-    --edge:inset 0 1px 0 rgba(255,255,255,.05);
-    --card-grad:linear-gradient(180deg,var(--surface-2),var(--surface));
-    --ambient:radial-gradient(90% 480px at 85% -120px, rgba(217,169,79,.07), transparent 60%);
-  }
-}
-:root[data-theme="light"]{
-  --bg:#F1EDE3; --surface:#FCFAF5; --surface-2:#F5F1E8; --inset:#EDE8DB;
-  --border:rgba(82,64,30,.12); --border-strong:rgba(82,64,30,.24);
-  --ink:#28221A; --ink-2:#5C5443; --ink-3:#8B8270;
-  --accent:#9C7118; --accent-hi:#B8863B; --accent-bg:rgba(156,113,24,.10);
-  --accent-grad:linear-gradient(180deg,#C89A4C,#A87A24 55%,#8A6218);
-  --accent-ink:#FFF8EA;
-  --pos:#237A4E; --pos-bg:rgba(35,122,78,.10);
-  --neg:#BF4E45; --neg-bg:rgba(191,78,69,.08);
-  --warn:#8F6A14; --warn-bg:rgba(156,113,24,.12);
-  --crit:#BF4E45; --hi:#B25325; --med:#8F6A14; --info:#237A4E;
-  --s1:#2a72c8; --s2:#1d9a6c; --s3:#c08a00;
-  --grid:#E5DFD0; --axis:#B9B09A;
-  --shadow:0 1px 2px rgba(60,50,30,.07), 0 8px 24px rgba(60,50,30,.07);
-  --shadow-2:0 2px 4px rgba(60,50,30,.08), 0 16px 40px rgba(60,50,30,.10);
-  --edge:inset 0 1px 0 rgba(255,255,255,.65);
-  --card-grad:linear-gradient(180deg,var(--surface),var(--surface-2));
-  --ambient:radial-gradient(90% 480px at 85% -120px, rgba(156,113,24,.06), transparent 60%);
-}
-:root[data-theme="dark"]{
+/* ============ TOKENS — v0.3.2 warm-metal, DARK ONLY ============ */
+/* Founder call: one theatre. The app renders warm-dark on every device,
+   regardless of OS appearance setting. Token names are load-bearing (JS
+   reads them via inline var()). */
+:root, :root[data-theme="light"], :root[data-theme="dark"]{
   --bg:#0C0B09; --surface:#141210; --surface-2:#1B1815; --inset:#0F0E0B;
   --border:rgba(235,220,190,.09); --border-strong:rgba(235,220,190,.18);
   --ink:#F0EAE0; --ink-2:#B0A695; --ink-3:#77705F;
@@ -82,6 +24,7 @@
   --edge:inset 0 1px 0 rgba(255,255,255,.05);
   --card-grad:linear-gradient(180deg,var(--surface-2),var(--surface));
   --ambient:radial-gradient(90% 480px at 85% -120px, rgba(217,169,79,.07), transparent 60%);
+  color-scheme:dark;
 }
 
 /* ============ BASE ============ */
@@ -235,8 +178,7 @@ details.panel > .panel-b{padding-top:2px}
   padding:12px 14px; border-radius:12px; background:var(--accent-bg);
   font-size:13px; color:var(--accent-hi); line-height:1.45;
 }
-:root:not([data-theme="dark"]) .setup-tip{color:var(--accent)}
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .setup-tip{color:var(--accent-hi)} }
+.setup-tip{color:var(--accent-hi)}
 .setup-tip b{font-weight:650}
 
 /* momentum slider */
@@ -536,7 +478,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
   <div class="topbar">
     <div class="brand">
       <span class="logo">BETS<b>&rarr;</b>GO</span>
-      <span class="sub">Decision Cockpit</span>
+      <span class="sub">Live Manager</span>
     </div>
     <div class="top-status" id="topStatus"></div>
   </div>
@@ -899,7 +841,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
 <script>
 "use strict";
 /* ============================================================
-   BETS→GO — core application (v0.3.1)
+   BETS→GO — core application (v0.3.2)
 
    Architecture
    ------------
@@ -914,7 +856,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
    See docs/ARCHITECTURE.md and docs/OPERATING_MODEL.md.
    ============================================================ */
 
-const VERSION = "0.3.1";
+const VERSION = "0.3.2";
 
 /* ================= UTILITIES (core) ================= */
 const $ = id => document.getElementById(id);
