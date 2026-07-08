@@ -443,14 +443,15 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
         <div class="panel-h"><span class="step-n">1</span><div class="step-head"><h2>The match</h2><span class="step-sub">Who's playing?</span></div></div>
         <div class="panel-b">
           <div class="f-grid">
-            <div class="f"><label>Home team</label><input id="s-home" autocomplete="off"></div>
-            <div class="f"><label>Away team</label><input id="s-away" autocomplete="off"></div>
+            <div class="f"><label>First team · left on Hard Rock</label><input id="s-home" autocomplete="off"></div>
+            <div class="f"><label>Second team · right on Hard Rock</label><input id="s-away" autocomplete="off"></div>
           </div>
+          <p class="hint" style="margin:8px 0 0">Enter them in the order Hard Rock shows. Venue doesn't matter — World Cup in America is fine; the odds already carry everything.</p>
           <div class="mkt-t">Winner odds — copy Hard Rock's row (sets the model)</div>
           <div class="odds-row">
-            <div class="odds-cell"><span class="onm" id="s-hr-h-lbl">Home</span><input id="s-hr-h" inputmode="text" placeholder="−270"></div>
+            <div class="odds-cell"><span class="onm" id="s-hr-h-lbl">Team 1</span><input id="s-hr-h" inputmode="text" placeholder="−270"></div>
             <div class="odds-cell"><span class="onm">Draw</span><input id="s-hr-d" inputmode="text" placeholder="+380"></div>
-            <div class="odds-cell"><span class="onm" id="s-hr-a-lbl">Away</span><input id="s-hr-a" inputmode="text" placeholder="+800"></div>
+            <div class="odds-cell"><span class="onm" id="s-hr-a-lbl">Team 2</span><input id="s-hr-a" inputmode="text" placeholder="+800"></div>
           </div>
           <div class="setup-tip">◎&nbsp;<span><b>That's all the model needs.</b> Those three prices tell it how strong each side is — it works out the rest and keeps learning as the match unfolds.</span></div>
           <details class="more-opts">
@@ -719,7 +720,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
 <script>
 "use strict";
 /* ============================================================
-   BETS→GO — core application (v0.4.1 "The Translator")
+   BETS→GO — core application (v0.4.2 "The Translator")
 
    Architecture
    ------------
@@ -738,7 +739,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
    See docs/ARCHITECTURE.md and docs/OPERATING_MODEL.md.
    ============================================================ */
 
-const VERSION = "0.4.1";
+const VERSION = "0.4.2";
 
 /* ================= UTILITIES (core) ================= */
 const $ = id => document.getElementById(id);
@@ -1379,13 +1380,31 @@ function renderTop(A){
     (A ? '<span class="tag '+(A.rec==="HOLD"?"pos":A.rec==="CASH OUT"||A.rec==="REDUCE"?"warn":"")+'">'+esc(A.rec)+'</span>' : '');
 }
 
+function teamNames(){
+  const home = (S ? S.home : $("s-home").value.trim());
+  const away = (S ? S.away : $("s-away").value.trim());
+  return {home: home||null, away: away||null};
+}
+function optName(id){
+  const t = teamNames();
+  let o = ADAPTER.markets[id].option;
+  if(t.home) o = o.replace(/\bHome\b/, t.home);
+  if(t.away) o = o.replace(/\bAway\b/, t.away);
+  return o;
+}
 function renderAdapterStatics(){
+  const keep1 = $("t-market").value, keep2 = $("r-type").value;
   $("t-market").innerHTML = ADAPTER.betOrder
-    .map(id=>'<option value="'+id+'">'+esc(ADAPTER.markets[id].option)+'</option>').join("");
+    .map(id=>'<option value="'+id+'">'+esc(optName(id))+'</option>').join("");
   $("r-type").innerHTML = ADAPTER.recoveryOrder
-    .map(id=>'<option value="'+id+'">'+esc(ADAPTER.markets[id].option)+'</option>').join("");
-  $("s-params").innerHTML = ADAPTER.setupParams.map(p=>
-    '<div class="f"><label>'+esc(p.label)+'</label><input id="s-p-'+p.key+'" type="number" step="'+p.step+'" value="'+p.def+'"></div>').join("");
+    .map(id=>'<option value="'+id+'">'+esc(optName(id))+'</option>').join("");
+  if(keep1) $("t-market").value = keep1;
+  if(keep2) $("r-type").value = keep2;
+  $("s-params").innerHTML = ADAPTER.setupParams.map(p=>{
+    const cur = $("s-p-"+p.key);
+    const val = cur && cur.value !== "" ? cur.value : p.def;
+    return '<div class="f"><label>'+esc(p.label)+'</label><input id="s-p-'+p.key+'" type="number" step="'+p.step+'" value="'+val+'"></div>';
+  }).join("");
 }
 
 function momLabels(){
@@ -2039,8 +2058,9 @@ function syncLineVis(){
 $("btn-addticket").addEventListener("click", addTicket);
 $("t-market").addEventListener("change", syncLineVis);
 ["s-home","s-away"].forEach(id=>$(id).addEventListener("input", ()=>{
-  $("s-hr-h-lbl").textContent = $("s-home").value.trim()||"Home";
-  $("s-hr-a-lbl").textContent = $("s-away").value.trim()||"Away";
+  $("s-hr-h-lbl").textContent = $("s-home").value.trim()||"Team 1";
+  $("s-hr-a-lbl").textContent = $("s-away").value.trim()||"Team 2";
+  renderAdapterStatics();
   renderTicketBuilder();
 }));
 $("s-bank").addEventListener("input", renderTicketBuilder);
