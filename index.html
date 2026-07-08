@@ -720,7 +720,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
 <script>
 "use strict";
 /* ============================================================
-   BETS→GO — core application (v0.4.2 "The Translator")
+   BETS→GO — core application (v0.4.3 "The Translator")
 
    Architecture
    ------------
@@ -739,7 +739,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
    See docs/ARCHITECTURE.md and docs/OPERATING_MODEL.md.
    ============================================================ */
 
-const VERSION = "0.4.2";
+const VERSION = "0.4.3";
 
 /* ================= UTILITIES (core) ================= */
 const $ = id => document.getElementById(id);
@@ -828,20 +828,20 @@ const FootballAdapter = (() => {
 
   const line$ = L => (L>0?"+":"")+L;
   const markets = {
-    "home-ml":      {option:"Home Moneyline",              forBet:true,  forRecovery:true,  needsLine:false, prob:(M)=>M.pH,                   label:st=>st.home+" ML"},
-    "draw":         {option:"Draw",                        forBet:true,  forRecovery:true,  needsLine:false, prob:(M)=>M.pD,                   label:()=>"Draw"},
-    "away-ml":      {option:"Away Moneyline",              forBet:true,  forRecovery:true,  needsLine:false, prob:(M)=>M.pA,                   label:st=>st.away+" ML"},
-    "over":         {option:"Over (total goals)",          forBet:true,  forRecovery:true,  needsLine:true,  prob:(M,st,L)=>M.overFull(L),     label:(st,L)=>"Over "+L},
-    "under":        {option:"Under (total goals)",         forBet:true,  forRecovery:true,  needsLine:true,  prob:(M,st,L)=>1-M.overFull(L),   label:(st,L)=>"Under "+L},
-    "home-hc":      {option:"Home spread / handicap",      forBet:true,  forRecovery:true,  needsLine:true,  prob:(M,st,L)=>M.handicap("h",L), label:(st,L)=>st.home+" "+line$(L)},
-    "away-hc":      {option:"Away spread / handicap",      forBet:true,  forRecovery:true,  needsLine:true,  prob:(M,st,L)=>M.handicap("a",L), label:(st,L)=>st.away+" "+line$(L)},
-    "btts-yes":     {option:"BTTS — Yes",                  forBet:true,  forRecovery:true,  needsLine:false, prob:(M)=>M.bttsYes,              label:()=>"BTTS Yes"},
-    "btts-no":      {option:"BTTS — No",                   forBet:true,  forRecovery:false, needsLine:false, prob:(M)=>M.bttsNo,               label:()=>"BTTS No"},
-    "home-next":    {option:"Home scores next",            forBet:false, forRecovery:true,  needsLine:false, prob:(M)=>M.nextHome,             label:st=>st.home+" scores next"},
-    "away-next":    {option:"Away scores next",            forBet:false, forRecovery:true,  needsLine:false, prob:(M)=>M.nextAway,             label:st=>st.away+" scores next"},
-    "home-tt-over": {option:"Home team total over (line)", forBet:false, forRecovery:true,  needsLine:true,  prob:(M,st,L)=>M.teamOver("h",L), label:(st,L)=>st.home+" total over "+L},
-    "away-tt-over": {option:"Away team total over (line)", forBet:false, forRecovery:true,  needsLine:true,  prob:(M,st,L)=>M.teamOver("a",L), label:(st,L)=>st.away+" total over "+L},
-    "custom":       {option:"Custom (manual %)",           forBet:false, forRecovery:true,  needsLine:false, prob:(M,st,L,man)=>(man||50)/100, label:()=>"Custom market"},
+    "home-ml":      {option:"Winner — Home",               forBet:true,  forRecovery:true,  needsLine:false, prob:(M)=>M.pH,                   label:st=>st.home+" to win"},
+    "draw":         {option:"Winner — Draw",               forBet:true,  forRecovery:true,  needsLine:false, prob:(M)=>M.pD,                   label:()=>"Draw"},
+    "away-ml":      {option:"Winner — Away",               forBet:true,  forRecovery:true,  needsLine:false, prob:(M)=>M.pA,                   label:st=>st.away+" to win"},
+    "over":         {option:"Total Goals — Over",          forBet:true,  forRecovery:true,  needsLine:true,  prob:(M,st,L)=>M.overFull(L),     label:(st,L)=>"Over "+L+" Goals"},
+    "under":        {option:"Total Goals — Under",         forBet:true,  forRecovery:true,  needsLine:true,  prob:(M,st,L)=>1-M.overFull(L),   label:(st,L)=>"Under "+L+" Goals"},
+    "home-hc":      {option:"Spread — Home",               forBet:true,  forRecovery:true,  needsLine:true,  prob:(M,st,L)=>M.handicap("h",L), label:(st,L)=>st.home+" "+line$(L)},
+    "away-hc":      {option:"Spread — Away",               forBet:true,  forRecovery:true,  needsLine:true,  prob:(M,st,L)=>M.handicap("a",L), label:(st,L)=>st.away+" "+line$(L)},
+    "btts-yes":     {option:"Both Teams to Score — Yes",   forBet:true,  forRecovery:true,  needsLine:false, prob:(M)=>M.bttsYes,              label:()=>"Both Teams to Score — Yes"},
+    "btts-no":      {option:"Both Teams to Score — No",    forBet:true,  forRecovery:false, needsLine:false, prob:(M)=>M.bttsNo,               label:()=>"Both Teams to Score — No"},
+    "home-next":    {option:"Next Team to Score — Home",   forBet:false, forRecovery:true,  needsLine:false, prob:(M)=>M.nextHome,             label:st=>st.home+" scores next"},
+    "away-next":    {option:"Next Team to Score — Away",   forBet:false, forRecovery:true,  needsLine:false, prob:(M)=>M.nextAway,             label:st=>st.away+" scores next"},
+    "home-tt-over": {option:"Team Total Goals — Home Over",forBet:false, forRecovery:true,  needsLine:true,  prob:(M,st,L)=>M.teamOver("h",L), label:(st,L)=>st.home+" over "+L+" goals"},
+    "away-tt-over": {option:"Team Total Goals — Away Over",forBet:false, forRecovery:true,  needsLine:true,  prob:(M,st,L)=>M.teamOver("a",L), label:(st,L)=>st.away+" over "+L+" goals"},
+    "custom":       {option:"Other market (I set the %)",  forBet:false, forRecovery:true,  needsLine:false, prob:(M,st,L,man)=>(man||50)/100, label:()=>"Other market"},
   };
 
   return {
