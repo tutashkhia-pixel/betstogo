@@ -719,7 +719,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
 <script>
 "use strict";
 /* ============================================================
-   BETS→GO — core application (v0.4.0 "The Translator")
+   BETS→GO — core application (v0.4.1 "The Translator")
 
    Architecture
    ------------
@@ -738,7 +738,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
    See docs/ARCHITECTURE.md and docs/OPERATING_MODEL.md.
    ============================================================ */
 
-const VERSION = "0.4.0";
+const VERSION = "0.4.1";
 
 /* ================= UTILITIES (core) ================= */
 const $ = id => document.getElementById(id);
@@ -992,6 +992,11 @@ if(S && S.bet && !S.positions){
 }
 if(S && !S.hr) S.hr = { odds:{}, line:2.5 };
 if(S && !Array.isArray(S.positions)) S.positions = [];
+/* a state too old or broken to migrate is discarded, never crashed on */
+if(S && (!S.live || typeof S.live.min !== "number" || !S.home || !S.away
+         || !Array.isArray(S.history) || !S.positions.every(P=>P && P.marketId && typeof P.odds==="number" && typeof P.stake==="number"))){
+  S = null; store.del(LSK); store.del(LEGACY[LSK]);
+}
 if(S && ADAPTERS[S.market]) ADAPTER = ADAPTERS[S.market];
 if(S) try { store.set(LSK, JSON.stringify(S)); } catch(e){}
 
