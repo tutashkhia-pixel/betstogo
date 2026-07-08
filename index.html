@@ -398,6 +398,42 @@ tr:last-child td{border-bottom:none}
 .foot{margin-top:32px; padding-top:16px; border-top:1px solid var(--border); font-size:11.5px; color:var(--ink-3); max-width:90ch}
 .hidden{display:none!important}
 
+/* ============ v0.5 — event row, predicted chips, what-if ============ */
+.ev-row{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:6px 0 12px}
+.ev{border:none; border-radius:14px; background:var(--inset); box-shadow:var(--edge), 0 0 0 1px var(--border);
+  padding:11px 4px; min-height:62px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  color:var(--ink); font:inherit}
+.ev .ei{font-size:18px} .ev .el{font-size:10px; font-weight:700; letter-spacing:.03em; color:var(--ink-2)}
+.ev.sel{box-shadow:var(--edge), 0 0 0 1px var(--accent); background:var(--accent-bg)}
+.ev.sel .el{color:var(--accent-hi)}
+.bet-line-nm{font-size:13.5px; color:var(--ink); margin-top:10px; font-weight:500}
+.ms-chips{display:flex; gap:7px; flex-wrap:wrap; align-items:center; margin:6px 0 2px}
+.chip{border:none; border-radius:999px; background:var(--inset); box-shadow:0 0 0 1px var(--border);
+  padding:9px 14px; color:var(--ink); font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:14.5px; font-weight:700; font-variant-numeric:tabular-nums; min-height:40px}
+.chip.pred{box-shadow:0 0 0 1px var(--accent-bg); color:var(--ink-2)}
+.chip.pred::before{content:"~"; color:var(--ink-3); font-weight:400}
+.chip.sel{box-shadow:0 0 0 1.5px var(--accent); color:var(--accent-hi); background:var(--accent-bg)}
+.chip.ghost{color:var(--ink-3); font-family:inherit; font-weight:500; font-size:12.5px}
+.chip.kb{font-family:inherit; color:var(--ink-3); padding:9px 12px}
+.chip-in{width:96px; background:var(--inset); border:1px solid var(--accent); border-radius:10px;
+  color:var(--ink); padding:8px 10px; font-size:16px; font-variant-numeric:tabular-nums;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.wi{background:var(--inset); border-radius:14px; padding:14px 16px; margin-top:12px}
+.wi .wt{font-size:13.5px; font-weight:650; margin-bottom:8px; color:var(--ink)}
+.wi .wr{display:flex; justify-content:space-between; font-size:13px; padding:3px 0; color:var(--ink-2)}
+.wi .wr b{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-variant-numeric:tabular-nums; color:var(--ink)}
+.wi .wr .delta{color:var(--pos)}
+.wi .actions{display:flex; gap:8px; margin-top:11px; align-items:center}
+.wi .actions .b1{flex:1.4; border:none; border-radius:10px; padding:10px; font:inherit; font-size:13px; font-weight:650;
+  background:var(--accent-bg); color:var(--accent-hi); box-shadow:0 0 0 1px var(--accent-bg)}
+.wi .actions .b2{flex:1; border:none; border-radius:10px; padding:10px; font:inherit; font-size:13px;
+  background:var(--surface-2); color:var(--ink-2); box-shadow:var(--edge)}
+.wi .stk{width:80px; background:var(--surface); border:1px solid var(--border); border-radius:10px;
+  color:var(--ink); padding:9px 10px; font-size:15px; font-variant-numeric:tabular-nums}
+#rec-card.tappable{cursor:pointer}
+#roeTable tr[data-wi]{cursor:pointer}
+
 /* ============ MISSION THEMING — the shift re-lights the room ============ */
 body.mission-build .status-dot{background:var(--accent); box-shadow:0 0 10px var(--accent-bg)}
 body.mission-protect .status-dot{background:var(--pos); box-shadow:0 0 10px var(--pos)}
@@ -565,6 +601,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
           <div style="height:12px"></div>
           <div class="tbl-wrap"><table id="roeTable"></table></div>
           <div id="roeVerdict" style="margin-top:10px"></div>
+          <div id="wi-box" class="hidden"></div>
         </div>
       </details>
 
@@ -670,8 +707,9 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
   <div id="m-sheet" class="hidden" role="dialog" aria-label="Update from Hard Rock">
     <div class="inner">
     <div class="ms-grab"></div>
-    <div class="ms-title">What does Hard Rock show?</div>
-    <div class="ms-sub">Copy the numbers you see. Skip anything that didn't change.</div>
+    <div class="ms-title">What happened?</div>
+    <div class="ms-sub">Tap the event, then tap the numbers Hard Rock shows. Skip anything that didn't change.</div>
+    <div class="ev-row" id="ms-events"></div>
     <div class="ms-row">
       <span class="ms-lbl">Minute</span>
       <div class="stepper"><button data-step="min:-1">−</button><b class="num" id="ms-min">0</b><button data-step="min:1">+</button></div>
@@ -697,8 +735,8 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
     </details>
     <div class="ms-row"><span class="ms-lbl">Who's on top?</span></div>
     <div class="seg" id="ms-mom"></div>
-    <div id="ms-mkts"></div>
     <div id="ms-bets"></div>
+    <div id="ms-mkts"></div>
     <div class="ms-did">
       <div class="ms-lbl" id="ms-did-lbl"></div>
       <div class="seg" id="ms-did"></div>
@@ -720,7 +758,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
 <script>
 "use strict";
 /* ============================================================
-   BETS→GO — core application (v0.4.6 "The Translator")
+   BETS→GO — core application (v0.5.0 "The 10-Second Loop")
 
    Architecture
    ------------
@@ -739,7 +777,7 @@ body.mission-preserve #m-pulse-open{background:var(--surface); color:var(--ink-2
    See docs/ARCHITECTURE.md and docs/OPERATING_MODEL.md.
    ============================================================ */
 
-const VERSION = "0.4.6";
+const VERSION = "0.5.0";
 
 /* ================= UTILITIES (core) ================= */
 const $ = id => document.getElementById(id);
@@ -1437,6 +1475,7 @@ function renderDesk(){
   if(S.closing){ renderTop(null); renderReview(); return; }
 
   const A = analyze(S);
+  curA = A;
   document.body.classList.add("mission-"+A.mission);
   renderTop(A);
   const L = S.live;
@@ -1485,8 +1524,9 @@ function renderDesk(){
         '<b class="dv" style="color:var(--ink-3)">'+(P.settledPL!=null?sgn$(P.settledPL):"—")+'</b></div>';
     }
     const ic = x.evNow>=0 ? '<span class="ic ok">✓</span>' : x.prob<0.2 ? '<span class="ic bad">✕</span>' : '<span class="ic watch">!</span>';
+    const age = P.cashAt ? Math.max(0, Math.round((Date.now()-P.cashAt)/60000)) : null;
     return '<button class="pos-row" data-pos="'+P.id+'">'+ic+
-      '<span class="nm">'+esc(x.label)+'</span><span class="st">$'+P.stake+(x.offer?' · CO '+fmt$(x.offer):'')+'</span>'+
+      '<span class="nm">'+esc(x.label)+'</span><span class="st">$'+P.stake+(x.offer?' · CO '+fmt$(x.offer)+(age>=10?' ('+age+'m old)':''):'')+'</span>'+
       '<b class="dv" style="color:'+(x.evNow>=0?"var(--pos)":"var(--neg)")+'">'+sgn$(x.evNow)+'</b></button>';
   }).join("");
   $("pf-list").querySelectorAll("[data-pos]").forEach(b=>b.addEventListener("click", ()=>togglePosDetail(+b.dataset.pos, A)));
@@ -1524,7 +1564,9 @@ function renderDesk(){
   const recWord = A.rec==="HOLD" ? "Do nothing." : A.rec==="CASH OUT" ? "Take the Cash Out." :
                   A.rec==="REDUCE" ? "Take part of the Cash Out." : A.rec==="ADD" ? "Worth adding." :
                   A.rec==="HEDGE" ? "Cover the downside." : "Rebalance.";
-  $("rec-card").innerHTML = esc(recWord) + (recSub.length?'<span class="sub">'+esc(recSub.join(" "))+'</span>':"");
+  const hasWi = !!A.addRec;
+  $("rec-card").innerHTML = esc(recWord) + (recSub.length?'<span class="sub">'+esc(recSub.join(" "))+(hasWi?' <b style="color:var(--accent-hi)">Tap to preview the portfolio.</b>':'')+'</span>':"");
+  $("rec-card").classList.toggle("tappable", hasWi);
 
   /* ---------- ENGINE ROOM ---------- */
   const M = A.M;
@@ -1580,15 +1622,19 @@ function renderDesk(){
       rows.map(r=>{
         const act = r.ev>=0.04 ? '<span class="tag warn">Worth adding</span>'
           : r.ev>0 ? '<span class="tag">Thin — pass</span>' : '<span class="tag neg">Pass</span>';
-        return '<tr><td>'+esc(r.label)+'</td><td class="r mono">'+fmtAmer(r.odds)+'</td>'+
+        return '<tr data-wi="'+rows.indexOf(r)+'"><td>'+esc(r.label)+'</td><td class="r mono">'+fmtAmer(r.odds)+'</td>'+
           '<td class="r mono">'+pct(r.prob)+'</td>'+
           '<td class="r mono '+(r.ev>0?"pos-t":"neg-t")+'">'+(r.ev>=0?"+":"−")+Math.abs(r.ev*100).toFixed(1)+'%</td>'+
           '<td class="r mono">'+(r.covers>0?(r.covers*100).toFixed(0)+"%":"—")+'</td>'+
           '<td>'+act+'</td>'+
           '<td class="r">'+(r.src==="watch"?'<button class="btn ghost" data-del="'+r.i+'" style="padding:1px 8px;font-size:10px">✕</button>':'')+'</td></tr>';
       }).join("")+'</tbody>';
-    tbl.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>{
+    tbl.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",(e)=>{
+      e.stopPropagation();
       S.markets.splice(+b.dataset.del,1); persist(); renderDesk();
+    }));
+    tbl.querySelectorAll("tr[data-wi]").forEach(tr=>tr.addEventListener("click",()=>{
+      renderWhatIf(rows[+tr.dataset.wi], A);
     }));
     $("roeVerdict").innerHTML = A.addRec
       ? '<p class="hint">Suggested size is quarter-Kelly, capped at half your committed capital. It qualifies on its own merit — never because you\'re down.</p>'
@@ -1606,6 +1652,7 @@ function renderDesk(){
 }
 
 let openDetailId = null;
+let curA = null;
 function togglePosDetail(id, A){
   const d = $("pf-detail");
   if(openDetailId===id && !d.classList.contains("hidden")){ d.classList.add("hidden"); openDetailId=null; return; }
@@ -1615,8 +1662,17 @@ function togglePosDetail(id, A){
   let html = esc(x.label)+' — win chance <b>'+pct(x.prob)+'</b>, worth about <b>'+fmt$(x.ehv)+'</b> if held. ';
   if(x.offer>0) html += 'Hard Rock\'s Cash Out is <b>'+fmt$(x.offer)+'</b> — '+esc(x.coWhy);
   else html += 'No Cash Out entered yet — copy it from My Bets on your next update.';
+  html += '<div class="actions" style="display:flex;gap:8px;margin-top:11px;align-items:center">'+
+    '<span class="hint">$</span><input class="stk" id="pd-cash" type="number" step="1" value="'+(x.offer||"")+'" style="width:84px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--ink);padding:8px 10px;font-size:15px">'+
+    '<button class="btn ghost" id="pd-cashed" style="flex:1">I cashed this on Hard Rock</button></div>';
   d.innerHTML = html;
   d.classList.remove("hidden");
+  $("pd-cashed").addEventListener("click", ()=>{
+    const v = parseFloat($("pd-cash").value);
+    if(isNaN(v) || v<0){ alertField($("pd-cash")); return; }
+    d.classList.add("hidden");
+    settlePos(id, v);
+  });
 }
 
 /* ================= MATCH ENGINE ================= */
@@ -1645,10 +1701,10 @@ function openMatch(cfg){
   persist(); renderDesk();
 }
 
-function snap(A, ev){
+function snap(A, ev, trigger){
   const L = S.live;
   return {min:L.min, sh:L.sh, sa:L.sa, probs: ADAPTER.snapshotProbs(A.M), wp:A.wp,
-          rec:A.rec, mission:A.mission, ev,
+          rec:A.rec, mission:A.mission, ev, trigger: trigger||null,
           hr: {...S.hr.odds},
           cashes: Object.fromEntries(A.open.map(x=>[x.P.id, x.offer||0]))};
 }
@@ -1667,7 +1723,7 @@ function commitData(d){
   if(d.hr) for(const id of Object.keys(d.hr)) if(d.hr[id]!=null) S.hr.odds[id] = d.hr[id];
   if(d.cashes) for(const id of Object.keys(d.cashes)){
     const P = S.positions.find(p=>p.id===+id);
-    if(P) P.cash = d.cashes[id];
+    if(P){ P.cash = d.cashes[id]; P.cashAt = Date.now(); }
   }
   const A = analyze(S);
   const ev = ADAPTER.detectEvents(prev, L, S).ev;
@@ -1677,7 +1733,7 @@ function commitData(d){
     if(!ev) S.lastEvent = null;
     pushAlert("high", "OBJECTIVE SHIFT — "+prevA.mission.toUpperCase()+" → "+A.mission.toUpperCase()+".");
   }
-  S.history.push(snap(A, ev));
+  S.history.push(snap(A, ev, d.trigger||null));
   S.lastCheckinAt = Date.now();
   diffAlerts(prev, prevA, A);
   persist(); renderDesk();
@@ -1719,25 +1775,101 @@ const QUESTIONS = [
 ];
 let ms = null;
 
-function sheetMarkets(){
-  /* which markets the sheet shows: Winner trio + Total pair + any other held market */
-  const base = [
-    {t:"Winner · 90 min", cells:[
-      {id:"home-ml", nm:S.home}, {id:"draw", nm:"Draw"}, {id:"away-ml", nm:S.away}]},
-    {t:"Total goals · "+S.hr.line, cells:[
-      {id:"over", nm:"Over"}, {id:"under", nm:"Under"}]},
-  ];
-  const covered = new Set(["home-ml","draw","away-ml","over","under"]);
-  const extra = [];
-  openPos(S).forEach(P=>{
-    if(covered.has(P.marketId)) return;
-    covered.add(P.marketId);
-    extra.push({id:P.marketId, nm:marketLabel(P.marketId, P.line, S)});
-  });
-  if(extra.length) base.push({t:"Your other markets", cells:extra});
-  return base;
+const prob2amer = p => {
+  p = Math.max(.02, Math.min(.98, p));
+  const a = p>=.5 ? -Math.round(100*p/(1-p)) : Math.round(100*(1-p)/p);
+  return Math.round(a/5)*5 || 100;
+};
+function msTempState(withChoices){
+  const t = JSON.parse(JSON.stringify(S));
+  t.live.min = ms.min; t.live.sh = ms.sh; t.live.sa = ms.sa; t.live.mom = ms.mom;
+  t.live.rh = ms.rh; t.live.ra = ms.ra;
+  if(withChoices){
+    for(const id of Object.keys(ms.hr)) t.hr.odds[id] = ms.hr[id];
+    for(const id of Object.keys(ms.cashes)){
+      const P = t.positions.find(p=>p.id===+id);
+      if(P) P.cash = ms.cashes[id];
+    }
+  }
+  return t;
 }
+function sheetMarketRows(F){
+  const rows = [], seen = new Set();
+  const push = (id, line, nm) => {
+    if(seen.has(id)) return; seen.add(id);
+    rows.push({id, line, nm, p: marketProb(id, line, null, F.M, S)});
+  };
+  push("home-ml", .5, "Winner — "+S.home);
+  push("draw", .5, "Winner — Draw");
+  push("away-ml", .5, "Winner — "+S.away);
+  push("over", S.hr.line, "Total Goals "+S.hr.line+" — Over");
+  push("under", S.hr.line, "Total Goals "+S.hr.line+" — Under");
+  openPos(S).forEach(P=>{ if(ADAPTER.markets[P.marketId]) push(P.marketId, P.line, posLabel(P,S)); });
+  return rows;
+}
+/* Law #0 — Hard Rock is the only source of truth. Chips are shortcuts;
+   nothing is saved unless the operator taps it. Gold ~chips are guesses. */
+function chipRow(kind, key, chosen, preds, ghost){
+  const chips = [];
+  chips.push('<button class="chip ghost" data-ck="keep">'+esc(ghost)+'</button>');
+  const seen = new Set();
+  preds.forEach((v,i)=>{
+    if(seen.has(v.val)) return; seen.add(v.val);
+    chips.push('<button class="chip'+(chosen===v.val?" sel":" pred")+'" data-ck="v" data-v="'+v.val+'">'+esc(v.txt)+'</button>');
+  });
+  if(chosen!=null && !seen.has(chosen))
+    chips.push('<button class="chip sel" data-ck="v" data-v="'+chosen+'">'+(kind==="cash"?fmt$(chosen):fmtAmer(chosen))+'</button>');
+  chips.push('<button class="chip kb" data-ck="kb" title="type it">⌨</button>');
+  return '<div class="ms-chips" data-kind="'+kind+'" data-key="'+key+'">'+chips.join("")+
+    '<input class="chip-in hidden" inputmode="text" placeholder="'+(kind==="cash"?"$":"±odds")+'"></div>';
+}
+function renderSheetDynamic(){
+  if(!ms) return;
+  $("ms-min").textContent = ms.min+"'";
+  $("ms-sh").textContent = ms.sh; $("ms-sa").textContent = ms.sa;
+  $("ms-rh").textContent = ms.rh; $("ms-ra").textContent = ms.ra;
+  $("ms-rh-lbl").textContent = S.home+" reds"; $("ms-ra-lbl").textContent = S.away+" reds";
+  renderMomSeg("ms-mom", ms.mom, v=>{ ms.mom = v; });
 
+  const evs = [
+    {k:"goal-h", ei:"⚽", el:"GOAL "+S.home.slice(0,3).toUpperCase()},
+    {k:"goal-a", ei:"⚽", el:"GOAL "+S.away.slice(0,3).toUpperCase()},
+    {k:"red",    ei:"🟥", el:"RED CARD"},
+    {k:"check",  ei:"👀", el:"CHECK"},
+  ];
+  $("ms-events").innerHTML = evs.map(e=>'<button type="button" class="ev'+(ms.trigger===e.k?" sel":"")+'" data-ev="'+e.k+'"><span class="ei">'+e.ei+'</span><span class="el">'+esc(e.el)+'</span></button>').join("");
+
+  /* predictions come from the event-adjusted state — guesses, clearly marked */
+  const F = computeFacts(msTempState(false));
+  const opens = openPos(S);
+  $("ms-bets").innerHTML = opens.length ?
+    '<div class="mkt-t">My Bets · Cash Out — tap what Hard Rock shows</div>'+
+    opens.map(P=>{
+      const x = F.pos.find(y=>y.P.id===P.id);
+      const base = Math.max(1, Math.round(0.90 * (x ? x.ehv : P.stake)));
+      const step = Math.max(2, Math.round(base*0.07));
+      const preds = [{val:base-step,txt:fmt$(base-step)},{val:base,txt:fmt$(base)},{val:base+step,txt:fmt$(base+step)}];
+      const age = P.cashAt ? Math.max(0, Math.round((Date.now()-P.cashAt)/60000)) : null;
+      const ghost = P.cash ? "keep "+fmt$(P.cash)+(age!=null?" · "+age+"m ago":"") : "no offer yet";
+      return '<div class="bet-line-nm">'+esc(posLabel(P,S))+'</div>'+chipRow("cash", P.id, ms.cashes[P.id] ?? null, preds, ghost);
+    }).join("") : "";
+
+  $("ms-mkts").innerHTML = '<div class="mkt-t">The board · only what moved — skip the rest</div>'+
+    sheetMarketRows(F).map(r=>{
+      const imp = Math.min(.97, Math.max(.03, r.p*1.05));
+      const mk = pp => { const v = prob2amer(pp); return {val:v, txt:fmtAmer(v)}; };
+      const preds = [mk(Math.max(.03,imp-.03)), mk(imp), mk(Math.min(.97,imp+.03))];
+      const cur = S.hr.odds[r.id];
+      const ghost = cur!=null ? "was "+fmtAmer(cur) : "didn't check";
+      return '<div class="bet-line-nm">'+esc(r.nm)+'</div>'+chipRow("hr", r.id, ms.hr[r.id] ?? null, preds, ghost);
+    }).join("");
+
+  /* the recommendation forms while you type — Translate previews the verdict */
+  try {
+    const A2 = analyze(msTempState(true));
+    $("ms-commit").textContent = "Translate → "+A2.rec;
+  } catch(e){ $("ms-commit").textContent = "Translate"; }
+}
 function openSheet(){
   if(!S || S.closing) return;
   const elapsed = S.lastCheckinAt ? Math.floor((Date.now()-S.lastCheckinAt)/60000) : 0;
@@ -1745,26 +1877,11 @@ function openSheet(){
     min: Math.min(120, S.live.min + Math.max(0, elapsed)),
     sh: S.live.sh, sa: S.live.sa, mom: S.live.mom,
     rh: S.live.rh||0, ra: S.live.ra||0,
+    trigger: null, hr: {}, cashes: {},
     did: null, advice: (lastSnap(1)||{}).rec || null,
   };
   $("ms-h-lbl").textContent = S.home;
   $("ms-a-lbl").textContent = S.away;
-
-  /* market grids — prefilled with the last board we saw */
-  $("ms-mkts").innerHTML = sheetMarkets().map(g=>
-    '<div class="mkt-t">'+esc(g.t)+'</div>'+
-    '<div class="odds-row'+(g.cells.length===2?" two":"")+'">'+
-    g.cells.map(c=>'<div class="odds-cell"><span class="onm">'+esc(c.nm)+'</span>'+
-      '<input data-hr="'+c.id+'" inputmode="text" value="'+(S.hr.odds[c.id]!=null?fmtAmer(S.hr.odds[c.id]):"")+'" placeholder="—"></div>').join("")+
-    '</div>').join("");
-
-  /* My Bets — Cash Out per open ticket */
-  const opens = openPos(S);
-  $("ms-bets").innerHTML = opens.length ?
-    '<div class="mkt-t">My Bets · current Cash Out</div>'+
-    opens.map(P=>'<div class="bet-row"><span class="nm">'+esc(posLabel(P,S))+'</span>'+
-      '<span class="co">$ <input data-cash="'+P.id+'" inputmode="decimal" value="'+(P.cash||"")+'" placeholder="0"></span></div>').join("") : "";
-
   $("ms-question").textContent = QUESTIONS[S.history.length % QUESTIONS.length];
   const didWrap = $("ms-did").parentElement;
   if(ms.advice && S.history.length > 1){
@@ -1772,19 +1889,9 @@ function openSheet(){
     $("ms-did-lbl").textContent = "Last call was "+ms.advice+" — what did you actually do?";
     renderDidSeg();
   } else didWrap.classList.add("hidden");
-  renderSheet();
+  renderSheetDynamic();
   $("m-sheet").classList.remove("hidden");
   $("m-backdrop").classList.remove("hidden");
-}
-function renderSheet(){
-  $("ms-min").textContent = ms.min+"'";
-  $("ms-sh").textContent = ms.sh;
-  $("ms-sa").textContent = ms.sa;
-  $("ms-rh").textContent = ms.rh;
-  $("ms-ra").textContent = ms.ra;
-  $("ms-rh-lbl").textContent = S.home+" reds";
-  $("ms-ra-lbl").textContent = S.away+" reds";
-  renderMomSeg("ms-mom", ms.mom, v=>{ ms.mom = v; });
 }
 function renderDidSeg(){
   const el = $("ms-did");
@@ -1804,26 +1911,68 @@ function closeSheet(){
 }
 function commitSheet(){
   if(!ms) return;
-  const hr = {};
-  let bad = null;
-  document.querySelectorAll("#ms-mkts [data-hr]").forEach(inp=>{
-    const raw = inp.value.trim();
-    if(!raw) return;
-    const v = parseAmerican(raw);
-    if(v==null){ bad = bad || inp; return; }
-    hr[inp.dataset.hr] = v;
-  });
-  if(bad){ alertField(bad); return; }
-  const cashes = {};
-  document.querySelectorAll("#ms-bets [data-cash]").forEach(inp=>{
-    const v = parseFloat(inp.value);
-    cashes[inp.dataset.cash] = isNaN(v) ? 0 : v;
-  });
   if(ms.did && ms.advice) recordAction(ms.advice, ms.did);
-  const d = {min: ms.min, sh: ms.sh, sa: ms.sa, mom: ms.mom, rh: ms.rh, ra: ms.ra, hr, cashes};
+  const d = {min: ms.min, sh: ms.sh, sa: ms.sa, mom: ms.mom, rh: ms.rh, ra: ms.ra,
+             hr: {...ms.hr}, cashes: {...ms.cashes}, trigger: ms.trigger || "check"};
   closeSheet();
   commitData(d);
   window.scrollTo({top:0});
+}
+
+/* ================= MID-MATCH ACTIONS (Hard Rock stays the actor) ================= */
+function addPositionLive(cand, stake){
+  const id = S.positions.reduce((m,p)=>Math.max(m,p.id),0)+1;
+  S.positions.push({id, marketId:cand.marketId, line:cand.line??0.5, odds:cand.odds, stake,
+                    cash:0, cashAt:null, hedgeOdds:null, manualProb:cand.manual??null, status:"open"});
+  if(S.hr.odds[cand.marketId]==null) S.hr.odds[cand.marketId] = cand.odds;
+  pushAlert("info", "Added: "+marketLabel(cand.marketId, cand.line??0.5, S)+" "+fmtAmer(cand.odds)+" for $"+stake+".");
+  const last = lastSnap(1);
+  if(last && /ADD|HEDGE|REBALANCE/.test(last.rec||"")) recordAction(last.rec, "Added");
+  persist(); renderDesk();
+}
+function settlePos(id, amount){
+  const P = S.positions.find(p=>p.id===id);
+  if(!P) return;
+  P.status = "cashed"; P.settledCash = amount; P.settledPL = +(amount - P.stake).toFixed(2);
+  pushAlert("info", "Cashed Out "+posLabel(P,S)+" for "+fmt$(amount)+".");
+  const last = lastSnap(1);
+  if(last && /CASH|REDUCE|REBALANCE/.test(last.rec||"")) recordAction(last.rec, "Cashed");
+  openDetailId = null;
+  persist(); renderDesk();
+}
+function whatIf(cand, A, stake){
+  const winFn = ADAPTER.cellWins[cand.marketId];
+  const dec = amer2dec(cand.odds);
+  let worst = Infinity, best = -Infinity;
+  const ev = A.pfEV + evPerDollar(cand.prob, dec)*stake;
+  if(winFn){
+    A.mat.forEach((c,i)=>{
+      const v = A.cellPf[i] + (winFn(c, cand.line, S) ? stake*(dec-1) : -stake);
+      if(v<worst) worst=v; if(v>best) best=v;
+    });
+  } else { worst = A.pfWorst - stake; best = A.pfBest + stake*(dec-1); }
+  return {ev, worst, best};
+}
+function renderWhatIf(cand, A){
+  const box = $("wi-box");
+  const stake0 = Math.max(5, Math.round(cand.stake||20));
+  const draw = stake => {
+    const w = whatIf(cand, A, stake);
+    box.innerHTML = '<div class="wi"><div class="wt">If you add '+esc(cand.label)+' · '+fmtAmer(cand.odds)+' · $'+stake+'</div>'+
+      '<div class="wr"><span>Expected value</span><b>'+sgn$(A.pfEV)+' → <span class="'+(w.ev>=A.pfEV?"delta":"")+'">'+sgn$(w.ev)+'</span></b></div>'+
+      '<div class="wr"><span>Worst case</span><b>'+sgn$(A.pfWorst)+' → <span class="'+(w.worst>=A.pfWorst?"delta":"")+'">'+sgn$(w.worst)+'</span></b></div>'+
+      '<div class="wr"><span>Best case</span><b>'+sgn$(A.pfBest)+' → '+sgn$(w.best)+'</b></div>'+
+      (cand.covers>0 ? '<div class="wr"><span>Covers your losing results</span><b class="delta">'+(cand.covers*100).toFixed(0)+'%</b></div>' : '')+
+      '<div class="actions"><span class="hint">$</span><input class="stk" id="wi-stk" type="number" step="5" value="'+stake+'">'+
+      '<button class="b1" id="wi-add">I placed it on Hard Rock</button>'+
+      '<button class="b2" id="wi-no">Never mind</button></div></div>';
+    box.classList.remove("hidden");
+    $("wi-stk").addEventListener("change", ()=>{ const v = parseFloat($("wi-stk").value)||stake0; draw(Math.max(1,v)); });
+    $("wi-add").addEventListener("click", ()=>{ const v = parseFloat($("wi-stk").value)||stake0; box.classList.add("hidden"); addPositionLive(cand, Math.max(1,v)); });
+    $("wi-no").addEventListener("click", ()=>box.classList.add("hidden"));
+  };
+  draw(stake0);
+  box.scrollIntoView({behavior:"smooth", block:"center"});
 }
 
 /* ================= REVIEW & JOURNAL ================= */
@@ -1840,13 +1989,14 @@ let dqState = {};
 function renderReview(){
   $("rv-score").value = S.live.sh+"-"+S.live.sa;
   dqState = {edge: (S.entryEdge??0) > 0, review: true, stake: true, co: true, roe: true, tilt: true, ...dqState};
-  $("rv-settle").innerHTML = S.positions.map(P=>
-    '<div class="settle-row"><span class="nm">'+esc(posLabel(P,S))+'<span class="od">'+fmtAmer(P.odds)+' · $'+P.stake+'</span></span>'+
+  $("rv-settle").innerHTML = S.positions.map(P=>{
+    const cashed = P.status==="cashed";
+    return '<div class="settle-row"><span class="nm">'+esc(posLabel(P,S))+'<span class="od">'+fmtAmer(P.odds)+' · $'+P.stake+(cashed?' · cashed mid-match':'')+'</span></span>'+
     '<div class="f"><label>Settled</label><select data-rvo="'+P.id+'">'+
       '<option value="won">Won</option><option value="lost">Lost</option>'+
-      '<option value="cashout">Cashed Out</option><option value="void">Void / push</option></select></div>'+
-    '<div class="f"><label>Cash Out received $</label><input data-rvc="'+P.id+'" type="number" step="1" value="'+(P.cash||0)+'"></div></div>'
-  ).join("");
+      '<option value="cashout"'+(cashed?' selected':'')+'>Cashed Out</option><option value="void">Void / push</option></select></div>'+
+    '<div class="f"><label>Cash Out received $</label><input data-rvc="'+P.id+'" type="number" step="1" value="'+(cashed?(P.settledCash||0):(P.cash||0))+'"></div></div>';
+  }).join("");
   $("rv-settle").querySelectorAll("select,input").forEach(el=>el.addEventListener("input", updatePL));
 
   $("rv-checks").innerHTML = DQ_CHECKS.map(c=>
@@ -1918,7 +2068,7 @@ function saveJournal(){
     updates: S.history.length,
     checkins: Math.max(0, S.history.length-1),
     adviceFollowed: answered.length ? answered.filter(followed).length+"/"+answered.length : null,
-    recTrail: S.history.slice(1).map(h=>({min:h.min, rec:h.rec, did:(S.actions.find(a=>a.min===h.min)||{}).did||null})),
+    recTrail: S.history.slice(1).map(h=>({min:h.min, rec:h.rec, trigger:h.trigger||null, did:(S.actions.find(a=>a.min===h.min)||{}).did||null})),
   });
   store.set(LSJ, JSON.stringify(journal));
   S = null; dqState = {}; persist();
@@ -2068,12 +2218,13 @@ function syncLineVis(){
 /* ================= WIRE-UP ================= */
 $("btn-addticket").addEventListener("click", addTicket);
 $("t-market").addEventListener("change", syncLineVis);
-["s-home","s-away"].forEach(id=>$(id).addEventListener("input", ()=>{
+["s-home","s-away"].forEach(id=>["input","change","blur","keyup"].forEach(evn=>$(id).addEventListener(evn, ()=>{
   $("s-hr-h-lbl").textContent = $("s-home").value.trim()||"Team 1";
   $("s-hr-a-lbl").textContent = $("s-away").value.trim()||"Team 2";
   renderAdapterStatics();
   renderTicketBuilder();
-}));
+})));
+$("t-market").addEventListener("focus", renderAdapterStatics);
 $("s-bank").addEventListener("input", renderTicketBuilder);
 
 $("btn-open").addEventListener("click", ()=>{
@@ -2135,16 +2286,57 @@ $("ms-cancel").addEventListener("click", closeSheet);
 $("m-backdrop").addEventListener("click", closeSheet);
 $("ms-commit").addEventListener("click", commitSheet);
 $("m-sheet").addEventListener("click", e=>{
+  if(!ms) return;
+  const evb = e.target.closest("[data-ev]");
+  if(evb){
+    const k = evb.dataset.ev;
+    if(ms.trigger===k && k!=="goal-h" && k!=="goal-a"){ ms.trigger = null; }
+    else {
+      ms.trigger = k;
+      if(k==="goal-h") ms.sh++;
+      if(k==="goal-a") ms.sa++;
+      if(k==="red"){ const dd = document.querySelector("#m-sheet details.more-opts"); if(dd) dd.open = true; }
+    }
+    renderSheetDynamic(); return;
+  }
   const b = e.target.closest("[data-step]");
-  if(!b || !ms) return;
-  const [k, d] = b.dataset.step.split(":");
-  const delta = parseInt(d,10);
-  if(k==="min") ms.min = Math.max(0, Math.min(120, ms.min+delta));
-  if(k==="sh")  ms.sh  = Math.max(0, ms.sh+delta);
-  if(k==="sa")  ms.sa  = Math.max(0, ms.sa+delta);
-  if(k==="rh")  ms.rh  = Math.max(0, Math.min(3, ms.rh+delta));
-  if(k==="ra")  ms.ra  = Math.max(0, Math.min(3, ms.ra+delta));
-  renderSheet();
+  if(b){
+    const [k, d] = b.dataset.step.split(":");
+    const delta = parseInt(d,10);
+    if(k==="min") ms.min = Math.max(0, Math.min(120, ms.min+delta));
+    if(k==="sh")  ms.sh  = Math.max(0, ms.sh+delta);
+    if(k==="sa")  ms.sa  = Math.max(0, ms.sa+delta);
+    if(k==="rh")  ms.rh  = Math.max(0, Math.min(3, ms.rh+delta));
+    if(k==="ra")  ms.ra  = Math.max(0, Math.min(3, ms.ra+delta));
+    renderSheetDynamic(); return;
+  }
+  const c = e.target.closest(".ms-chips button");
+  if(c){
+    const row = c.closest(".ms-chips");
+    const kind = row.dataset.kind, key = row.dataset.key;
+    if(c.dataset.ck==="kb"){
+      const inp = row.querySelector(".chip-in");
+      inp.classList.toggle("hidden");
+      if(!inp.classList.contains("hidden")) inp.focus();
+      return;
+    }
+    if(c.dataset.ck==="keep"){
+      if(kind==="cash") delete ms.cashes[key]; else delete ms.hr[key];
+    } else {
+      const v = parseFloat(c.dataset.v);
+      if(kind==="cash") ms.cashes[key] = v; else ms.hr[key] = v;
+    }
+    renderSheetDynamic(); return;
+  }
+});
+$("m-sheet").addEventListener("change", e=>{
+  const inp = e.target.closest(".chip-in");
+  if(!inp || !ms) return;
+  const row = inp.closest(".ms-chips");
+  const kind = row.dataset.kind, key = row.dataset.key;
+  if(kind==="cash"){ const v = parseFloat(inp.value); if(!isNaN(v) && v>=0) ms.cashes[key] = v; else return alertField(inp); }
+  else { const v = parseAmerican(inp.value); if(v!=null) ms.hr[key] = v; else return alertField(inp); }
+  renderSheetDynamic();
 });
 $("m-strip").addEventListener("click", ()=> window.scrollTo({top:0, behavior:"smooth"}));
 
