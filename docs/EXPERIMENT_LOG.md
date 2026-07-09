@@ -24,12 +24,24 @@
 - Product response shipped in v0.1.1 (TEC-104): Pulse Questions panel, Cost of Doing Nothing line, Devil's Advocate copy.
 - Full product-learning write-up: [CASE_STUDIES/2026-07-06_usa-vs-belgium.md](CASE_STUDIES/2026-07-06_usa-vs-belgium.md)
 
+### 2026-07-07 — Session 3 (field test: Argentina vs Egypt, World Cup R16)
+- First field test of the mobile-first cockpit (v0.2–v0.3 era). Operator placed a real bet on Hard Rock and drove the app on the phone during the match.
+- **Friction findings (drove the roadmap):** (1) too many setup fields — a friend's first reaction to the live link was "too many fields and numbers"; (2) no discoverable way out of a stuck open position on iPhone (shipped `/?reset`, v0.3.1); (3) setup placeholders ("Spain/Portugal") read as saved data.
+- **Meta-finding:** the operator's actual workflow was screenshot-to-ChatGPT for portfolio management. This reframed the entire product thesis from single-bet manager to **live portfolio manager that replaces ChatGPT** — the v0.4 (Translator) and v0.5 (10-Second Loop) arcs are the direct response.
+- Fixes shipped mid-session: `/?reset` escape hatch; team-name / neutral-venue language; Hard Rock market vocabulary; dark-only theme.
+
+### 2026-07-08 — Session 4 (field test: France vs Morocco) — *planned*
+- First run of the full v0.5 loop: event-first pulse, predicted chips, what-if, mid-match recording, and the screenshot lane (v0.5.1).
+- **Data this session must produce:** real Hard Rock screenshots to tune OCR against (TEC-119); time-to-commit a pulse on a real device (target < 10s); whether predicted chips help or anchor; whether the what-if preview changed a decision.
+- Journal entry + export required at close (dataset lives only in the browser).
+
 ### Template
 ```
 ### YYYY-MM-DD — Session N (match)
-- Position:
-- Pulses committed:
+- Portfolio (bets on Hard Rock):
+- Pulses committed (and lane used: tap / screenshot / type):
 - Advice followed / overridden (and why):
+- Mid-match actions (adds / cash-outs recorded):
 - DQS:  P/L:
 - Lessons:
 ```

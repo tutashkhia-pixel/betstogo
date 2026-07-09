@@ -1,12 +1,14 @@
 # BETS→GO
 
-**A live football trading terminal that grades decisions, not outcomes.**
+**A live sports-bet portfolio manager that grades decisions, not outcomes.**
 
-BETS→GO is an experimental decision-support workstation for live sports trading. You tell it what you see — score, minute, live odds, the cash-out offer — and it prices every available action in dollars: hold, cash out, partial, hedge, or an independent recovery trade. **"No Action" is always a valid recommendation.**
+BETS→GO is an experimental decision companion for live sports trading. It sits beside Hard Rock during a match: you tell it what Hard Rock shows — the score, the odds, your Cash Out values — and it evaluates your **whole portfolio of bets** as one thing, then names the smartest move in plain English and real dollars: HOLD · ADD · REDUCE · HEDGE · REBALANCE · CASH OUT. **Doing nothing is always a valid call.**
 
-> BETS→GO does not predict the future. It continuously evaluates the quality of every available decision as new information arrives.
+The interface speaks **Hard Rock's language, not the model's** — every word on screen either appears on a Hard Rock screen or is a plain-English verdict. The xG/edge/EV math runs underneath, in the engine room. Updating takes seconds: tap the event and confirm predicted numbers, or hand it your Hard Rock screenshot (read on-device — nothing is uploaded).
 
-**Advisory only.** It analyzes data, quantifies trade-offs, and explains its reasoning; it does not guarantee outcomes, and the final wagering decision is always yours. If gambling stops being fun, call or text 1-800-GAMBLER (US). 21+.
+> BETS→GO does not predict the future. It continuously evaluates the quality of every available decision as new information arrives. **Hard Rock is always the source of truth.**
+
+**Advisory only.** It analyzes data, quantifies trade-offs, and explains its reasoning; it does not guarantee outcomes, and the final wagering decision is always yours. It never logs into or scrapes your sportsbook. If gambling stops being fun, call or text 1-800-GAMBLER (US). 21+.
 
 ## The experiment
 
@@ -14,23 +16,23 @@ This project exists to answer one question:
 
 > **Does BETS→GO measurably improve live sports trading decisions?**
 
-Every feature serves that hypothesis; anything else is deferred. The measurement instrument is the built-in **Match Journal**: every closed position is graded with a **Decision Quality Score (0–100)** based on process — positive-edge entry, stake discipline, following the cash-out engine, no negative-EV recovery trades, no chasing. See [docs/EXPERIMENT_LOG.md](docs/EXPERIMENT_LOG.md).
+Every feature serves that hypothesis; anything else is deferred. The measurement instrument is the built-in **Match Journal**: every closed match is graded with a **Decision Quality Score (0–100)** based on process — positive-edge entries, stake discipline, following the Cash Out reads, no negative-EV adds, no chasing — and **recommendation tracking** records what the app advised versus what the operator did at every pulse. See [docs/EXPERIMENT_LOG.md](docs/EXPERIMENT_LOG.md).
 
 ## Features
 
-- **Live Trading Cockpit** — primary decision verdict with plain-English reasoning, Trade Score, confidence, and a dollars-first Risk & Exposure strip (exposure, max loss, lockable-now, expected value).
-- **Action Board** — every option priced as Expected / Worst / Best net P/L and ranked: 🥇 best EV · 🛡 best capital protection · ⚖ best risk-adjusted.
-- **Probability Engine** — explainable Poisson in-play model driven by pre-match xG, red cards, momentum, and game state; prices 1X2, totals, team totals, spreads, BTTS, next-goal.
-- **Cash-Out Engine** — judges the book's offer against Expected Hold Value (HOLD / WAIT / PARTIAL / FULL).
-- **Hedge Engine (protection simulator)** — equal-profit hedge stake with net P/L in every scenario; arms only at 25–80% win probability.
-- **Recovery Opportunity Engine** — when a position is effectively dead, prices every live market independently; happily rules **NO RECOVERY TRADE** when nothing clears the EV bar.
-- **Pulse checks** — automatic alerts at halftime, 70', 80', 85', 88', plus goals, red cards, probability swings, and fair-value cash-out offers.
-- **Match Journal** — decision-quality-graded history with aggregates and JSON export.
-- **Model & Method tab** — every formula documented in the app itself; nothing is a black box.
+- **The Read** — the 10-second surface: a status verb (🟢 HOLD / CASH OUT / …), one plain sentence, your bets with net-if-held in dollars, what moved since your last check, and a single recommendation card.
+- **Portfolio engine** — every bet is a payoff rule over the model's joint final-score grid; the app nets your exposure to every outcome, prices correlated risk exactly (e.g. SGP goal legs), and justifies each verdict by the **portfolio delta**, never by whether one bet looks good in isolation.
+- **The Update** — three input lanes, all under Law #0 (Hard Rock is the source of truth): **tap** an event and confirm predicted chips (~8s, no keyboard); hand it a **screenshot** (on-device OCR → 📷 chips); or **type**. The Translate button previews the verdict live.
+- **What-if** — tap any market to see the portfolio before → after adding it (EV / worst / best / coverage); "I placed it" / "I cashed this" record mid-match reality so the portfolio stays truthful.
+- **Cash Out reads** — judges each Hard Rock Cash Out against what the bet is really worth (Take it / Fair / Low / Keep).
+- **Watch / Add engine** — prices any live market on its own merit; only ever suggests adding when the numbers favor it, **never because you're down**.
+- **Probability engine** — explainable Poisson in-play model; pre-match strength derived from the Winner odds you enter; prices 1X2, totals, team totals, spreads, BTTS, next-goal.
+- **Objective shifts** — BUILD → PROTECT → PRESERVE re-light the cockpit so the change in mission is felt, not just read.
+- **Match Journal + Model & Method** — decision-quality-graded history with JSON export; every formula documented in the app itself.
 
 ## Architecture
 
-Market-agnostic **core engines** produce *facts*; a single **Decision Orchestrator** produces *advice*; sport-specific logic lives in **market adapters** (Football is the first). The app is deliberately a **single self-contained HTML file** — no build step, no dependencies, works from a double-click, an email attachment, or any static host. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+Market-agnostic **core engines** produce *facts*; a single **Decision Orchestrator** produces *advice*; sport-specific logic lives in **market adapters** (Football is the first). Since v0.4 the fundamental unit is the **portfolio** — bets as payoff maps over a joint score grid. The interface speaks Hard Rock or plain English; engine vocabulary stays in the engine room. The app is a **single self-contained `index.html`** (no build, no framework, any static host); the one exception is `vendor/`, third-party static assets (the on-device OCR engine) that can't be inlined. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Local setup
 
